@@ -23,6 +23,7 @@ angular
       	})	
 		.state('editItem', {
 	        url: '/editItem/:id',
+	        templateUrl: 'views/items/item-form.html',
 	        controller: 'EditItemController'
       	})	      				   
 		.state('Stores', {
