@@ -3,7 +3,8 @@
 angular
  .module('app', [
     'ui.router',
-    'lbServices'
+    'lbServices',
+    'angularFileUpload'
  ])
  .config(['$stateProvider', '$urlRouterProvider', function(
  	$stateProvider, $urlRouterProvider) {
@@ -25,7 +26,12 @@ angular
 	        url: '/editItem/:id',
 	        templateUrl: 'views/items/item-form.html',
 	        controller: 'EditItemController'
-      	})	      				   
+      	})
+		.state('addFile', {
+			url: '/addFile',
+			templateUrl: 'views/files/addFile.html',
+			authenticate: true
+		})    		     		      				   
 		.state('Stores', {
 			url: '/Stores',
 			templateUrl: 'views/stores/stores.html',
