@@ -1,5 +1,5 @@
 {
-  "name": "ReceiptItem",
+  "name": "ReceiptTag",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
@@ -16,10 +16,10 @@
       "model": "Receipt",
       "foreignKey": "receiptId"
     },
-    "item": {
+    "tag": {
       "type": "belongsTo",
-      "model": "Item",
-      "foreignKey": "itemId"
+      "model": "Tag",
+      "foreignKey": "tagId"
     }
   },
   "acls": [],

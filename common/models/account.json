@@ -1,5 +1,5 @@
 {
-  "name": "Store",
+  "name": "Account",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
@@ -9,6 +9,10 @@
     "TimeStamp": true
   },
   "properties": {
+    "type": {
+      "type": "number",
+      "required": true
+    },
     "name": {
       "type": "string",
       "required": true
@@ -16,16 +20,10 @@
   },
   "validations": [],
   "relations": {
-    "receipts": {
+    "customers": {
       "type": "hasMany",
-      "model": "Receipt",
+      "model": "Customer",
       "foreignKey": ""
-    },
-    "categories": {
-      "type": "hasMany",
-      "model": "Category",
-      "foreignKey": "",
-      "through": "StoreCategory"
     }
   },
   "acls": [],

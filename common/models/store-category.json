@@ -1,5 +1,5 @@
 {
-  "name": "ReceiptItem",
+  "name": "StoreCategory",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
@@ -11,15 +11,15 @@
   "properties": {},
   "validations": [],
   "relations": {
-    "receipt": {
+    "store": {
       "type": "belongsTo",
-      "model": "Receipt",
-      "foreignKey": "receiptId"
+      "model": "Store",
+      "foreignKey": "storeId"
     },
-    "item": {
+    "category": {
       "type": "belongsTo",
-      "model": "Item",
-      "foreignKey": "itemId"
+      "model": "Category",
+      "foreignKey": "categoryId"
     }
   },
   "acls": [],

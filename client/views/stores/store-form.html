@@ -2,12 +2,27 @@
 <hr>
 <form name="storeForm" novalidate ng-submit="submitForm()">
   <div class="form-group" ng-class="{'has-error': storeForm.name.$invalid && storeForm.name.$dirty}">
-    <input type="text" class="form-control" name="name" 
-        placeholder="Name" autocomplete="off" required
-        ng-model="storename">
-    <span class="has-error control-label" ng-show="storeForm.name.$invalid && storeForm.name.$dirty">
-      Store name is required.
-    </span>        
+
+  	<div class="row">
+	  	<label class="col-sm-2 control-label">Store name</label>
+	  	<div class="col-sm-4">
+		    <input type="text" class="form-control" name="name" 
+		        placeholder="Name" autocomplete="off" required
+		        ng-model="storename">
+		    <span class="has-error control-label" ng-show="storeForm.name.$invalid && storeForm.name.$dirty">
+		      Store name is required.
+		    </span>   
+		</div>
+
+	  	<label class="col-sm-2 control-label">Category</label>
+	  	<div class="col-sm-4">
+	  		<select  class="form-control" 
+	  			ng-model="selectedCategory" 
+	  			ng-options="category as category.name for category in categories"></select>
+	  	</div>
+
+	</div>  
+
   </div>
   <button class="btn btn-default" ng-disabled="storeForm.$invalid">{{ action }} Store</button>
 </form>

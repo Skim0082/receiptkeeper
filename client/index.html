@@ -32,9 +32,23 @@
       <ul class="nav navbar-nav navbar-right">
         <li><a href="/#/Home">Home</a></li>
         <li><a href="/#/Receipts">Receipts</a></li>
-        <li><a href="/#/Items">Items</a></li>
-        <li><a href="/#/Stores">Stores</a></li>
+
+        <li class="dropdown">
+          <a href="" class="dropdown-toggle" data-toggle="dropdown">
+            Pre-Define <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="/#/Items">Item</a></li>
+            <li><a href="/#/Tags">Tag</a></li>
+            <li class="divider"></li>
+            <li><a href="/#/Stores">Store</a></li>           
+            <li><a href="/#/Categories">Category</a></li> 
+          </ul>
+        </li>
+
         <li><a href="/#/addFile">File</a></li>
+        <li><a href="/#/Customers">Admin</a></li>
+
         <li class="dropdown">
           <a href="" class="dropdown-toggle" data-toggle="dropdown">
             Account <b class="caret"></b>
@@ -90,5 +104,7 @@
  <script src="js/controllers/item.js"></script>
  <script src="js/controllers/user.js"></script>
  <script src="js/controllers/file.js"></script>
+ <script src="js/controllers/tag.js"></script>
+ <script src="js/controllers/category.js"></script>
  </body>
 </html>

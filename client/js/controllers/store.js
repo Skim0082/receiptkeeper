@@ -2,10 +2,20 @@
 
  angular
   .module('app')
-  .controller('AddStoreController', ['$scope', 'Store',
-      '$state', function($scope, Store, $state) {
+  .controller('AddStoreController', ['$scope', 'Store', 'Category',
+      '$state', function($scope, Store, Category, $state) {
     $scope.action = 'Add';
     $scope.store = {};
+    $scope.categories = {};
+    $scope.selectedCategory;
+
+    Category
+      .find()
+      .$promise
+      .then(function(categories){
+        $scope.categories = categories;
+        $scope.selectedCategory = $scope.selectedCategory || categories[0]
+    });
 
     $scope.submitForm = function() {
       Store
@@ -22,14 +32,22 @@
   	'$scope', 'Store', function($scope, Store) {
 	    $scope.stores = Store.find();
   }])
-  .controller('EditStoreController', ['$scope', 'Store', '$stateParams', '$state', 
-      function($scope, Store, $stateParams, $state) {
+  .controller('EditStoreController', ['$scope', 'Store', 'Category', '$stateParams', '$state', 
+      function($scope, Store, Category, $stateParams, $state) {
 		    $scope.action = 'Edit';
 
         Store.findById({ id: $stateParams.id }).$promise
         .then(function(store){
           $scope.storename = store.name;
         });  
+
+        Category
+          .find()
+          .$promise
+          .then(function(categories){
+            $scope.categories = categories;
+            $scope.selectedCategory = $scope.selectedCategory || categories[0];
+        });
 
 		    $scope.submitForm = function() {				
           Store.prototype$updateAttributes(

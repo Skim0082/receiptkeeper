@@ -61,6 +61,48 @@ angular
 	        url: '/deleteStore/:id',
 	        controller: 'DeleteStoreController'
       	})
+		.state('Tags', {
+			url: '/Tags',
+			templateUrl: 'views/tags/tags.html',
+			controller: 'AllTagsController'
+		})
+		.state('addTag', {
+			url: '/addTag',
+			templateUrl: 'views/tags/tag-form.html',
+			controller: 'AddTagController'
+			// , authenticate: true
+		}) 		
+		.state('editTag', {
+			url: '/editTag/:id',
+			templateUrl: 'views/tags/tag-form.html',
+			controller: 'EditTagController'//
+			//, authenticate: true
+		})
+		.state('deleteTag', {
+	        url: '/deleteTag/:id',
+	        controller: 'DeleteTagController'
+      	})      	
+		.state('Categories', {
+			url: '/Categories',
+			templateUrl: 'views/categories/categories.html',
+			controller: 'AllCategoriesController'
+		})
+		.state('addCategory', {
+			url: '/addCategory',
+			templateUrl: 'views/categories/category-form.html',
+			controller: 'AddCategoryController'
+			// , authenticate: true
+		}) 		
+		.state('editCategory', {
+			url: '/editCategory/:id',
+			templateUrl: 'views/categories/category-form.html',
+			controller: 'EditCategoryController'//
+			//, authenticate: true
+		})
+		.state('deleteCategory', {
+	        url: '/deleteCategory/:id',
+	        controller: 'DeleteCategoryController'
+      	})      	
 		.state('addReceipt', {
 			url: '/addReceipt',
 			templateUrl: 'views/receipts/receipt-form.html',
@@ -82,6 +124,27 @@ angular
         url: '/deleteReceipt/:id',
         controller: 'DeleteReceiptController'
       	})
+		.state('Customers', {
+			url: '/Customers',
+			templateUrl: 'views/users/users.html',
+			controller: 'AllCustomersController'
+		})
+		.state('addCustomer', {
+			url: '/addCustomer',
+			templateUrl: 'views/users/user-form.html',
+			controller: 'AddCustomerController'
+			// , authenticate: true
+		}) 		
+		.state('editCustomer', {
+			url: '/editCustomer/:id',
+			templateUrl: 'views/users/user-form.html',
+			controller: 'EditCustomerController'//
+			//, authenticate: true
+		})
+		.state('deleteCustomer', {
+	        url: '/deleteCustomer/:id',
+	        controller: 'DeleteCustomerController'
+      	})      	
 		.state('Login', {
 			url: '/Login',
 			templateUrl: 'views/users/login.html',

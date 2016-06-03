@@ -1,5 +1,5 @@
 {
-  "name": "Store",
+  "name": "Tag",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
@@ -19,13 +19,8 @@
     "receipts": {
       "type": "hasMany",
       "model": "Receipt",
-      "foreignKey": ""
-    },
-    "categories": {
-      "type": "hasMany",
-      "model": "Category",
       "foreignKey": "",
-      "through": "StoreCategory"
+      "through": "ReceiptTag"
     }
   },
   "acls": [],

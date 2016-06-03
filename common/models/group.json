@@ -1,5 +1,5 @@
 {
-  "name": "Store",
+  "name": "Group",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
@@ -16,16 +16,11 @@
   },
   "validations": [],
   "relations": {
-    "receipts": {
+    "customers": {
       "type": "hasMany",
-      "model": "Receipt",
-      "foreignKey": ""
-    },
-    "categories": {
-      "type": "hasMany",
-      "model": "Category",
+      "model": "Customer",
       "foreignKey": "",
-      "through": "StoreCategory"
+      "through": "CustomerGroup"
     }
   },
   "acls": [],

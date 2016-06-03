@@ -1,5 +1,5 @@
 {
-  "name": "ReceiptItem",
+  "name": "CustomerGroup",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
@@ -11,15 +11,15 @@
   "properties": {},
   "validations": [],
   "relations": {
-    "receipt": {
+    "customer": {
       "type": "belongsTo",
-      "model": "Receipt",
-      "foreignKey": "receiptId"
+      "model": "Customer",
+      "foreignKey": "customerId"
     },
-    "item": {
+    "group": {
       "type": "belongsTo",
-      "model": "Item",
-      "foreignKey": "itemId"
+      "model": "Group",
+      "foreignKey": "groupId"
     }
   },
   "acls": [],

@@ -4,12 +4,18 @@
  	<div class="form-group" >
  		<div class="row">
 		  	<label class="col-sm-2 control-label">Store name</label>
-		  	<div class="col-sm-10">
+		  	<div class="col-sm-4">
 		  		<select  class="form-control" 
 		  			ng-disabled="isDisabled"  
 		  			ng-model="selectedStore" 
 		  			ng-options="store as store.name for store in stores"></select>
 		  	</div>
+		  	<label class="col-sm-2 control-label">Category</label>
+		  	<div class="col-sm-4">
+		  		<select  class="form-control" 
+		  			ng-model="selectedCategory" 
+		  			ng-options="category as category.name for category in categories"></select>
+		  	</div>		  	
 	  	</div>
 		<div ng-repeat="item in items">
 			<div class="row">

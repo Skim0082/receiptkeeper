@@ -12,24 +12,23 @@
     Receipt.items.destroyAll(
       {id: $stateParams.id}, 
       function(res1){
-      //console.log("destroyAll : ", res1);
       Receipt
         .destroyById({ id: $stateParams.id })
         .$promise
         .then(function(res2) {
-            //console.log("destroyById : ", res2);
             $state.go('Receipts');        
         });      
     });
     
   }])
   .controller('EditReceiptController', ['$scope', 'Receipt', '$state',
-      '$stateParams', 'Store', 'Item', 'ReceiptItem', 
-      function($scope, Receipt, $state, $stateParams, Store, Item, ReceiptItem) {
+      '$stateParams', 'Store', 'Item', 'ReceiptItem', 'Category',
+      function($scope, Receipt, $state, $stateParams, Store, Item, ReceiptItem, Category) {
 
     $scope.action = 'Edit';
     $scope.stores = [];
     $scope.selectedStore;
+    $scope.selectedCategory;
     $scope.receipt = {};
     $scope.isDisabled = false;
     $scope.delDisabled = true;  
@@ -52,7 +51,6 @@
       };      
     };
 
-    //var items;
     Store.find()
       .$promise
       .then(function(stores){
@@ -64,17 +62,27 @@
           }
         })
         .$promise
-        .then(function(receipt){   
-          //console.log(receipt);         
+        .then(function(receipt){            
           $scope.receipt = receipt; 
           $scope.items = receipt.items;
           if($scope.items.length > 0){ 
             $scope.delDisabled = false;
-          };          
-          var selectedStoreIndex = stores.map(function(store){
+          };  
+
+          var selectedStoreIndex = stores.map(function(store){ 
             return store.id;
           }).indexOf($scope.receipt.storeId);
-          $scope.selectedStore = stores[selectedStoreIndex];          
+          $scope.selectedStore = stores[selectedStoreIndex];     
+
+          Category.find()
+            .$promise
+            .then(function(categories){
+                $scope.categories = categories;
+                var selectedCategoryIndex = categories.map(function(category){ 
+                  return category.id;
+                }).indexOf(receipt.categoryId);
+                $scope.selectedCategory = categories[selectedCategoryIndex]; 
+            });
         });
     });
 
@@ -93,6 +101,7 @@
 
     $scope.submitForm = function() {
       $scope.receipt.storeId = $scope.selectedStore.id;
+      $scope.receipt.categoryId = $scope.selectedCategory.id;
       $scope.receipt
       .$save()
       .then(function(){
@@ -120,12 +129,13 @@
     };
   }])
   .controller('AddReceiptController', ['$scope', '$state', 
-      'Receipt', 'Store', 'Item', 'ReceiptItem', 
-      function($scope, $state, Receipt, Store, Item, ReceiptItem) {
+      'Receipt', 'Store', 'Category', 'Item', 'ReceiptItem', 
+      function($scope, $state, Receipt, Store, Category, Item, ReceiptItem) {
 
     $scope.action = 'Add';
     $scope.stores = [];
     $scope.selectedStore;
+    $scope.selectedCategory;
     $scope.receipt = {};
     $scope.isDisabled = false;
     $scope.delDisabled = true;
@@ -136,6 +146,14 @@
       .then(function(stores){
         $scope.stores = stores;
         $scope.selectedStore = $scope.selectedStore || stores[0]
+    });
+
+    Category
+      .find()
+      .$promise
+      .then(function(categories){
+        $scope.categories = categories;
+        $scope.selectedCategory = $scope.selectedCategory || categories[0]
     });
 
     $scope.items = [];        
@@ -178,7 +196,8 @@
           comment: $scope.receipt.comment, 
           numberOfItem: $scope.receipt.numberOfItem, 
           total: $scope.receipt.total, 
-          storeId: $scope.selectedStore.id
+          storeId: $scope.selectedStore.id,
+          categoryId: $scope.selectedCategory.id
         }, function(receipt){           
             for(var i=0 ; i < $scope.items.length ; i++){
               Item

@@ -28,7 +28,13 @@
     "imageFilePath": {
       "type": "string",
       "required": false
-    }
+    },
+    "categoryId": {
+      "type": "string",
+      "id": false,
+      "required": false,
+      "index": false
+    }    
   },
   "validations": [],
   "relations": {
@@ -42,6 +48,12 @@
       "type": "belongsTo",
       "model": "Store",
       "foreignKey": "storeId"
+    },
+    "tags": {
+      "type": "hasMany",
+      "model": "Tag",
+      "foreignKey": "",
+      "through": "ReceiptTag"
     }
   },
   "acls": [],
