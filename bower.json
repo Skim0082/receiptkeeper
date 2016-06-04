@@ -1,0 +1,27 @@
+{
+  "name": "receipt-keeper",
+  "description": "receipt-keeper",
+  "main": "server/server.js",
+  "authors": [
+    "Skim0082 <joe215.kim@gmail.com>"
+  ],
+  "license": "UNLICENSED",
+  "keywords": [
+    "receiptkeeper"
+  ],
+  "homepage": "https://receiptkeeper.herokuapp.com/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "client/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-bootstrap-multiselect": "https://github.com/bentorfs/angular-bootstrap-multiselect.git#^1.1.4",
+    "angular-ui-router": "^0.3.0",
+    "angular-resource": "^1.5.6",
+    "bootstrap": "^3.3.6"
+  }
+}

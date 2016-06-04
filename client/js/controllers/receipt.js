@@ -120,10 +120,10 @@
                 .create({
                   receiptId: $scope.receipt.id,
                   itemId: item.id
-                });
-                $state.go('Receipts'); 
+                });                
             });
-          }            
+          }
+          $state.go('Receipts');           
         }); 
       });
     };

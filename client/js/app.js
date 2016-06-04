@@ -4,7 +4,8 @@ angular
  .module('app', [
     'ui.router',
     'lbServices',
-    'angularFileUpload'
+    'angularFileUpload',
+    'btorfs.multiselect'
  ])
  .config(['$stateProvider', '$urlRouterProvider', function(
  	$stateProvider, $urlRouterProvider) {
