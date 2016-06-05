@@ -59,7 +59,12 @@
           Store.findById({ 
             id: $stateParams.id,
             filter: {
-              include: 'categories'
+              include: {
+                relation: 'categories',
+                scope:{
+                  fields: ['id', 'name']
+                }
+              }
             }
           })
           .$promise

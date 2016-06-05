@@ -22,8 +22,9 @@
     
   }])
   .controller('EditReceiptController', ['$scope', 'Receipt', '$state',
-      '$stateParams', 'Store', 'Item', 'ReceiptItem', 'Category',
-      function($scope, Receipt, $state, $stateParams, Store, Item, ReceiptItem, Category) {
+      '$stateParams', 'Store', 'Item', 'ReceiptItem', 'Category', 'ReceiptService', '$rootScope', 
+      function($scope, Receipt, $state, $stateParams, Store, 
+        Item, ReceiptItem, Category, ReceiptService, $rootScope) {
 
     $scope.action = 'Edit';
     $scope.stores = [];
@@ -51,14 +52,20 @@
       };      
     };
 
-    Store.find()
+    Store
+      .find({
+        fields: {
+          id: true,
+          name: true
+        }
+      })
       .$promise
       .then(function(stores){
         var stores = $scope.stores = stores;
         Receipt.findById({
          id: $stateParams.id, 
          filter: { 
-          include: 'items'
+          include: ['items', 'tags']
           }
         })
         .$promise
@@ -72,8 +79,15 @@
           var selectedStoreIndex = stores.map(function(store){ 
             return store.id;
           }).indexOf($scope.receipt.storeId);
-          $scope.selectedStore = stores[selectedStoreIndex];     
+          $scope.selectedStore = stores[selectedStoreIndex];   
+          console.log("$scope.selectedStore: ", $scope.selectedStore);  
 
+          // Call to get the categories from selected store
+          //$scope.getStoreCategories($scope.receipt.storeId, $scope.receipt.categoryId);
+          ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, $scope.receipt.categoryId);
+
+          //get the all Categories
+          /*
           Category.find()
             .$promise
             .then(function(categories){
@@ -83,25 +97,64 @@
                 }).indexOf(receipt.categoryId);
                 $scope.selectedCategory = categories[selectedCategoryIndex]; 
             });
+          */          
+        
         });
     });
 
+    // Get the Store's categories
+    $scope.getStoreCategories = function(storeId, categoryId){
+      
+      Store.findById({ 
+        id: storeId,
+        fields: {
+          id: true,
+          name: true
+        },            
+        filter: {
+          include: 'categories'
+        }
+      })
+      .$promise
+      .then(function(store){
+        var categories = $scope.categories = store.categories;
+        //console.log("store.categories: ", store.categories);
+        if(store.categories.length > 0 && categoryId != null){
+            var selectedCategoryIndex = categories.map(function(category){ 
+              return category.id;
+            }).indexOf(categoryId);
+            $scope.selectedCategory = categories[selectedCategoryIndex];
+        }
+      }); 
+
+    }
+  
+    $scope.changeStore = function(){
+      console.log("changeStore: ", $scope.selectedStore.name);
+      ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, null); 
+      //$scope.getStoreCategories($scope.selectedStore.id, null);
+    }   
+
     $scope.changePrice = function(){
-      console.log("items.length: ", $scope.items.length);
+      //console.log("items.length: ", $scope.items.length);
       $scope.totalprice=0;
       if($scope.items.length > 0){ 
         for(var i = 0 ; i < $scope.items.length ; i++){
           $scope.totalprice += $scope.items[i].price;
         };
-        console.log("total price: ", $scope.totalprice);
+        //console.log("total price: ", $scope.totalprice);
         $scope.receipt.numberOfItem = $scope.items.length;
         $scope.receipt.total = $scope.totalprice;
       };   
     };
 
+
     $scope.submitForm = function() {
-      $scope.receipt.storeId = $scope.selectedStore.id;
-      $scope.receipt.categoryId = $scope.selectedCategory.id;
+      //console.log("selectedCategory: ", $scope.selectedCategory);
+      if($scope.selectedCategory !== undefined){
+        $scope.receipt.categoryId = $scope.selectedCategory.id;
+      }
+      $scope.receipt.storeId = $scope.selectedStore.id;      
       $scope.receipt
       .$save()
       .then(function(){
@@ -129,8 +182,8 @@
     };
   }])
   .controller('AddReceiptController', ['$scope', '$state', 
-      'Receipt', 'Store', 'Category', 'Item', 'ReceiptItem', 
-      function($scope, $state, Receipt, Store, Category, Item, ReceiptItem) {
+      'Receipt', 'Store', 'Category', 'Item', 'ReceiptItem', 'ReceiptService', 
+      function($scope, $state, Receipt, Store, Category, Item, ReceiptItem, ReceiptService) {
 
     $scope.action = 'Add';
     $scope.stores = [];
@@ -145,16 +198,26 @@
       .$promise
       .then(function(stores){
         $scope.stores = stores;
-        $scope.selectedStore = $scope.selectedStore || stores[0]
+        $scope.selectedStore = $scope.selectedStore;
     });
 
+    // Get All categories
+    /* Don't need to get the all categories 
     Category
       .find()
       .$promise
       .then(function(categories){
         $scope.categories = categories;
-        $scope.selectedCategory = $scope.selectedCategory || categories[0]
+        $scope.selectedCategory = $scope.selectedCategory;
     });
+    */
+
+    // Get categories by selected store
+    $scope.changeStore = function(){
+      console.log("changeStore: ", $scope.selectedStore.name);
+      ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, null);    
+    }
+
 
     $scope.items = [];        
     $scope.newItem = function () {

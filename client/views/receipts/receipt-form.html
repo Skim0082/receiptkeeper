@@ -6,15 +6,20 @@
 		  	<label class="col-sm-2 control-label">Store name</label>
 		  	<div class="col-sm-4">
 		  		<select  class="form-control" 
+		  			ng-change="changeStore()" 
 		  			ng-disabled="isDisabled"  
 		  			ng-model="selectedStore" 
-		  			ng-options="store as store.name for store in stores"></select>
+		  			ng-options="store as store.name for store in stores">
+	  				<option value="" disabled selected hidden>Plase Choose...</option>
+	  			</select>
 		  	</div>
 		  	<label class="col-sm-2 control-label">Category</label>
 		  	<div class="col-sm-4">
 		  		<select  class="form-control" 
 		  			ng-model="selectedCategory" 
-		  			ng-options="category as category.name for category in categories"></select>
+		  			ng-options="category as category.name for category in categories">
+	  				<option value="" disabled selected hidden>Plase Choose...</option>
+	  			</select>
 		  	</div>		  	
 	  	</div>
 		<div ng-repeat="item in items">
@@ -38,10 +43,10 @@
 
 		<div class="row">
 			<div class="col-sm-offset-2 col-sm-4">
-				<button class="btn btn-default" ng-click="newItem()">append Item</button>
+				<button class="btn btn-default" ng-click="newItem()">Add Item</button>
 			</div>
 			<div class="col-sm-4 col-sm-offset-2">
-				<button class="btn btn-default" ng-click="spliceItem()" ng-disabled="delDisabled">del Item</button>
+				<button class="btn btn-warning" ng-click="spliceItem()" ng-disabled="delDisabled">Del Item</button>
 			</div>			
 		</div>
 		<div class="row">
