@@ -20,7 +20,7 @@
   }])  
   .controller('AllTagsController', [
   	'$scope', 'Tag', function($scope, Tag) {
-	    $scope.tags = Tag.find();
+	    $scope.tags = Tag.find({filter: {order: 'name ASC'}});
   }])
   .controller('EditTagController', ['$scope', 'Tag', '$stateParams', '$state', 
       function($scope, Tag, $stateParams, $state) {

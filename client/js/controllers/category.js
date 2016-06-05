@@ -20,7 +20,7 @@
   }])  
   .controller('AllCategoriesController', [
   	'$scope', 'Category', function($scope, Category) {
-	    $scope.categorys = Category.find();
+	    $scope.categorys = Category.find({filter: {order: 'name ASC'}});
   }])
   .controller('EditCategoryController', ['$scope', 'Category', '$stateParams', '$state', 
       function($scope, Category, $stateParams, $state) {

@@ -29,8 +29,6 @@
           name: $scope.store.name
         }, function(store) {
           for(var i = 0 ; i < $scope.selectedCategory.length ; i++){
-            console.log("category Id : ", $scope.selectedCategory[i].id);
-            console.log("store Id : ", store.id);
             StoreCategory
               .create({
                 storeId: store.id,
@@ -90,13 +88,9 @@
 
       $scope.deleteStore = function(){
         if(confirm("Are you sure?")){
-
-          $rootScope.$emit("CallThisMethod",res);
-          
-        }
-        
+          $rootScope.$emit("CallThisMethod",res);          
+        }        
       }  
-
 
 	    $scope.submitForm = function() {
         $scope.store
@@ -120,7 +114,7 @@
   }])
   .controller('AllStoresController', [
     '$scope', 'Store', function($scope, Store) {
-      $scope.stores = Store.find();
+      $scope.stores = Store.find({filter: {order: 'name ASC'}});
   }])
   .controller('DeleteStoreController', ['$scope', 'Store', '$state',
       '$stateParams', '$rootScope', function($scope, Store, $state, $stateParams, $rootScope) {

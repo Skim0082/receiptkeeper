@@ -4,27 +4,39 @@
   .module('app')
   .controller('AllReceiptsController', [
   	'$scope', 'Receipt', function($scope, Receipt) {
-	    $scope.receipts = Receipt.find();
+	    $scope.receipts = Receipt.find({
+        filter: {
+          order: 'createdAt DESC', 
+          include: 'store'
+        }
+      });
+      console.log($scope.receipts);
   }])
   .controller('DeleteReceiptController', ['$scope', 'Receipt', '$state',
       '$stateParams', function($scope, Receipt, $state, $stateParams) {
 
     Receipt.items.destroyAll(
       {id: $stateParams.id}, 
-      function(res1){
-      Receipt
-        .destroyById({ id: $stateParams.id })
+      function(){
+        Receipt.tags.destroyAll({
+          id: $stateParams.id
+        })
         .$promise
-        .then(function(res2) {
-            $state.go('Receipts');        
-        });      
+        .then(function(){
+          Receipt
+            .destroyById({ id: $stateParams.id })
+            .$promise
+            .then(function() {
+                $state.go('Receipts');        
+            });          
+        });
     });
-    
   }])
   .controller('EditReceiptController', ['$scope', 'Receipt', '$state',
-      '$stateParams', 'Store', 'Item', 'ReceiptItem', 'Category', 'ReceiptService', '$rootScope', 
+      '$stateParams', 'Store', 'Item', 'ReceiptItem', 'Category', 
+      'ReceiptService', 'Tag', 'ReceiptTag', 
       function($scope, Receipt, $state, $stateParams, Store, 
-        Item, ReceiptItem, Category, ReceiptService, $rootScope) {
+        Item, ReceiptItem, Category, ReceiptService, Tag, ReceiptTag) {
 
     $scope.action = 'Edit';
     $scope.stores = [];
@@ -32,25 +44,10 @@
     $scope.selectedCategory;
     $scope.receipt = {};
     $scope.isDisabled = false;
-    $scope.delDisabled = true;  
-
-    $scope.items = [];        
-    $scope.newItem = function () {
-      console.log("go into newItem");
-      // Add Item input form
-      $scope.items.push({});
-      if($scope.items.length > 0){ 
-        $scope.delDisabled = false;
-      };
-    };
-
-    $scope.spliceItem = function(){
-      console.log("Item length: ", $scope.items.length);
-      $scope.items.splice($scope.items.length-1, 1);
-      if($scope.items.length < 1){ 
-        $scope.delDisabled = true;
-      };      
-    };
+    $scope.delDisabled = true;
+    $scope.tags = [];  
+    $scope.selectedTags=[];
+    $scope.selTagCount;    
 
     Store
       .find({
@@ -69,42 +66,54 @@
           }
         })
         .$promise
-        .then(function(receipt){            
+        .then(function(receipt){ 
+          console.log("receipt: ", receipt);   
+          // Set Items related to Receipt       
           $scope.receipt = receipt; 
           $scope.items = receipt.items;
           if($scope.items.length > 0){ 
             $scope.delDisabled = false;
-          };  
-
+          };
+          // Set selected Store
           var selectedStoreIndex = stores.map(function(store){ 
             return store.id;
           }).indexOf($scope.receipt.storeId);
           $scope.selectedStore = stores[selectedStoreIndex];   
-          console.log("$scope.selectedStore: ", $scope.selectedStore);  
-
           // Call to get the categories from selected store
-          //$scope.getStoreCategories($scope.receipt.storeId, $scope.receipt.categoryId);
-          ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, $scope.receipt.categoryId);
+          $scope.getStoreCategories($scope.selectedStore.id, $scope.receipt.categoryId);
+          // Get categories by selected store using Service named 'ReceiptService'
+          //ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, $scope.receipt.categoryId);                  
 
-          //get the all Categories
-          /*
-          Category.find()
+          // Set Tag related to Receipt
+          Tag.find()
             .$promise
-            .then(function(categories){
-                $scope.categories = categories;
-                var selectedCategoryIndex = categories.map(function(category){ 
-                  return category.id;
-                }).indexOf(receipt.categoryId);
-                $scope.selectedCategory = categories[selectedCategoryIndex]; 
+            .then(function(tags){
+              $scope.tags = tags;
+              if(receipt.tags.length > 0){
+                for(var i=0 ; i < receipt.tags.length ; i++){
+                  var selectedTagIndex = tags.map(function(tag){ 
+                    return tag.id;
+                  }).indexOf(receipt.tags[i].id);
+                  $scope.selectedTags.push(tags[selectedTagIndex]);
+                }
+                $scope.selTagCount=receipt.tags.length + " selected";
+              }
             });
-          */          
-        
+
         });
     });
+ 
+    /*
+    // Get categories by selected store using Service named 'ReceiptService'
+    $scope.changeStore = function(){
+      console.log("changeStore: ", $scope.selectedStore.name);
+      ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, null);
+    } 
+    */
 
-    // Get the Store's categories
-    $scope.getStoreCategories = function(storeId, categoryId){
-      
+    // Get the Store's categories using Controller's function (but duplicated)
+    $scope.getStoreCategories = function(storeId=$scope.selectedStore.id, categoryId=null){
+      console.log("changeStore: ", $scope.selectedStore.name);
       Store.findById({ 
         id: storeId,
         fields: {
@@ -125,15 +134,30 @@
             }).indexOf(categoryId);
             $scope.selectedCategory = categories[selectedCategoryIndex];
         }
-      }); 
+      });
+    }      
 
+    $scope.countSelectedTag = function(){
+      $scope.selTagCount=$scope.selectedTags.length + " selected";
     }
-  
-    $scope.changeStore = function(){
-      console.log("changeStore: ", $scope.selectedStore.name);
-      ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, null); 
-      //$scope.getStoreCategories($scope.selectedStore.id, null);
-    }   
+
+    $scope.items = [];        
+    $scope.newItem = function () {
+      console.log("go into newItem");
+      // Add Item input form
+      $scope.items.push({});
+      if($scope.items.length > 0){ 
+        $scope.delDisabled = false;
+      };
+    };
+
+    $scope.spliceItem = function(){
+      console.log("Item length: ", $scope.items.length);
+      $scope.items.splice($scope.items.length-1, 1);
+      if($scope.items.length < 1){ 
+        $scope.delDisabled = true;
+      };      
+    };
 
     $scope.changePrice = function(){
       //console.log("items.length: ", $scope.items.length);
@@ -148,7 +172,6 @@
       };   
     };
 
-
     $scope.submitForm = function() {
       //console.log("selectedCategory: ", $scope.selectedCategory);
       if($scope.selectedCategory !== undefined){
@@ -161,29 +184,46 @@
 
         Receipt.items.destroyAll(
           {id: $stateParams.id}, 
-          function(res){
-          for(var i=0 ; i < $scope.items.length ; i++){
-            Item
-            .create({
-              name: $scope.items[i].name,
-              price: $scope.items[i].price                
-            }, function(item){
-              console.log('item id : ', item.id);
-              ReceiptItem
-                .create({
-                  receiptId: $scope.receipt.id,
-                  itemId: item.id
-                });                
+          function(){
+            for(var i=0 ; i < $scope.items.length ; i++){
+              Item
+              .create({
+                name: $scope.items[i].name,
+                price: $scope.items[i].price                
+              }, function(item){
+                console.log('new related item id : ', item.id);
+                ReceiptItem
+                  .create({
+                    receiptId: $scope.receipt.id,
+                    itemId: item.id
+                  })
+                  .$promise;                
+              });
+            }
+
+            Receipt.tags.destroyAll({
+              id: $stateParams.id
+            })
+            .$promise
+            .then(function(){
+                for(var i = 0 ; i < $scope.selectedTags.length ; i++){
+                  ReceiptTag
+                    .create({
+                      receiptId: $scope.receipt.id,
+                      tagId: $scope.selectedTags[i].id
+                    })
+                    .$promise;                  
+                }
             });
-          }
-          $state.go('Receipts');           
+            $state.go('Receipts');           
         }); 
       });
     };
   }])
-  .controller('AddReceiptController', ['$scope', '$state', 
-      'Receipt', 'Store', 'Category', 'Item', 'ReceiptItem', 'ReceiptService', 
-      function($scope, $state, Receipt, Store, Category, Item, ReceiptItem, ReceiptService) {
+  .controller('AddReceiptController', ['$scope', '$state', 'Receipt', 'Store', 
+      'Category', 'Item', 'ReceiptItem', 'ReceiptService', 'Tag', 'ReceiptTag',  
+      function($scope, $state, Receipt, Store, Category, 
+        Item, ReceiptItem, ReceiptService, Tag, ReceiptTag) {
 
     $scope.action = 'Add';
     $scope.stores = [];
@@ -192,6 +232,9 @@
     $scope.receipt = {};
     $scope.isDisabled = false;
     $scope.delDisabled = true;
+    $scope.tags = [];  
+    $scope.selectedTags=[];
+    $scope.selTagCount;     
 
     Store
       .find()
@@ -199,25 +242,52 @@
       .then(function(stores){
         $scope.stores = stores;
         $scope.selectedStore = $scope.selectedStore;
-    });
 
-    // Get All categories
-    /* Don't need to get the all categories 
-    Category
-      .find()
-      .$promise
-      .then(function(categories){
-        $scope.categories = categories;
-        $scope.selectedCategory = $scope.selectedCategory;
+        // Set Tag related to Receipt
+        Tag.find()
+          .$promise
+          .then(function(tags){
+            $scope.tags = tags;
+        });
     });
-    */
-
-    // Get categories by selected store
+    
+    /*
+    // Get categories by selected store using Service named 'ReceiptService'
     $scope.changeStore = function(){
       console.log("changeStore: ", $scope.selectedStore.name);
-      ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, null);    
+      ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, null); 
     }
+    */
 
+    // Get categories by selected store using Controller's function (but duplicated)
+    $scope.getStoreCategories = function(storeId=$scope.selectedStore.id, categoryId=null){
+      console.log("changeStore: ", $scope.selectedStore.name);
+      Store.findById({ 
+        id: storeId,
+        fields: {
+          id: true,
+          name: true
+        },            
+        filter: {
+          include: 'categories'
+        }
+      })
+      .$promise
+      .then(function(store){
+        var categories = $scope.categories = store.categories;
+        //console.log("store.categories: ", store.categories);
+        if(store.categories.length > 0 && categoryId != null){
+            var selectedCategoryIndex = categories.map(function(category){ 
+              return category.id;
+            }).indexOf(categoryId);
+            $scope.selectedCategory = categories[selectedCategoryIndex];
+        }
+      });
+    }    
+
+    $scope.countSelectedTag = function(){
+      $scope.selTagCount=$scope.selectedTags.length + " selected";
+    }
 
     $scope.items = [];        
     $scope.newItem = function () {
@@ -262,20 +332,27 @@
           storeId: $scope.selectedStore.id,
           categoryId: $scope.selectedCategory.id
         }, function(receipt){           
-            for(var i=0 ; i < $scope.items.length ; i++){
-              Item
-                .create({
-                  name: $scope.items[i].name,
-                  price: $scope.items[i].price                
-                }, function(item){
-                  console.log('item id : ', item.id);
-                  ReceiptItem
-                    .create({
-                      receiptId: receipt.id,
-                      itemId: item.id
-                    });
-                });
-            }
+          for(var i=0 ; i < $scope.items.length ; i++){
+            Item
+              .create({
+                name: $scope.items[i].name,
+                price: $scope.items[i].price                
+              }, function(item){
+                console.log('item id : ', item.id);
+                ReceiptItem
+                  .create({
+                    receiptId: receipt.id,
+                    itemId: item.id
+                  });
+              });
+          };
+          for(var i = 0 ; i < $scope.selectedTags.length ; i++){
+            ReceiptTag
+              .create({
+                receiptId: receipt.id,
+                tagId: $scope.selectedTags[i].id
+              }).$promise;              
+          };            
       });
       $state.go('Receipts');
     };        

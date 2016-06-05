@@ -6,14 +6,14 @@
 		  	<label class="col-sm-2 control-label">Store name</label>
 		  	<div class="col-sm-4">
 		  		<select  class="form-control" 
-		  			ng-change="changeStore()" 
+		  			ng-change="getStoreCategories()" 
 		  			ng-disabled="isDisabled"  
 		  			ng-model="selectedStore" 
 		  			ng-options="store as store.name for store in stores">
 	  				<option value="" disabled selected hidden>Plase Choose...</option>
 	  			</select>
 		  	</div>
-		  	<label class="col-sm-2 control-label">Category</label>
+		  	<label class="col-sm-2 control-label" style="text-align:right;">Category</label>
 		  	<div class="col-sm-4">
 		  		<select  class="form-control" 
 		  			ng-model="selectedCategory" 
@@ -30,7 +30,7 @@
 				    	ame="itemname" placeholder="Item name" ng-model="item.name">
 			    </div>
 
-			    <label class="col-sm-2 control-label">Item price</label>
+			    <label class="col-sm-2 control-label" style="text-align:right;">Item price</label>
 			    <div class="col-sm-4">
 			    	<div class="input-group">
 			    	<div class="input-group-addon">$</div>
@@ -64,7 +64,7 @@
 						ng-model="receipt.total">  
 				</div>
 			</div>
-			<label class="col-sm-2 control-label">Number of items</label>
+			<label class="col-sm-2 control-label" style="text-align:right;"># Items</label>
 			<div class="col-sm-4">
 				<input type="number" class="form-control" name="numberOfItem" 
 					placeholder="Number of item" disabled="true"
@@ -73,11 +73,23 @@
 		</div>
 		<div class="row">
 			<label class="col-sm-2 control-label">Comment</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" name="comment" 
-					placeholder="Comment" ng-model="receipt.comment">
+			<div class="col-sm-4">
+				<textarea class="form-control" name="comment" rows="4" maxlength="140" 
+					placeholder="Comment" ng-model="receipt.comment"></textarea> 
 			</div>
 
+			<div class="col-sm-2 control-label" style="text-align:right;">
+		  	<label>Tag</label>
+		  	<br><span style="text-align:center;">{{selTagCount}}</span>
+		  	</div>
+		  	<div class="col-sm-4">
+		  		<select multiple size=5 ng-multiple="true" ng-click="countSelectedTag()"
+		  			ng-model="selectedTags" class="form-control" 
+		  			ng-options="tag as tag.name for tag in tags"></select>
+		  	</div>
+
+		</div>
+		<div class="row">
 			<div  class="col-sm-offset-2 col-sm-10">
 				<button class="btn btn-primary"  ng-click="submitForm()"
 					ng-disabled="delDisabled">{{ action }} Receipt</button>

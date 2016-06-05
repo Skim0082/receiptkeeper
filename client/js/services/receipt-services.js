@@ -1,7 +1,6 @@
 angular
   .module('app')
   .factory('ReceiptService', ['Store', '$rootScope',  function(Store, $rootScope){
-
     function getCategoriesBySelectedStore(storeId, categoryId){
       return Store
         .findById({ 
@@ -31,7 +30,6 @@ angular
           }
         }); 
     };
-
     return {
       getCategoriesBySelectedStore: getCategoriesBySelectedStore
     };
