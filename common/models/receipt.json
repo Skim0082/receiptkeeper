@@ -17,6 +17,9 @@
       "type": "number",
       "required": true
     },
+    "date": {
+      "type": "date"
+    },    
     "error": {
       "type": "boolean",
       "required": true,

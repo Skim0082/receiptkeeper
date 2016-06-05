@@ -141,6 +141,11 @@
       $scope.selTagCount=$scope.selectedTags.length + " selected";
     }
 
+    $scope.openCalendar = function(){
+      $('#datetimepicker1').datetimepicker();
+      $scope.receipt.date = $('#datetimepicker1 input').prop('value');
+    }
+
     $scope.items = [];        
     $scope.newItem = function () {
       console.log("go into newItem");
@@ -156,6 +161,8 @@
       $scope.items.splice($scope.items.length-1, 1);
       if($scope.items.length < 1){ 
         $scope.delDisabled = true;
+        $scope.receipt.numberOfItem = "";
+        $scope.receipt.total = "";        
       };      
     };
 
@@ -177,7 +184,8 @@
       if($scope.selectedCategory !== undefined){
         $scope.receipt.categoryId = $scope.selectedCategory.id;
       }
-      $scope.receipt.storeId = $scope.selectedStore.id;      
+      $scope.receipt.storeId = $scope.selectedStore.id;  
+      $scope.receipt.date = $scope.receipt.date = $('#datetimepicker1 input').prop('value');    
       $scope.receipt
       .$save()
       .then(function(){
@@ -289,9 +297,14 @@
       $scope.selTagCount=$scope.selectedTags.length + " selected";
     }
 
+    $scope.openCalendar = function(){
+      $('#datetimepicker1').datetimepicker();
+      $scope.receipt.date = $('#datetimepicker1 input').prop('value');
+    }
+
     $scope.items = [];        
     $scope.newItem = function () {
-      console.log("go into newItem");
+      //console.log("go into newItem");
       // Add Item input form
       $scope.items.push({});
       if($scope.items.length > 0){ 
@@ -301,34 +314,38 @@
     };
 
     $scope.spliceItem = function(){
-      console.log("Item length: ", $scope.items.length);
+      //console.log("Item length: ", $scope.items.length);
       $scope.items.splice($scope.items.length-1, 1);
       if($scope.items.length < 1){ 
         $scope.delDisabled = true;
+        $scope.receipt.numberOfItem="" ;
+        $scope.receipt.total="";         
       };
       this.changePrice();
     };        
 
     $scope.changePrice = function(){
-      console.log("items.length: ", $scope.items.length);
+      //console.log("items.length: ", $scope.items.length);
       $scope.totalprice=0;
       if($scope.items.length > 0){ 
         for(var i = 0 ; i < $scope.items.length ; i++){
           $scope.totalprice += $scope.items[i].price;
         };
-        console.log("total price: ", $scope.totalprice);
+        //console.log("total price: ", $scope.totalprice);
         $scope.receipt.numberOfItem = $scope.items.length;
         $scope.receipt.total = $scope.totalprice;
       };   
     };
 
     $scope.submitForm = function() {
-      //console.log(" go into submitForm");
+      $scope.receipt.date = $scope.receipt.date = $('#datetimepicker1 input').prop('value');
+      console.log("receipt.date: ", $scope.receipt.date);
       Receipt
         .create({
           comment: $scope.receipt.comment, 
           numberOfItem: $scope.receipt.numberOfItem, 
           total: $scope.receipt.total, 
+          date: $scope.receipt.date,
           storeId: $scope.selectedStore.id,
           categoryId: $scope.selectedCategory.id
         }, function(receipt){           

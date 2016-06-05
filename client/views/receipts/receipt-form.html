@@ -22,6 +22,30 @@
 	  			</select>
 		  	</div>		  	
 	  	</div>
+		<!-- date picker -->
+	    <div class="row">
+	    	<label class="col-sm-2 control-label">Date</label>
+	        <div class='col-sm-4'>
+	            <div class="form-group">
+	                <div class='input-group date' id='datetimepicker1'>
+	                    <input type='text' class="form-control" ng-model="receipt.date">
+	                    <span class="input-group-addon">
+	                        <span class="glyphicon glyphicon-calendar" ng-click="openCalendar()"></span>
+	                    </span>
+	                </div>
+	            </div>
+	        </div>
+			<div class="col-sm-offset-2 col-sm-2">
+				<button class="btn btn-default" ng-click="newItem()">Add Item</button>
+			</div>
+			<div class="col-sm-2">
+				<button class="btn btn-warning" ng-click="spliceItem()" ng-disabled="delDisabled">Del Item</button>
+			</div>			
+
+			<div class="col-sm-offset-2 col-sm-10">
+			<hr style="margin-top:0">
+			</div>
+		</div>	  	
 		<div ng-repeat="item in items">
 			<div class="row">
 			  	<label class="col-sm-2 control-label">Item name</label>
@@ -42,19 +66,6 @@
 		</div>
 
 		<div class="row">
-			<div class="col-sm-offset-2 col-sm-4">
-				<button class="btn btn-default" ng-click="newItem()">Add Item</button>
-			</div>
-			<div class="col-sm-4 col-sm-offset-2">
-				<button class="btn btn-warning" ng-click="spliceItem()" ng-disabled="delDisabled">Del Item</button>
-			</div>			
-		</div>
-		<div class="row">
-			<div class="col-sm-offset-2 col-sm-10">
-			<hr>
-			</div>
-		</div>
-		<div class="row">
 			<label class="col-sm-2 control-label">Total Price</label>
 			<div class="col-sm-4">
 		    	<div class="input-group">
@@ -72,6 +83,9 @@
 			</div>
 		</div>
 		<div class="row">
+			<div class="col-sm-offset-2 col-sm-10">
+			<hr style="margin-top:0">
+			</div>		
 			<label class="col-sm-2 control-label">Comment</label>
 			<div class="col-sm-4">
 				<textarea class="form-control" name="comment" rows="4" maxlength="140" 

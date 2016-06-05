@@ -8,7 +8,8 @@
   "mixins": {
     "TimeStamp": true
   },
-  "properties": {},
+  "properties": {   
+  },
   "validations": [],
   "relations": {
     "receipt": {
