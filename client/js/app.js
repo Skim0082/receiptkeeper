@@ -160,10 +160,34 @@ angular
 			templateUrl: 'views/users/signup.html',
 			controller: 'SignUpController'
 		})
-      .state('forbidden', {
-        url: '/forbidden',
-        templateUrl: 'views/pages/forbidden.html'
-      });
+		.state('Profile', {
+			url: '/Profile',
+			templateUrl: 'views/users/profile.html',
+			controller: 'ProfileController'
+		})
+		.state('Groups', {
+			url: '/Groups',
+			templateUrl: 'views/groups/groups.html',
+			controller: 'AllGroupsController'
+		})	
+		.state('addGroup', {
+			url: '/addGroup',
+			templateUrl: 'views/groups/group-form.html',
+			controller: 'AddGroupController'
+		})	
+		.state('editGroup', {
+			url: '/editGroup/:id',
+			templateUrl: 'views/groups/group-form.html',
+			controller: 'EditGroupController'
+		})
+		.state('deleteGroup', {
+	        url: '/deleteGroup/:id',
+	        controller: 'DeleteGroupController'
+      	}) 					
+		.state('forbidden', {
+		url: '/forbidden',
+		templateUrl: 'views/pages/forbidden.html'
+		});
 
    $urlRouterProvider.otherwise('Home');
 

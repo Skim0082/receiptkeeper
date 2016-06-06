@@ -12,17 +12,20 @@ angular
     $scope.login = function() {
       AuthService.login($scope.user.email, $scope.user.password)
         .then(function() {
-          //console.log("currentCustomer: ", $scope);
-          $state.go('Receipts');
+          //console.log("currentUser: ", $scope.currentUser);
+          $state.go('Profile');
+          //$state.go('Groups');
         });
     };
   }])
-  .controller('AuthLogoutController', ['$scope', 'AuthService', '$state',
-      function($scope, AuthService, $state) {
-    AuthService.logout()
-      .then(function() {
-        $state.go('Home');
+  .controller('AuthLogoutController', ['$scope', 'AuthService', '$state', '$rootScope', 
+      function($scope, AuthService, $state, $rootScope) {
+      AuthService.logout()
+        .then(function() {
+          $state.go('Home');
       });
+      $rootScope.currentUser = null;   
+      $state.go('Home');        
   }])
   .controller('SignUpController', ['$scope', 'AuthService', '$state',
       function($scope, AuthService, $state) {
@@ -52,7 +55,12 @@ angular
           $state.go('Customers');
         });
     };
-  }])  
+  }]) 
+  .controller('ProfileController', [
+    '$scope', 'Customer', '$rootScope', function($scope, Customer, $rootScope) {
+      $scope.user = Customer.findById({id: $rootScope.currentUser.id});
+      console.log("loggedin user; ", $scope.user);
+  }])   
   .controller('AllCustomersController', [
     '$scope', 'Customer', function($scope, Customer) {
       $scope.users = Customer.find();
