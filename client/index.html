@@ -55,9 +55,9 @@
             Account <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="/#/Profile">Profile</a></li>
-            <li><a href="/#/Groups">Group</a></li>             
-            <li><a href="">Settings</a></li>
+            <li ng-show="currentUser"><a href="/#/Profile">Profile</a></li>
+            <li ng-show="currentUser"><a href="/#/Groups">Group</a></li>             
+            <li ng-show="currentUser"><a href="">Settings</a></li>
             <li class="divider"></li>
             <li ng-hide="currentUser">
               <a rel="nofollow" href="/#/Login">Log in</a>

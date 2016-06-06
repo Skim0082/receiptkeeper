@@ -52,6 +52,11 @@
       "model": "Store",
       "foreignKey": "storeId"
     },
+    "customer": {
+      "type": "belongsTo",
+      "model": "Customer",
+      "foreignKey": "customerId"
+    },    
     "tags": {
       "type": "hasMany",
       "model": "Tag",

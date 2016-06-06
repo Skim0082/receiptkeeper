@@ -14,6 +14,12 @@
     },
     "gender": {
       "type": "number"
+    },
+    "groupId": {
+      "type": "string",
+      "id": false,
+      "required": false,
+      "index": false
     }
   },
   "validations": [],
