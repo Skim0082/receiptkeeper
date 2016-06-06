@@ -3,11 +3,13 @@
  angular
   .module('app')
   .controller('AllReceiptsController', [
-  	'$scope', 'Receipt', function($scope, Receipt) {
+  	'$scope', 'Receipt', '$rootScope', function($scope, Receipt, $rootScope) {
+      var userId = $rootScope.currentUser.id;
 	    $scope.receipts = Receipt.find({
         filter: {
           order: 'createdAt DESC', 
-          include: 'store'
+          include: ['store', 'customer'],
+          where: {customerId: userId}
         }
       });
       console.log($scope.receipts);
@@ -229,9 +231,9 @@
     };
   }])
   .controller('AddReceiptController', ['$scope', '$state', 'Receipt', 'Store', 
-      'Category', 'Item', 'ReceiptItem', 'ReceiptService', 'Tag', 'ReceiptTag',  
+      'Category', 'Item', 'ReceiptItem', 'ReceiptService', 'Tag', 'ReceiptTag', '$rootScope',   
       function($scope, $state, Receipt, Store, Category, 
-        Item, ReceiptItem, ReceiptService, Tag, ReceiptTag) {
+        Item, ReceiptItem, ReceiptService, Tag, ReceiptTag, $rootScope) {
 
     $scope.action = 'Add';
     $scope.stores = [];
@@ -339,7 +341,8 @@
 
     $scope.submitForm = function() {
       $scope.receipt.date = $scope.receipt.date = $('#datetimepicker1 input').prop('value');
-      console.log("receipt.date: ", $scope.receipt.date);
+      //console.log("receipt.date: ", $scope.receipt.date);
+      var userId = $rootScope.currentUser.id;
       Receipt
         .create({
           comment: $scope.receipt.comment, 
@@ -347,6 +350,7 @@
           total: $scope.receipt.total, 
           date: $scope.receipt.date,
           storeId: $scope.selectedStore.id,
+          customerId: userId,
           categoryId: $scope.selectedCategory.id
         }, function(receipt){           
           for(var i=0 ; i < $scope.items.length ; i++){
