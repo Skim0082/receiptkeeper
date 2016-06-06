@@ -6,7 +6,7 @@
 		  	<label class="col-sm-2 control-label">Store name</label>
 		  	<div class="col-sm-4">
 		  		<select  class="form-control" 
-		  			ng-change="getStoreCategories()" 
+		  			ng-change="getStoreCategories(selectedStore.id)" 
 		  			ng-disabled="isDisabled"  
 		  			ng-model="selectedStore" 
 		  			ng-options="store as store.name for store in stores">

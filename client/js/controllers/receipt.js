@@ -114,8 +114,8 @@
     */
 
     // Get the Store's categories using Controller's function (but duplicated)
-    $scope.getStoreCategories = function(storeId=$scope.selectedStore.id, categoryId=null){
-      console.log("changeStore: ", $scope.selectedStore.name);
+    $scope.getStoreCategories = function(storeId, categoryId = null){
+      //console.log("changeStore: ", $scope.selectedStore.name);
       Store.findById({ 
         id: storeId,
         fields: {
@@ -270,8 +270,8 @@
     */
 
     // Get categories by selected store using Controller's function (but duplicated)
-    $scope.getStoreCategories = function(storeId=$scope.selectedStore.id, categoryId=null){
-      console.log("changeStore: ", $scope.selectedStore.name);
+    $scope.getStoreCategories = function(storeId, categoryId = null){
+      //console.log("changeStore: ", storeId);
       Store.findById({ 
         id: storeId,
         fields: {
