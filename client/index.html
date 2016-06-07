@@ -8,9 +8,12 @@
    <title>Receipt Keeper - MSD Capstone Project</title>
  
    <!-- Bootstrap -->
-   <link href="vendor/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
-   <link href="css/style.css" rel="stylesheet">
-   <link href="css/custom.css" rel="stylesheet">
+  <link href="vendor/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/custom.css" rel="stylesheet">
+  <link href="css/sb-admin-2.css" rel="stylesheet">
+  <link href="vendor/angular-loading-bar/build/loading-bar.min.css" rel="stylesheet">
+  <link href="css/font-awesome.min.css" rel="stylesheet">  
  
    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -50,7 +53,7 @@
         <li class="dropdown">
           <a href="" class="dropdown-toggle" data-toggle="dropdown">
             <i class="glyphicon glyphicon-inbox"></i>
-            Pre-Define <b class="caret"></b>
+            Config <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">
             <li>
@@ -80,13 +83,12 @@
             </li> 
           </ul>
         </li>
-
         <li>
-          <a href="/#/addFile">
-            <i class="glyphicon glyphicon-open"></i>
-            File
+          <a href="/#/chart">
+            <i class="glyphicon glyphicon-equalizer"></i> 
+            Chart
           </a>
-        </li>
+        </li>         
         <li>
           <a href="/#/Customers">
             <i class="glyphicon glyphicon-dashboard"></i>
@@ -96,7 +98,7 @@
         <li class="dropdown">
           <a href="" class="dropdown-toggle" data-toggle="dropdown">
             <i class="glyphicon glyphicon-user"></i>
-            Account 
+            User
             <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">
@@ -118,13 +120,19 @@
                 <i class="glyphicon glyphicon-blackboard"></i> 
                 Group
               </a>
-            </li>
+            </li>  
             <li ng-show="currentUser">
-              <a href="/#/">
+              <a href="/#/Dashboard">
                 <i class="glyphicon glyphicon-equalizer"></i> 
                 Dashboard
               </a>
-            </li>                           
+            </li>  
+            <li ng-show="currentUser">
+              <a href="/#/addFile">
+                <i class="glyphicon glyphicon-open"></i>
+                File
+              </a>
+            </li>                                              
             <li ng-show="currentUser">
               <a href="">
                 <i class="glyphicon glyphicon-cog"></i>
@@ -196,6 +204,12 @@
   <script src="js/controllers/tag.js"></script>
   <script src="js/controllers/group.js"></script>
   <script src="js/controllers/category.js"></script>
+
+  <script src="vendor/json3/lib/json3.min.js"></script>
+  <script src="vendor/oclazyload/dist/ocLazyLoad.min.js"></script>
+  <script src="vendor/angular-loading-bar/build/loading-bar.min.js"></script>
+  <script src="vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>  
+  <script src="vendor/Chart.js/Chart.min.js"></script>
 
 
 

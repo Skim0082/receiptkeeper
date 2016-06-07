@@ -1263,6 +1263,12 @@ module.factory(
           method: "HEAD"
         },
 
+        // INTERNAL. Use Receipt.customer() instead.
+        "prototype$__get__customer": {
+          url: urlBase + "/Receipts/:id/customer",
+          method: "GET"
+        },
+
         // INTERNAL. Use Receipt.items() instead.
         "prototype$__get__items": {
           isArray: true,
@@ -3032,6 +3038,42 @@ module.factory(
         R.tags.updateById = function() {
           var TargetResource = $injector.get("Tag");
           var action = TargetResource["::updateById::Receipt::tags"];
+          return action.apply(R, arguments);
+        };
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Receipt#customer
+         * @methodOf lbServices.Receipt
+         *
+         * @description
+         *
+         * Fetches belongsTo relation customer.
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `refresh` – `{boolean=}` - 
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `Customer` object.)
+         * </em>
+         */
+        R.customer = function() {
+          var TargetResource = $injector.get("Customer");
+          var action = TargetResource["::get::Receipt::customer"];
           return action.apply(R, arguments);
         };
 
@@ -12745,6 +12787,12 @@ module.factory(
         "resetPassword": {
           url: urlBase + "/Customers/reset",
           method: "POST"
+        },
+
+        // INTERNAL. Use Receipt.customer() instead.
+        "::get::Receipt::customer": {
+          url: urlBase + "/Receipts/:id/customer",
+          method: "GET"
         },
 
         // INTERNAL. Use CustomerGroup.customer() instead.

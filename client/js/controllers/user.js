@@ -12,7 +12,7 @@ angular
       AuthService.login($scope.user.email, $scope.user.password)
         .then(function() {
           //Check the invalid user, and giving a message will need
-          $state.go('Profile');
+          $state.go('Dashboard');
         });
     };
   }])

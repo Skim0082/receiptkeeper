@@ -5,10 +5,18 @@ angular
     'ui.router',
     'lbServices',
     'angularFileUpload',
-    'btorfs.multiselect'
+    'btorfs.multiselect',
+    'oc.lazyLoad',
+    'angular-loading-bar'
  ])
- .config(['$stateProvider', '$urlRouterProvider', function(
- 	$stateProvider, $urlRouterProvider) {
+ .config(['$stateProvider', '$urlRouterProvider', '$ocLazyLoadProvider', function(
+ 	$stateProvider, $urlRouterProvider, $ocLazyLoadProvider) {
+
+    $ocLazyLoadProvider.config({
+      debug:false,
+      events:true,
+    });	
+
    $stateProvider  
 		.state('Home', {
 			url: '/Home',
@@ -183,11 +191,39 @@ angular
 		.state('deleteGroup', {
 	        url: '/deleteGroup/:id',
 	        controller: 'DeleteGroupController'
-      	}) 					
+      	})
+		.state('Charts', {
+			url: '/Charts',
+			templateUrl: 'views/users/charts.html'
+		})       	
+		.state('Dashboard', {
+			url: '/Dashboard',
+			templateUrl: 'views/users/dashboard.html'
+		})      	 					
 		.state('forbidden', {
-		url: '/forbidden',
-		templateUrl: 'views/pages/forbidden.html'
-		});
+			url: '/forbidden',
+			templateUrl: 'views/pages/forbidden.html'
+		})
+		.state('chart',{
+			url:'/chart',
+			templateUrl:'views/users/chart.html',			
+			controller:'ChartCtrl',
+			resolve: {
+			  loadMyFile:function($ocLazyLoad) {
+			    return $ocLazyLoad.load({
+			      name:'chart.js',
+			      files:[
+			        'vendor/angular-chart.js/dist/angular-chart.min.js',
+			        'vendor/angular-chart.js/dist/angular-chart.css'
+			      ]
+			    }),
+			    $ocLazyLoad.load({
+			        name:'app',
+			        files:['js/controllers/chart.js']
+			    })
+			  }
+			}
+		});	
 
    $urlRouterProvider.otherwise('Home');
 
