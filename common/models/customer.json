@@ -9,6 +9,9 @@
     "TimeStamp": true
   },
   "properties": {
+    "name": {
+      "type": "string"
+    },
     "dateOfBirth": {
       "type": "date"
     },

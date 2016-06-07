@@ -1,12 +1,9 @@
 {
-  "name": "Group",
+  "name": "GroupType",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
-  },
-  "mixins": {
-    "TimeStamp": true
   },
   "properties": {
     "name": {
@@ -14,25 +11,23 @@
       "required": true
     },
     "limitedMember": {
-      "type": "number"
+      "type": "number",
+      "required": true,
+      "default": "5"
     },
     "limitedReceipt": {
-      "type": "number"
+      "type": "number",
+      "required": true,
+      "default": "50"
     }
   },
   "validations": [],
   "relations": {
-    "customers": {
+    "groups": {
       "type": "hasMany",
-      "model": "Customer",
-      "foreignKey": "",
-      "through": "CustomerGroup"
-    },
-    "grouptype": {
-      "type": "belongsTo",
-      "model": "GroupType",
-      "foreignKey": "groupTypeId"
-    }   
+      "model": "Group",
+      "foreignKey": ""
+    }
   },
   "acls": [],
   "methods": {}

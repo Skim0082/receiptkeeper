@@ -65,7 +65,8 @@
               scope: {
                 order: 'createdAt DESC', 
                 fields: ['id', 'name'],
-                limit: 1
+                limit: 1,
+                include: 'grouptype'                
               }
             }
           }
@@ -73,6 +74,7 @@
         .$promise
         .then(function(customer){
           $scope.groups = customer.groups;
+          //console.log("customer-groups: ", customer);
           if(customer.groups.length > 0){
             $scope.isDisabled = true;
           }else{

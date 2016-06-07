@@ -108,5 +108,9 @@
   "Container": {
     "dataSource": "storage",
     "public": true
+  },
+  "GroupType": {
+    "dataSource": "MongoDB",
+    "public": true
   }
 }

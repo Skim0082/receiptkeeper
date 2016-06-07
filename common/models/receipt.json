@@ -19,7 +19,7 @@
     },
     "date": {
       "type": "date"
-    },    
+    },
     "error": {
       "type": "boolean",
       "required": true,
@@ -37,7 +37,7 @@
       "id": false,
       "required": false,
       "index": false
-    }    
+    }
   },
   "validations": [],
   "relations": {
@@ -56,7 +56,7 @@
       "type": "belongsTo",
       "model": "Customer",
       "foreignKey": "customerId"
-    },    
+    },
     "tags": {
       "type": "hasMany",
       "model": "Tag",
