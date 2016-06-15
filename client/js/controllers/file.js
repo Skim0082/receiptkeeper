@@ -3,8 +3,9 @@
 angular
   .module('app')
   // The example of the full functionality
-  .controller('UploadController',['$state', '$scope', 'FileUploader', '$rootScope',
-            function ($state, $scope, FileUploader, $rootScope) {
+  .controller('UploadController',['$state', '$scope', 'FileUploader', 
+      '$rootScope', 'Container', 
+            function ($state, $scope, FileUploader, $rootScope, Container) {
     'use strict';
 
 
