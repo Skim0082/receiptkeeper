@@ -21,8 +21,8 @@ angular.module('app')
     };
 
     $scope.bar = {
-	    labels: ['2006', '2007', '2008', '2009', '2010', '2011', '2012'],
-		series: ['Series A', 'Series B'],
+	    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+		series: ['2015', '2016'],
 
 		data: [
 		   [65, 59, 80, 81, 56, 55, 40],
