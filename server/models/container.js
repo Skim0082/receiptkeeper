@@ -1,5 +1,5 @@
 module.exports = function(Container) {
-
+	/*
 	var qt = require('quickthumb');
 
     Container.afterRemote('upload', function(ctx,  res, next) {
@@ -22,5 +22,6 @@ module.exports = function(Container) {
 		);   
       	next();
     }); //afterRemote..
+    */
 
 };
