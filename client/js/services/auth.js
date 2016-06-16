@@ -5,8 +5,8 @@
 
 angular
   .module('app')
-  .factory('AuthService', ['Customer', '$q', '$rootScope', function(User, $q,
-      $rootScope) {
+  .factory('AuthService', ['Customer', '$q', '$rootScope',   
+    function(User, $q, $rootScope) {
     function login(email, password) {
       return User
         .login({email: email, password: password})

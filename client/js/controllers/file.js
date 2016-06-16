@@ -8,7 +8,6 @@ angular
             function ($state, $scope, FileUploader, $rootScope, Container) {
     'use strict';
 
-
       var userId = "";
       var repositoryPath = "";
       
@@ -16,11 +15,29 @@ angular
         $state.go('forbidden');
       }else{
         userId = $rootScope.currentUser.id;
-        repositoryPath = userId + '/';     
+        repositoryPath = userId + '/'; 
+
+        Container.getContainers(function(container){
+          console.log("container: ", container);
+          var isContainer = false;
+          for(var i = 0; i < container.length; i++){
+            if(container[i].name == userId){
+              isContainer = true;
+              break;
+            }           
+          }
+          if(isContainer == false){
+            Container.createContainer({
+              name: userId
+            },function(data){
+                console.log("new container: ", data);
+              }
+            );               
+          }          
+        });
       }     
 
     // create a uploader with options
-
     var uploader = $scope.uploader = new FileUploader({
       scope: $scope,                          // to automatically update the html. Default: $rootScope
       url: '/api/containers/' + repositoryPath + 'upload',
@@ -85,7 +102,7 @@ angular
       console.info('Complete all');
     };
     // --------------------
-    console.info('uploader: ', uploader);
+    //console.info('uploader: ', uploader);
   }
 ]).controller('FilesController',['$state', '$scope', '$http', '$rootScope', 
     function ($state, $scope, $http, $rootScope) {
@@ -102,7 +119,7 @@ angular
 
     $scope.load = function () {
       $http.get('/api/containers/' + repositoryPath + 'files').success(function (data) {
-        console.log("file data: ", data);
+        //console.log("file data: ", data);
         $scope.files = data;
         $scope.filepath = repositoryPath;
       });
