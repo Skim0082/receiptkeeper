@@ -13,12 +13,11 @@
       "type": "string",
       "required": true
     },
-    "limitedMember": {
-      "type": "number"
-    },
-    "limitedReceipt": {
-      "type": "number"
-    }
+    "type": {
+      "type": "string",
+      "required": false,
+      "default": "member"
+    }    
   },
   "validations": [],
   "relations": {
@@ -32,7 +31,7 @@
       "type": "belongsTo",
       "model": "GroupType",
       "foreignKey": "groupTypeId"
-    }   
+    }
   },
   "acls": [],
   "methods": {}
