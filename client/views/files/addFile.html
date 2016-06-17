@@ -10,27 +10,27 @@
             <div ng-show="uploader.isHTML5">
                 <!-- 3. nv-file-over | nv-file-over="className" -->
                 <div class="well my-drop-zone" nv-file-over uploader="uploader">
-                    Base drop zone
+                    Drop receipt here
                 </div>
             </div>
                 <!-- The fileinput-button span is used to style the file input field as button -->
                 <span class="btn btn-primary fileinput-button" ng-class="{disabled: disabled}">
                     <i class="glyphicon glyphicon-plus"></i>
-                    <span>Add Receipts...</span>
+                    <span>Add Receipt...</span>
                     <input nv-file-select uploader="uploader" type="file" multiple ng-disabled="disabled"/>
                 </span>            
         </div>
 
         <div class="col-md-9" style="margin-bottom: 40px">
 
-            <h3>Request receipt file list</h3>
+            <h3>Request receipt</h3>
 
-            <p>Number of upload: {{ uploader.queue.length }}</p>
+            <p>Number of receipt: {{ uploader.queue.length }}</p>
 
             <table class="table">
                 <thead>
                 <tr>
-                    <th width="50%">Name</th>
+                    <th>Name</th>
                     <th ng-show="uploader.isHTML5">Size</th>
                     <th ng-show="uploader.isHTML5">Progress</th>
                     <th>Status</th>
@@ -67,12 +67,14 @@
                             <span class="glyphicon glyphicon-upload"></span>
                             Upload
                         </button>
+                        <!--
                         <button type="button" class="btn btn-warning btn-xs"
                                 ng-click="item.cancel()"
                                 ng-disabled="!item.isUploading">
                             <span class="glyphicon glyphicon-ban-circle"></span>
                             Cancel
                         </button>
+                        -->
                         <button type="button" class="btn btn-danger btn-xs"
                                 ng-click="item.remove()">
                             <span class="glyphicon glyphicon-trash"></span>
@@ -97,12 +99,14 @@
                         ng-disabled="!uploader.getNotUploadedItems().length">
                     <span class="glyphicon glyphicon-upload"></span> Upload all
                 </button>
+                <!--
                 <button type="button" class="btn btn-warning btn-s"
                         ng-click="uploader.cancelAll()"
                         ng-disabled="!uploader.isUploading">
                     <span class="glyphicon glyphicon-ban-circle"></span> Cancel
                     all
                 </button>
+                -->
                 <button type="button" class="btn btn-danger btn-s"
                         ng-click="uploader.clearQueue()"
                         ng-disabled="!uploader.queue.length">
@@ -112,7 +116,7 @@
 
         </div>
 
-        <div class="col-md-9" style="margin-bottom: 40px"
+        <div class="col-md-offset-3 col-md-9" style="margin-bottom: 40px"
              ng-controller="FilesController" data-ng-init="load()">
 
             <h3>Receipts in my repository</h3>
@@ -134,17 +138,15 @@
                         <a href="/api/containers/{{filepath}}/thumb/download/{{file.name}}"></a>
                     </td>
                     <td>
+                    </td>
                     <td>
-                        <button type="button" class="btn btn-danger btn-xs"
+                        <button type="button" class="btn btn-danger btn-xs text-right"
                                 ng-click="delete($index, file.name)"
                                 title="Delete the file">
                             <span class="glyphicon glyphicon-trash"></span>
                             Remove
                         </button>
-
-                    </td>
-                    </button>
-                    </td>
+                    </td>                  
                 </tr>
                 </tbody>
             </table>
