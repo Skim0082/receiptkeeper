@@ -17,7 +17,14 @@
       "type": "string",
       "required": false,
       "default": "member"
-    }    
+    },
+    "ownerId": {
+      "type": "string",
+      "id": false,
+      "required": false,
+      "index": false,
+      "default": ""
+    }            
   },
   "validations": [],
   "relations": {
