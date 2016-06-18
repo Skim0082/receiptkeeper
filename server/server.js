@@ -3,8 +3,8 @@ var boot = require('loopback-boot');
 
 var app = module.exports = loopback();
 
-//var path = require('path');
-//app.use(loopback.static(path.resolve(__dirname, '../client')));
+// use loopback.context on all routes
+app.use(loopback.context());
 
 app.start = function() {
   // start the web server
@@ -18,9 +18,6 @@ app.start = function() {
     }
   });
 };
-
-// Use cookies for authentication
-app.use(loopback.token({ model: app.models.accessToken }));
 
 // Bootstrap the application, configure models, datasources and middleware.
 // Sub-apps like REST API are mounted via boot scripts.
