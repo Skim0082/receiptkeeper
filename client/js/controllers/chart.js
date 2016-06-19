@@ -15,6 +15,7 @@ angular.module('app')
     var totals;
     var dates; 
     var monthlyTotal;
+    var monthlyTotalLastYear;
     var monthNum;
     var monthNameFromDate; 
 
@@ -35,6 +36,7 @@ angular.module('app')
         totals = [];
         dates = []; 
         monthlyTotal = [];
+        monthlyTotalLastYear = [];
         monthNum = [];
         monthNameFromDate = [];         
 
@@ -56,6 +58,7 @@ angular.module('app')
             var monthTotal = 0;
             var thisMonth = 0;
             var nextMonth = 0;
+            var randomValue = 0;
             for(var i = totals.length -1 ; i >= 0 ; i--){
                 monthTotal += totals[i];
                 thisMonth = (new Date(dates[i])).getMonth();
@@ -64,26 +67,48 @@ angular.module('app')
                     if(thisMonth != nextMonth){
                         monthlyTotal.push(monthTotal);
                         monthNum.push(thisMonth);
+                        //Test data using 2016 from database
+                        randomValue = monthTotal + Math.floor(Math.random() * 300) + 100;
+                        monthlyTotalLastYear.push(randomValue);
                         monthTotal = 0;
                     }
                 }else{
                     monthlyTotal.push(monthTotal);
                     monthNum.push(thisMonth);
+                    //Test data using 2016 from database
+                    randomValue = monthTotal + Math.floor(Math.random() * 300) + 100;
+                    monthlyTotalLastYear.push(randomValue);
+                    monthTotal = 0;
                 }
             }
             for(var i = 0; i < monthNum.length ; i++){
                 monthNameFromDate.push(monthNames[monthNum[i]]);
             }              
         });
+        console.log("last year month: ", monthlyTotalLastYear);
 
         // Line Chart retrieved from real data of database
         $scope.line = {
-            labels: monthNameFromDate,   //['January', 'February', 'March', 'April', 'May', 'June'],        
-            series: [$scope.thisYear],   //series: ['2016'],
+            labels: monthNameFromDate,      //['January', 'February', 'March', 'April', 'May', 'June'],        
+            series: [$scope.thisYear],      //series: ['2016'],
             data: [
-                monthlyTotal              //[1900, 1650, 1700, 2100, 1600, 1800]
+                monthlyTotal                //[1900, 1650, 1700, 2100, 1600, 1800]
             ]
-        };                
+        }; 
+
+        // Bar Chart comparion of monthly of each year
+        // not the real data test using 2016 data from database
+        $scope.bar = {
+            labels: monthNameFromDate,
+            series: [$scope.thisYear-1, $scope.thisYear],
+            data: [
+               monthlyTotal,
+               monthlyTotalLastYear
+            ]
+            
+        };
+
+
     }
     // When change the range of month, re-draw line chart
     $scope.changRangeOfMonth = function(){
@@ -106,7 +131,7 @@ angular.module('app')
         }
     };    
     */
-
+    /*
     $scope.bar = {
         labels: ['January', 'February', 'March', 'April', 'May', 'June'],
     	series: ['2015', '2016'],
@@ -117,6 +142,7 @@ angular.module('app')
     	]
     	
     };
+    */
 
     $scope.donut = {
     	labels: ["Applicances", "Clothing", "Electronics", "Helth & Pharmacy", "Furniture", "Grocery"],

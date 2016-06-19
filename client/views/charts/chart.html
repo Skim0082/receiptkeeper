@@ -11,7 +11,7 @@
             <div class="panel-heading">
                 {{thisYear}} Monthly consumption 
                 <select class="form-inline"  
-                    style="width:80px;margin-bottom:0;margin-left:10px;"  
+                    style="width:100px;margin-bottom:0;margin-left:10px;"  
                     ng-change="changRangeOfMonth()" 
                     ng-model="selectedMonth">
                     <option value="" disabled selected hidden>Range...</option>
@@ -26,7 +26,7 @@
     </div>
     <div class="col-lg-6 col-sm-6" id="bar-chart">
         <div class="panel panel-default">
-            <div class="panel-heading">Comparison of 2015 (monthly)</div>
+            <div class="panel-heading">Comparison of {{thisYear-1}} (monthly)</div>
             <div class="panel-body">
                 <canvas id="bar" class="chart chart-bar" data="bar.data" labels="bar.labels" series="bar.series"
                 options="bar.options"></canvas>
