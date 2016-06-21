@@ -40,9 +40,9 @@
   }])
   .controller('ViewReceiptController', ['$scope', 'Receipt', '$state',
       '$stateParams', 'Store', 'Item', 'ReceiptItem', 'Category', 
-      'Tag', 'ReceiptTag', '$location', 
+      'Tag', 'ReceiptTag', '$location', '$rootScope', 
       function($scope, Receipt, $state, $stateParams, Store, 
-        Item, ReceiptItem, Category, Tag, ReceiptTag, $location) {
+        Item, ReceiptItem, Category, Tag, ReceiptTag, $location, $rootScope) {
 
     $scope.stores = [];
     $scope.selectedStore;
@@ -56,8 +56,13 @@
       .find({
         fields: {
           id: true,
-          name: true
-        }
+          name: true,
+          customerId: true
+        },
+        filter: {
+          order: 'name ASC',
+          where: {customerId: $rootScope.currentUser.id}
+        }        
       })
       .$promise
       .then(function(stores){
@@ -65,7 +70,20 @@
         Receipt.findById({
          id: $stateParams.id, 
          filter: { 
-          include: ['items', 'tags']
+            include: [
+              {
+                relation: 'items',
+                scope:{
+                  where: {customerId: $rootScope.currentUser.id}                  
+                }
+              },
+              {
+                relation: 'tags',
+                scope:{
+                  where: {customerId: $rootScope.currentUser.id}                  
+                }
+              }              
+            ]
           }
         })
         .$promise
@@ -87,7 +105,12 @@
           //ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, $scope.receipt.categoryId);                  
 
           // Set Tag related to Receipt
-          Tag.find()
+          Tag.find({
+              filter: {
+                order: 'name ASC',
+                where: {customerId: $rootScope.currentUser.id}
+              }
+            })
             .$promise
             .then(function(tags){
               $scope.tags = tags;
@@ -125,8 +148,11 @@
           id: true,
           name: true
         },            
-        filter: {
-          include: 'categories'
+        include: {
+          relation: 'categories',
+          scope:{
+            where: {customerId: $rootScope.currentUser.id}                  
+          }
         }
       })
       .$promise
@@ -156,16 +182,16 @@
   }])  
   .controller('EditReceiptController', ['$scope', 'Receipt', '$state',
       '$stateParams', 'Store', 'Item', 'ReceiptItem', 'Category', 
-      'Tag', 'ReceiptTag', '$location', 
+      'Tag', 'ReceiptTag', '$location', '$rootScope', 
       function($scope, Receipt, $state, $stateParams, Store, 
-        Item, ReceiptItem, Category, Tag, ReceiptTag, $location) {   
+        Item, ReceiptItem, Category, Tag, ReceiptTag, $location, $rootScope) {   
 
     $scope.action = 'Edit';
     $scope.stores = [];
     $scope.selectedStore;
     $scope.selectedCategory;
     $scope.receipt = {};
-    $scope.isDisabled = true;
+    $scope.isDisabled = false;
     $scope.delDisabled = true;
     $scope.tags = [];  
     $scope.selectedTags=[];
@@ -173,9 +199,9 @@
 
     Store
       .find({
-        fields: {
-          id: true,
-          name: true
+        filter: {
+          order: 'name ASC',
+          where: {customerId: $rootScope.currentUser.id}
         }
       })
       .$promise
@@ -185,7 +211,20 @@
         Receipt.findById({
          id: $stateParams.id, 
          filter: { 
-          include: ['items', 'tags']
+            include: [
+              {
+                relation: 'items',
+                scope:{
+                  where: {customerId: $rootScope.currentUser.id}                  
+                }
+              },
+              {
+                relation: 'tags',
+                scope:{
+                  where: {customerId: $rootScope.currentUser.id}                  
+                }
+              }              
+            ]
           }
         })
         .$promise
@@ -209,7 +248,12 @@
           //ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, $scope.receipt.categoryId);                  
 
           // Set Tag related to Receipt
-          Tag.find()
+          Tag.find({
+            filter: {
+              order: 'name ASC',
+              where: {customerId: $rootScope.currentUser.id}
+            }            
+          })
             .$promise
             .then(function(tags){
               $scope.tags = tags;
@@ -248,7 +292,12 @@
           name: true
         },            
         filter: {
-          include: 'categories'
+          include: {
+            relation: 'categories',
+            scope:{
+              where: {customerId: $rootScope.currentUser.id}                  
+            }
+          }
         }
       })
       .$promise
@@ -347,7 +396,8 @@
               Item
               .create({
                 name: $scope.items[i].name,
-                price: $scope.items[i].price                
+                price: $scope.items[i].price,
+                customerId: $rootScope.currentUser.id            
               }, function(item){
                 console.log('new related item id : ', item.id);
                 ReceiptItem
@@ -397,14 +447,24 @@
     $scope.selTagCount; 
 
     Store
-      .find()
+      .find({
+        filter: {
+          order: 'name ASC',
+          where: {customerId: $rootScope.currentUser.id}
+        }
+      })
       .$promise
       .then(function(stores){
         $scope.stores = stores;
         $scope.selectedStore = $scope.selectedStore;
 
         // Set Tag related to Receipt
-        Tag.find()
+        Tag.find({
+            filter: {
+              order: 'name ASC',
+              where: {customerId: $rootScope.currentUser.id}
+            }
+          })
           .$promise
           .then(function(tags){
             $scope.tags = tags;
@@ -432,7 +492,12 @@
           name: true
         },            
         filter: {
-          include: 'categories'
+          include: {
+            relation: 'categories',
+            scope:{
+              where: {customerId: $rootScope.currentUser.id}                  
+            }
+          }
         }
       })
       .$promise
@@ -523,7 +588,8 @@
             Item
               .create({
                 name: $scope.items[i].name,
-                price: $scope.items[i].price                
+                price: $scope.items[i].price,
+                customerId: userId               
               }, function(item){
                 console.log('item id : ', item.id);
                 ReceiptItem
