@@ -165,7 +165,7 @@
     $scope.selectedStore;
     $scope.selectedCategory;
     $scope.receipt = {};
-    $scope.isDisabled = false;
+    $scope.isDisabled = true;
     $scope.delDisabled = true;
     $scope.tags = [];  
     $scope.selectedTags=[];
@@ -283,31 +283,42 @@
       $scope.items.push({});
       if($scope.items.length > 0){ 
         $scope.delDisabled = false;
-      };
-    };
+      }
+    }
 
     $scope.spliceItem = function(){
       //console.log("Item length: ", $scope.items.length);
       $scope.items.splice($scope.items.length-1, 1);
       if($scope.items.length < 1){ 
-        $scope.delDisabled = true;
+        $scope.delDisabled = $scope.isDisabled = true;
         $scope.receipt.numberOfItem = "";
         $scope.receipt.total = "";        
-      };      
-    };
+      }   
+    }
 
-    $scope.changePrice = function(){
+    $scope.changeItemPrice = function(){
       //console.log("items.length: ", $scope.items.length);
       $scope.totalprice=0;
       if($scope.items.length > 0){ 
         for(var i = 0 ; i < $scope.items.length ; i++){
-          $scope.totalprice += $scope.items[i].price;
+          if($scope.items[i].price != undefined){
+            $scope.totalprice += $scope.items[i].price;
+          }
         };
         //console.log("total price: ", $scope.totalprice);
         $scope.receipt.numberOfItem = $scope.items.length;
         $scope.receipt.total = $scope.totalprice;
-      };   
-    };
+        this.changeTotal();
+      }   
+    }
+
+    $scope.changeTotal = function(){
+      if($scope.receipt.total > 0){
+        $scope.isDisabled = false;
+      }else{
+        $scope.isDisabled = true;
+      }  
+    }
 
     // Delete selected receipt
     $scope.delReceipt = function(){
@@ -379,7 +390,7 @@
     $scope.selectedStore;
     $scope.selectedCategory;
     $scope.receipt = {};
-    $scope.isDisabled = false;
+    $scope.isDisabled = true;
     $scope.delDisabled = true;
     $scope.tags = [];  
     $scope.selectedTags=[];
@@ -457,33 +468,43 @@
       if($scope.items.length > 0){ 
         $scope.delDisabled = false;
       };
-      this.changePrice();
+      this.changeItemPrice();
     };
 
     $scope.spliceItem = function(){
       //console.log("Item length: ", $scope.items.length);
       $scope.items.splice($scope.items.length-1, 1);
       if($scope.items.length < 1){ 
-        $scope.delDisabled = true;
+        $scope.delDisabled = $scope.isDisabled = true;
         $scope.receipt.numberOfItem="" ;
         $scope.receipt.total="";         
       };
-      this.changePrice();
+      this.changeItemPrice();
     };        
 
-    $scope.changePrice = function(){
+    $scope.changeItemPrice = function(){
       //console.log("items.length: ", $scope.items.length);
       $scope.totalprice=0;
       if($scope.items.length > 0){ 
         for(var i = 0 ; i < $scope.items.length ; i++){
-          $scope.totalprice += $scope.items[i].price;
+          if($scope.items[i].price != undefined){
+            $scope.totalprice += $scope.items[i].price;
+          }
         };
         //console.log("total price: ", $scope.totalprice);
         $scope.receipt.numberOfItem = $scope.items.length;
         $scope.receipt.total = $scope.totalprice;
+        this.changeTotal();
       };   
     };
 
+    $scope.changeTotal = function(){
+      if($scope.receipt.total > 0){
+        $scope.isDisabled = false;
+      }else{
+        $scope.isDisabled = true;
+      }  
+    }
     $scope.submitForm = function() {
       $scope.receipt.date = $scope.receipt.date = $('#receiptdate input').prop('value');
       //console.log("receipt.date: ", $scope.receipt.date);
