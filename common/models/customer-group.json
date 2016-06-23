@@ -20,7 +20,7 @@
       "type": "belongsTo",
       "model": "Group",
       "foreignKey": "groupId"
-    } 
+    }
   },
   "acls": [],
   "methods": {}

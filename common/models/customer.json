@@ -14,7 +14,7 @@
     },
     "lastName": {
       "type": "string"
-    },    
+    },
     "dateOfBirth": {
       "type": "date"
     },
