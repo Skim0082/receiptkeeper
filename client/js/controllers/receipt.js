@@ -162,7 +162,7 @@
     $scope.selectedTags=[];
     $scope.selTagCount;  
 
-    var groupName = $stateParams.groupName; 
+    $scope.groupName = $stateParams.groupName;
 
     var userId, groupId;
     if($stateParams.groupId == undefined){
