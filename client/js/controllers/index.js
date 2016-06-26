@@ -2,7 +2,9 @@
 
  angular
   .module('app')
-  .controller('IndexController', ['$scope', '$state', 'IntroHeaderService',
-   function($scope, $state, IntroHeaderService) {
-      IntroHeaderService.isIntroHeaderVisible(true);
+  .controller('IndexController', ['$scope', '$state', 'IntroHeaderService', '$rootScope', 
+   function($scope, $state, IntroHeaderService, $rootScope) {
+      
+    IntroHeaderService.isIntroHeaderVisible(true);   	
+
   }]);

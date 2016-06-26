@@ -70,7 +70,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="navbar-brand page-scroll nav-logo" href="{{currentUser?'/':'#page-top';}}">
+          <a class="navbar-brand page-scroll nav-logo" href="#page-top">
             <i class="glyphicon glyphicon-list-alt" style="font-size: 0.9em;margin-right:5px;"></i>
             RECEIPT KEEPER
           </a>      
@@ -79,31 +79,32 @@
 
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
-          <li ng-hide="currentUser">
+
+          <li class="staticNavMenu" ng-hide="currentUser">
             <a class="page-scroll" href="#services">
               <i class="glyphicon glyphicon-blackboard"></i>
               Services
             </a>
           </li>  
-          <li ng-hide="currentUser">
+          <li class="staticNavMenu" ng-hide="currentUser">
             <a class="page-scroll" href="#Tech">
               <i class="glyphicon glyphicon-briefcase"></i>
               Tech.
             </a>
           </li> 
-          <li ng-hide="currentUser">
+          <li class="staticNavMenu" ng-hide="currentUser">
             <a class="page-scroll" href="#Process">
               <i class="glyphicon glyphicon-tasks"></i>
               Process
             </a>
           </li>          
-          <li ng-hide="currentUser">
+          <li class="staticNavMenu" ng-hide="currentUser">
             <a class="page-scroll" href="#team">
               <i class="fa fa-users" aria-hidden="true"></i>
               Team
             </a>
           </li>                               
-          <li ng-hide="currentUser">
+          <li class="staticNavSigup" ng-hide="currentUser">
             <a href="/#/Signup">
               <i class="glyphicon glyphicon-edit"></i>
               Sign Up
@@ -162,33 +163,32 @@
               Admin
             </a>
           </li>
-          -->       
+          -->  
+          <li ng-show="currentUser">
+            <a href="/#/Receipts">
+              <i class="glyphicon glyphicon-usd"></i> 
+              Receipts
+            </a>
+          </li>
+          <li ng-show="currentUser">
+            <a href="/#/Groups">
+              <i class="glyphicon glyphicon-blackboard"></i> 
+              Group
+            </a>
+          </li>                
           <li ng-show="currentUser" class="dropdown">
             <a href="" class="dropdown-toggle" data-toggle="dropdown">
               <i class="glyphicon glyphicon-user"></i>
               User
               <b class="caret"></b>
             </a>
-            <ul class="dropdown-menu">
-              <li ng-show="currentUser">
-                <a href="/#/Receipts">
-                  <i class="glyphicon glyphicon-usd"></i> 
-                  Receipts
-                </a>
-              </li>
-              <li ng-show="currentUser" class="divider"></li>
+            <ul class="dropdown-menu">             
               <li ng-show="currentUser">
                 <a href="/#/Profile">
                   <i class="glyphicon glyphicon-king"></i> 
                   Profile
                 </a>
               </li>
-              <li ng-show="currentUser">
-                <a href="/#/Groups">
-                  <i class="glyphicon glyphicon-blackboard"></i> 
-                  Group
-                </a>
-              </li>  
               <li ng-show="currentUser">
                 <a href="/#/Dashboard">
                   <i class="glyphicon glyphicon-dashboard"></i> 
@@ -200,7 +200,8 @@
                   <i class="glyphicon glyphicon-open"></i>
                   File
                 </a>
-              </li>                                              
+              </li>     
+              <li ng-show="currentUser" class="divider"></li>                                                       
               <li ng-show="currentUser">
                 <a href="">
                   <i class="glyphicon glyphicon-cog"></i>

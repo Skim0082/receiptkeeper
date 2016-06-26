@@ -5,13 +5,14 @@
 
 angular
   .module('app')
-  .controller('AuthLoginController', ['$scope', 'AuthService', '$state', 
-      function($scope, AuthService, $state) {     
+  .controller('AuthLoginController', ['$scope', 'AuthService', '$state', '$rootScope', 
+      function($scope, AuthService, $state, $rootScope) {    
 
     $scope.user = {
       email: "aaa@gmail.com",
       password: "aaa"
     };
+
     $scope.login = function() {
       AuthService.login($scope.user.email, $scope.user.password)
         .then(function() {
@@ -23,12 +24,12 @@ angular
   .controller('AuthLogoutController', ['$scope', 'AuthService', '$state', 
       function($scope, AuthService, $state) {
       AuthService.logout()
-        .then(function() {
+        .then(function() {          
           $state.go('/');
       });     
   }])
   .controller('SignUpController', ['$scope', 'AuthService', '$state', '$rootScope',  
-      function($scope, AuthService, $state, $rootScope) {       
+      function($scope, AuthService, $state, $rootScope) {
 
     $scope.user = {};
     $scope.register = function() {      

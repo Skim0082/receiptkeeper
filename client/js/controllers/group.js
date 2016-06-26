@@ -113,7 +113,7 @@
       }
         
       $scope.acceptJoin = function(notificationId){
-        if(confirm("Are you join this group?")){
+        if(confirm("Are you joining this group?")){
             var index = $scope.notifications.map(function(notification){
               return notification.id;
             }).indexOf(notificationId);
