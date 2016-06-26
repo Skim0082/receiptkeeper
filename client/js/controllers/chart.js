@@ -226,10 +226,10 @@ angular.module('app')
                     labels: monthNameFromDate,
                     series: [$scope.thisYear-1, $scope.thisYear],
                     data: [
-                       monthlyTotal,
-                       monthlyTotalLastYear
+                       monthlyTotalLastYear,
+                       monthlyTotal
                     ]            
-                };                
+                };   
 
             });  // .then(function(lastYearReceipts){         
 
