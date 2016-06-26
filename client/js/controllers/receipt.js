@@ -116,7 +116,7 @@
   }])
   .controller('DeleteReceiptController', ['$scope', 'Receipt', '$state',
       '$stateParams',  
-      function($scope, Receipt, $state, $stateParams) {
+      function($scope, Receipt, $state, $stateParams) {         
 
     Receipt.items.destroyAll(
       {id: $stateParams.id}, 
