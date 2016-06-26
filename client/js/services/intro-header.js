@@ -28,9 +28,7 @@ angular
               $('.staticNavMenu').removeClass("active");
               $('.staticNavMenu').hide();       
             }
-            if(!$('.staticNavSigup').is(":visible")){
-              $('.staticNavSigup').show();       
-            }                
+            $('.staticNavSigup').hide();      
         }
       } 
 

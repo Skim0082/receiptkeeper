@@ -1,6 +1,6 @@
 body {
     overflow-x: hidden;
-    font-family: "Roboto Slab", "Helvetica Neue", Helvetica, Arial, sans-serif
+    /*font-family: "Roboto Slab", "Helvetica Neue", Helvetica, Arial, sans-serif*/
 }
 
 .text-muted {
@@ -224,7 +224,7 @@ header .intro-text .intro-lead-in {
 
 header .intro-text .intro-heading {
     font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     font-weight: 700;
     font-size: 50px;
     line-height: 50px;
@@ -245,7 +245,7 @@ header .intro-text .intro-heading {
     }
     header .intro-text .intro-heading {
         font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
-        text-transform: uppercase;
+        /*text-transform: uppercase;*/
         font-weight: 700;
         font-size: 75px;
         line-height: 75px;
@@ -657,7 +657,7 @@ ul.social-buttons li a:active {
 
 ::selection {
     text-shadow: none;
-    background: #fed136
+    background: #eee
 }
 
 img::selection {
@@ -669,5 +669,5 @@ img::-moz-selection {
 }
 
 body {
-    webkit-tap-highlight-color: #fed136
+    /*webkit-tap-highlight-color: #fed136*/
 }
