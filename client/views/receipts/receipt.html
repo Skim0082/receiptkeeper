@@ -69,6 +69,15 @@
   		</ul>
   	</div>
 </div>
+<div class="row" ng-show="receipt.imageFilePath">
+	<div class="col-sm-offset-2 col-sm-10">
+	<hr style="margin-top:0">
+	</div>		
+	<label class="col-sm-2 control-label">Receipt<br>Photo</label>
+	<div class="col-sm-8">
+		<img ng-src="{{receipt.imageFilePath}}" style="width:100%; height: auto; max-width:600px;" />
+	</div>
+</div>
 <hr>
 <!-- button -->
 <div class="row">

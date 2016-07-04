@@ -6,7 +6,8 @@ angular
     'lbServices',
     'angularFileUpload',
     'oc.lazyLoad',
-    'angular-loading-bar'
+    'angular-loading-bar',
+    'ui.bootstrap'
  ])
  .config(['$stateProvider', '$urlRouterProvider', '$ocLazyLoadProvider', function(
  	$stateProvider, $urlRouterProvider, $ocLazyLoadProvider) {

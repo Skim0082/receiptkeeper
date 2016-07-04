@@ -297,6 +297,7 @@ footer nav ul li{
 .navbar-inverse .navbar-nav > li > a:hover, 
 .navbar-inverse .navbar-nav > li > a:focus {
     color: #fed136;
+    outline: 0;
 }
 #footwrap {
     font-size: 18px; 
