@@ -60,7 +60,7 @@
 			{{member.email}}
 	 		<i class="glyphicon glyphicon-remove pull-right text-danger" 
 		 		ng-click="removeMember(member.id)" 
-		 		style="padding-right:15px" title="Remove"></i>
+		 		style="padding-right:15px" tooltip-html-unsafe="Remove"></i>
 		</span>	
 	</div>
 </div> 
@@ -129,10 +129,10 @@
 				{{notification.display}}
 		 		<i class="glyphicon glyphicon-remove pull-right text-danger" 
 			 		ng-click="removeInvitation(notification.receiverId)" 
-			 		style="padding-left:10px" title="Remove"></i>
+			 		style="padding-left:10px" tooltip-html-unsafe="Remove"></i>
 		 		<i ng-show="notification.seen && notification.left" class="glyphicon glyphicon-bullhorn pull-right text-primary" 
 			 		ng-click="againInvitation(notification.id)" 
-			 		style="padding-right:10px" title="Re-invitation"></i>
+			 		style="padding-right:10px" tooltip-html-unsafe="Re-invitation"></i>
 			</span>	
 		</div>
 	</div> 

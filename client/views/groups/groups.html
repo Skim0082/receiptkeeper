@@ -13,13 +13,13 @@
 		 	Member limitation: {{group.grouptype.limitedMember}} / 
 		 	Receipt limitation: {{group.grouptype.limitedReceipt}} / 
 
-		    <i class="glyphicon glyphicon-eye-open pull-right text-success" 
+		    <i class="glyphicon glyphicon-search pull-right text-success" 
 		    	style="padding-left:10px" 
-		    	ui-sref="viewGroup({id: group.id})" title="View"></i>	
+		    	ui-sref="viewGroup({id: group.id})" tooltip-html-unsafe="View Details"></i>	
 		    
 		 	<i class="glyphicon glyphicon-pencil pull-right text-primary" 
 		 		style="padding-right:10px" 
-		 		ui-sref="editGroup({id: group.id})" title="Edit"></i> 
+		 		ui-sref="editGroup({id: group.id})" tooltip-html-unsafe="Edit"></i> 
 	  	</span>
 	  	<span ng-hide="groups" class="list-group-item">No group you own.</span>
 	  	</div>
@@ -37,12 +37,12 @@
 		 	Member limitation: {{group.grouptype.limitedMember}} / 
 		 	Receipt limitation: {{group.grouptype.limitedReceipt}} / 
 
-		    <i class="glyphicon glyphicon-eye-open pull-right text-success" 
+		    <i class="glyphicon glyphicon-search pull-right text-success" 
 		    	style="padding-left:10px" 
-		    	ui-sref="viewGroup({id: group.id})" title="View"></i>
+		    	ui-sref="viewGroup({id: group.id})" tooltip-html-unsafe="View Details"></i>
 		    <i class="glyphicon glyphicon-list-alt pull-right text-info" 
 		    	style="padding-right:10px" 
-		    	ng-click="groupReceipts(group.id, group.ownerId, group.name)" title="Receipts"></i>		    	
+		    	ng-click="groupReceipts(group.id, group.ownerId, group.name)" tooltip-html-unsafe="Receipts"></i>		    	
 	  	</span>
 	  	<span ng-hide="groupsinmember" class="list-group-item">No group as a member.</span>
 	  	</div>
@@ -66,15 +66,15 @@
 				    <i class="glyphicon glyphicon-ban-circle pull-right text-danger" 
 				    	style="margin-right:10px;margin-left:10px;" 
 				    	ng-click="refuseJoin(notification.id)" 
-				    	title="Refuse invitation"></i>			 			
-				    <i class="glyphicon glyphicon-eye-open pull-right text-success" 
+				    	tooltip-html-unsafe="Refuse invitation"></i>			 			
+				    <i class="glyphicon glyphicon-zoom-in pull-right text-success" 
 				    	style="margin-left:10px;margin-right:10px;"
 				    	ng-click="showDetails =! showDetails" 
-				    	title="View group"></i>
+				    	tooltip-html-unsafe="View Summary"></i>
 				    <i class="glyphicon glyphicon-ok pull-right text-primary" 
 				    	style="margin-right:10px;" 
 				    	ng-click="acceptJoin(notification.id)" 
-				    	title="Accept invitation"></i>	
+				    	tooltip-html-unsafe="Accept invitation"></i>	
 
 			  	</span>
 			  	<div class="invitation-desc" ng-show="showDetails">

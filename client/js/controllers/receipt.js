@@ -3,13 +3,19 @@
  angular
   .module('app')
   .controller('AllReceiptsController', [
-  	'$scope', 'Receipt', '$rootScope', '$stateParams', '$state', 
-     function($scope, Receipt, $rootScope, $stateParams, $state) {
+  	'$scope', 'Receipt', '$rootScope', '$stateParams', '$state', '$log', '$filter', 
+     function($scope, Receipt, $rootScope, $stateParams, $state, $log, $filter) {
 
       $scope.ownerId = $stateParams.ownerId;
       $scope.groupId = $stateParams.groupId;
       $scope.groupName = $stateParams.groupName;
-      $scope.indexnum = 0;
+      $scope.receipts = [];
+
+      // Pagination
+      $scope.pageUnits = [5, 10, 15, 20];
+      $scope.pageSize = 10;
+      $scope.currentPage = 0; 
+      $scope.q = '';     
 
       var userId, groupId;
       if($stateParams.groupId == undefined){
@@ -20,7 +26,7 @@
         groupId = $stateParams.groupId;
       }
 
-      $scope.receipts = Receipt.find({
+      Receipt.find({
         filter: {
           order: 'date DESC', 
           include: ['store', 'customer'],
@@ -29,12 +35,64 @@
             {groupId: groupId},
           ]}
         }
-      });  
+      })
+      .$promise
+      .then(function(receipts){
+        $scope.receipts = receipts;
+      }); 
 
-      //$scope.count = $scope.receipts.length;
+      // Sorting
+      $scope.tablehead = {
+        store: "Store",
+        total: "Total",
+        numberOfItem: "# Item",
+        date: "Date"
+      };
 
-      console.log("$scope.receipts: ", $scope.receipts);
-      //console.log("$scope.receipts.length: ", $scope.receipts.length);
+      $scope.sort = {
+          column: 'total',
+          descending: '',
+          symbol: false
+      };      
+      
+      $scope.selectedCls = function(column) {
+          return column == $scope.sort.column && 'sort-' + $scope.sort.symbol;
+      };
+
+      $scope.changeSorting = function(column) {
+          var sort = $scope.sort;
+          if (sort.column == column) {
+             if(sort.descending == ''){
+                sort.descending = '-';
+             }else{
+                sort.descending = '';
+             }
+             sort.symbol = !sort.symbol;
+          } else {
+              sort.column = column;
+              sort.descending = '';
+              sort.symbol = false;
+          }
+      };  
+      // Sorting    
+
+      //Pagination - angular
+      $scope.getData = function(){
+        return $filter('filter')($scope.receipts, $scope.q)
+      }
+
+      $scope.numberOfPages=function(){
+          return Math.ceil($scope.getData().length/$scope.pageSize);                
+      }
+      //$scope.number = $scope.numberOfPages();
+      $scope.getNumber = function(num) {
+          return new Array(num);   
+      }
+      $scope.changePageSize = function(){
+        $scope.currentPage = 0;
+      }     
+      //Pagination - angular
+
 
       $scope.viewGroup = function(){
         if($stateParams.groupId != undefined){
@@ -120,6 +178,12 @@
       }
 
   }])
+  .filter('startFrom', function() {
+      return function(input, start) {
+          start = +start; //parse to int
+          return input.slice(start);
+      }
+  })
   .controller('DeleteReceiptController', ['$scope', 'Receipt', '$state',
       '$stateParams',  
       function($scope, Receipt, $state, $stateParams) {         

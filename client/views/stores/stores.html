@@ -7,10 +7,10 @@
 	<span class="list-group-item" ng-repeat="store in stores">
 	 	{{store.name}}&nbsp; &nbsp; 
 	    <i class="glyphicon glyphicon-remove pull-right text-danger" 
-	    	ng-click="deleteStore(store.id)" title="Delete"></i>	 	
+	    	ng-click="deleteStore(store.id)" tooltip-html-unsafe="Delete"></i>	 	
 	 	<i class="glyphicon glyphicon-pencil pull-right text-primary" 
 	 		style="padding-right:20px" 
-	 		ng-click="editStore(store.id)" title="Edit"></i> 
+	 		ng-click="editStore(store.id)" tooltip-html-unsafe="Edit"></i> 
   	</span>
 </div>
 <div class="row">
