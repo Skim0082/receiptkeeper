@@ -43,16 +43,16 @@
 
       // Sorting
       $scope.tablehead = {
-        store: "Store",
+        //store: "Store",
         total: "Total",
         numberOfItem: "# Item",
         date: "Date"
       };
 
       $scope.sort = {
-          column: 'total',
-          descending: '',
-          symbol: false
+          column: 'date',
+          descending: '-',
+          symbol: true
       };      
       
       $scope.selectedCls = function(column) {
