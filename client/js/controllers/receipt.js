@@ -9,6 +9,7 @@
       $scope.ownerId = $stateParams.ownerId;
       $scope.groupId = $stateParams.groupId;
       $scope.groupName = $stateParams.groupName;
+      $scope.indexnum = 0;
 
       var userId, groupId;
       if($stateParams.groupId == undefined){
@@ -29,6 +30,11 @@
           ]}
         }
       });  
+
+      //$scope.count = $scope.receipts.length;
+
+      console.log("$scope.receipts: ", $scope.receipts);
+      //console.log("$scope.receipts.length: ", $scope.receipts.length);
 
       $scope.viewGroup = function(){
         if($stateParams.groupId != undefined){

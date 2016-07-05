@@ -16,7 +16,10 @@ angular
             //if($('.staticNavSigup').is(":visible")){
             //  $('.staticNavSigup').hide();       
             //}     
-        }         
+        }  
+        if($('.ribbon').is(":visible")){
+          $('.ribbon').hide();
+        }       
       }else{
         $('.navbar-brand').attr("href", "/");
         if($('header').is(":visible")){
@@ -30,6 +33,9 @@ angular
             }
             //$('.staticNavSigup').hide();      
         }
+        if(!$('.ribbon').is(":visible")){
+          $('.ribbon').show();
+        }         
       } 
 
     };

@@ -1,8 +1,40 @@
+<!--
+    <div class="container">
+        <h1>Basic Sort</h1>
+        <p>Use <code>sortName</code>, <code>sortOrder</code>, <code>sortable</code> options, and <code>sortable</code>, <code>order</code> column options to set the basic sort of bootstrap table.</p>
+        <table id="table"
+               data-toggle="table"
+               data-height="460"
+               data-url="/data1.json"
+               data-sort-name="name"
+               data-sort-order="desc">
+            <thead>
+            <tr>
+                <th data-field="id" data-sortable="true">Item ID</th>
+                <th data-field="name" data-sortable="true">Item Name</th>
+                <th data-field="price" data-sortable="true">Item Price</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+-->    
 <div class="container">
 <section>
 <div class="container">
 <h1 class="page-title">{{groupName}} Receipts</h1>
 <hr>
+<!--
+<table class="table table-hover">
+    <tr ng-repeat="receipt in receipts">
+        <td style="text-align: center; vertical-align: middle; ">{{receipt.id}}</td>
+        <td style="text-align: center; ">{{receipt.store.name}}</td>
+        <td style="text-align: center; ">$ {{receipt.total}}</td>
+        <td style="text-align: center; ">{{receipt.numberOfItem}}</td>
+        <td style="text-align: center; ">{{(receipt.date).substring(0, 10)}}</td>
+        <td style="text-align: center; ">{{receipt.comment}}</td>
+    </tr>
+</table>
+-->
 <div class="list-group">
 	<span class="list-group-item" ng-repeat="receipt in receipts">
 	 	{{receipt.store.name}} / 
