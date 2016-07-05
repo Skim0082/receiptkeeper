@@ -43,7 +43,7 @@
 
       // Sorting
       $scope.tablehead = {
-        //store: "Store",
+        store: "Store",
         total: "Total",
         numberOfItem: "# Item",
         date: "Date"
@@ -183,6 +183,35 @@
           start = +start; //parse to int
           return input.slice(start);
       }
+  })
+  .filter('receiptFilter', function(){
+    return function(dataArray, searchTerm) {
+        // If no array is given, exit.
+        if (!dataArray) {
+            return;
+        }
+        // If no search term exists, return the array unfiltered.
+        else if (!searchTerm) {
+            return dataArray;
+        }
+        // Otherwise, continue.
+        else {
+             // Convert filter text to lower case.
+             var term = searchTerm.toLowerCase();
+             // Return the array and filter it by looking for any occurrences of the search term in each items id or name. 
+             return dataArray.filter(function(receipt){
+                var total = "" + receipt.total;
+                var name = receipt.store.name;
+                var date = "" + receipt.date;
+                var comment = "" + receipt.comment;
+                var receiptInStore = name.toLowerCase().indexOf(term) > -1;
+                var receiptInTotal = total.toLowerCase().indexOf(term) > -1;
+                var receiptInDate = date.toLowerCase().indexOf(term) > -1;
+                var receiptInComment = comment.toLowerCase().indexOf(term) > -1;
+                return receiptInStore || receiptInTotal || receiptInDate || receiptInComment;
+             });
+        } 
+    }
   })
   .controller('DeleteReceiptController', ['$scope', 'Receipt', '$state',
       '$stateParams',  

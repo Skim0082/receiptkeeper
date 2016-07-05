@@ -1,35 +1,33 @@
 <div class="container">
 <section>
 <div class="container">
-<h1 class="page-title">{{groupName}} Receipts</h1>
+<h1 class="page-title">
+	<i class="fa fa-barcode" aria-hidden="true"></i> 
+	{{groupName}} Receipts
+</h1>
 <hr>
-
+	<div class="row">
+		<label class="col-sm-2 control-label text-right">Search</label>
+		<div class="col-sm-3">			
+			<input ng-model="searchText" id="search" class="form-control" placeholder="Search text">
+		</div>
+	</div>
 	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
-				<!--
 				<tr style="background:#ffffff;">
 					<th style="display:none;">ID</th>
-					<th style="text-align: center; ">Store</th>
-					<th style="text-align: center; ">Total</th>
-					<th style="text-align: center; "># Item</th>
-					<th style="text-align: center; ">Date</th>
-					<th style="text-align: center; "colspan="2">Comment</th>
-				</tr>
-				-->
-				<tr style="background:#ffffff;">
-					<th style="display:none;">ID</th>
-					<th style="text-align: center; ">Store</th>
-					<th style="text-align: center; "
-						ng-repeat="(i,th) in tablehead" 
-					    ng-class="selectedCls(i)" 
-					    ng-click="changeSorting(i)">{{th}}
-					</th>
+					<!--<th style="text-align: center; ">Store</th>-->
+					<th class="sortable" 
+						style="text-align: center; "
+						ng-repeat="(key,value) in tablehead" 
+					    ng-class="selectedCls(key)" 
+					    ng-click="changeSorting(key)">{{value}}</th>
 					<th style="text-align: center; "colspan="2">Comment</th>
 				</tr>
 			</thead>
 			<tbody>
-		    <tr ng-repeat="receipt in receipts | orderBy : sort.descending + sort.column | filter:q | startFrom:currentPage*pageSize | limitTo:pageSize">
+		    <tr ng-repeat="receipt in receipts | orderBy : sort.descending + sort.column | receiptFilter:searchText | startFrom:currentPage*pageSize | limitTo:pageSize">
 		        <td style="display:none;">{{receipt.id}}</td>
 		        <td style="margin-left:15px;">{{receipt.store.name}}</td>
 		        <td style="text-align: center; ">$ {{receipt.total}}</td>

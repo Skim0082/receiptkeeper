@@ -297,7 +297,7 @@ footer nav ul li{
 .navbar-inverse .navbar-nav > li > a:hover, 
 .navbar-inverse .navbar-nav > li > a:focus {
     color: #fed136;
-    outline: 0;
+    /*outline: 0;*/
 }
 #footwrap {
     font-size: 18px; 
@@ -378,7 +378,10 @@ td { padding: 0.2em 1em; }
 th { text-align: center; }
 thead {
     border-bottom: 2px solid black; 
-    cursor: pointer;  
+    /*cursor: pointer;  */
+}
+.sortable {
+  cursor: pointer;
 }
 /* http://www.greywyvern.com/code/php/binary2base64 */
 
