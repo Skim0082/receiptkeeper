@@ -8,9 +8,9 @@ angular
   .controller('AuthLoginController', ['$scope', 'AuthService', '$state', '$rootScope', 
       function($scope, AuthService, $state, $rootScope) {    
 
-    if(!$('.staticNavSigup').is(":visible")){
-      $('.staticNavSigup').show();       
-    }        
+    //if(!$('.staticNavSigup').is(":visible")){
+    //  $('.staticNavSigup').show();       
+    //}        
 
     $scope.user = {
       email: "aaa@gmail.com",

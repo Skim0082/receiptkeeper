@@ -13,9 +13,9 @@ angular
             if(!$('.staticNavMenu').is(":visible")){
               $('.staticNavMenu').show();       
             } 
-            if($('.staticNavSigup').is(":visible")){
-              $('.staticNavSigup').hide();       
-            }     
+            //if($('.staticNavSigup').is(":visible")){
+            //  $('.staticNavSigup').hide();       
+            //}     
         }         
       }else{
         $('.navbar-brand').attr("href", "/");
@@ -28,7 +28,7 @@ angular
               $('.staticNavMenu').removeClass("active");
               $('.staticNavMenu').hide();       
             }
-            $('.staticNavSigup').hide();      
+            //$('.staticNavSigup').hide();      
         }
       } 
 
