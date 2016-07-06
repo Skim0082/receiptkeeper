@@ -64,9 +64,11 @@
   	<br><span style="text-align:center;">{{selTagCount}}</span>
   	</div>
   	<div class="col-sm-4">
+  		<!--
   		<ul>
   			<li ng-repeat="tag in selectedTags">{{tag.name}}</li>
   		</ul>
+  		--><span class="gh-tag" ng-repeat="tag in selectedTags">{{tag.name}}</span> 
   	</div>
 </div>
 <div class="row" ng-show="receipt.imageFilePath">

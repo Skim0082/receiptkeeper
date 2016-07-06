@@ -330,6 +330,7 @@ angular
 		.state('Dashboard', {
 			url: '/Dashboard',
 			templateUrl: 'views/users/dashboard.html', 
+			controller: 'DashboardController', 
 			authenticate: true
 		})      	 					
 		.state('forbidden', {

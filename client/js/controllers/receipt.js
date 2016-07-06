@@ -317,7 +317,7 @@
         })
         .$promise
         .then(function(receipt){ 
-          console.log("receipt: ", receipt);   
+          //console.log("receipt: ", receipt);   
           // Set Items related to Receipt       
           $scope.receipt = receipt; 
           $scope.items = receipt.items;
@@ -508,7 +508,7 @@
         })
         .$promise
         .then(function(receipt){ 
-          console.log("receipt: ", receipt);   
+          //console.log("receipt: ", receipt);   
           // Set Items related to Receipt       
           $scope.receipt = receipt; 
           $scope.items = receipt.items;
@@ -953,7 +953,7 @@
                 customerId: userId,
                 groupId: groupId               
               }, function(item){
-                console.log('item id : ', item.id);
+                //console.log('item id : ', item.id);
                 ReceiptItem
                   .create({
                     receiptId: receipt.id,
