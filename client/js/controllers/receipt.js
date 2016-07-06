@@ -895,7 +895,21 @@
                     .$promise;                  
                 }
             });
-            //$state.go('Receipts');  
+
+            if($stateParams.groupId == undefined){
+              $state.go('viewReceipt', {'id': $stateParams.id});
+            }else{
+                 $state.go(
+                  'groupViewReceipt', 
+                  {
+                    'id':         $stateParams.id, 
+                    'groupId':    $stateParams.groupId, 
+                    'groupName':  $stateParams.groupName,
+                    'ownerId':    $stateParams.ownerId
+                  }
+                );
+            } 
+            /*
             if($stateParams.groupId == undefined){
               $state.go('Receipts');
             }else{
@@ -908,10 +922,10 @@
                 }
               );
             }
-
+            */
         }); 
       });
-    };
+    };  // Submit()
   }])
   .controller('AddReceiptController', ['$scope', '$state', 'Receipt', 'Store', 
     'Category', 'Item', 'ReceiptItem', 'Tag', 'ReceiptTag', '$rootScope', '$stateParams',  
@@ -1125,5 +1139,6 @@
           }
         );
       }
+
     };        
   }]);  
