@@ -401,6 +401,13 @@ thead {
     font-weight:bold;
     font: 700 11px/14px 'Helvetica Neue',Helvetica,Arial,sans-serif; 
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.19);   
+    cursor:pointer;
+}
+.gh-tag:hover,
+.gh-tag:focus,
+.gh-tag.focus {
+  background-color: #d4d4d4;
+  text-decoration: none;
 }
 .gh-btn, .gh-tag {
     padding: 2px 5px 2px 4px;
@@ -410,7 +417,6 @@ thead {
     white-space: nowrap;
     border-radius: 3px;
 }
-
 .gh-btn, .gh-tag, .gh-ico {
     float: left;
 }

@@ -21,7 +21,7 @@ angular
       AuthService.login($scope.user.email, $scope.user.password)
         .then(function() {
           //Check the invalid user, and giving a message will need
-          $state.go('Dashboard');
+          //$state.go('Dashboard');
         });
     };
   }])
@@ -43,6 +43,7 @@ angular
           //below code is temporary for test need to adopt athentication correctly later
           //$rootScope.currentUser = user;
           //$state.transitionTo('Profile');
+          
         });
     };
   }])

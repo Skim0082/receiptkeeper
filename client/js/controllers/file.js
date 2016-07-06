@@ -28,7 +28,7 @@ angular
         repositoryPath = storageId + '/'; 
 
         Container.getContainers(function(container){
-          console.log("container: ", container);
+          //console.log("container: ", container);
           var isContainer = false;
           for(var i = 0; i < container.length; i++){
             if(container[i].name == storageId){

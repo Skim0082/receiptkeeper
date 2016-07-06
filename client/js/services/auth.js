@@ -5,20 +5,26 @@
 
 angular
   .module('app')
-  .factory('AuthService', ['Customer', '$q', '$rootScope',    
-    function(User, $q, $rootScope) {
-    function login(email, password) {
+  .factory('AuthService', ['Customer', '$q', '$rootScope', '$state', 
+    function(User, $q, $rootScope, $state) {
+
+    function login(email, password) {   
+
       return User
         .login({email: email, password: password})
         .$promise
-        .then(function(response) {          
-          $rootScope.currentUser = {
-            id: response.user.id,
-            tokenId: response.id,
-            email: email,
-            username: response.user.username
-          };
-          sessionStorage.setItem('access_token', JSON.stringify($rootScope.currentUser));
+        .then(function(response) {  
+            $rootScope.currentUser = {
+              id: response.user.id,
+              tokenId: response.id,
+              email: email,
+              username: response.user.username
+            };
+            sessionStorage.setItem('access_token', JSON.stringify($rootScope.currentUser));
+            $state.go('Dashboard');            
+        })
+        .then(function(err){
+          console.log("Err: ", err);
         });
     }
 

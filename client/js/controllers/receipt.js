@@ -3,8 +3,8 @@
  angular
   .module('app')
   .controller('AllReceiptsController', [
-  	'$scope', 'Receipt', '$rootScope', '$stateParams', '$state', '$log', '$filter', 
-     function($scope, Receipt, $rootScope, $stateParams, $state, $log, $filter) {
+  	'$scope', 'Receipt', '$rootScope', '$stateParams', '$state', '$log', '$filter', 'Tag', 
+     function($scope, Receipt, $rootScope, $stateParams, $state, $log, $filter, Tag) {
 
       $scope.ownerId = $stateParams.ownerId;
       $scope.groupId = $stateParams.groupId;
@@ -14,8 +14,7 @@
       // Pagination
       $scope.pageUnits = [5, 10, 15, 20];
       $scope.pageSize = 10;
-      $scope.currentPage = 0; 
-      $scope.q = '';     
+      $scope.currentPage = 0;    
 
       var userId, groupId;
       if($stateParams.groupId == undefined){
@@ -78,7 +77,7 @@
 
       //Pagination - angular
       $scope.getData = function(){
-        return $filter('filter')($scope.receipts, $scope.q)
+        return $filter('filter')($scope.receipts)
       }
 
       $scope.numberOfPages=function(){
@@ -261,8 +260,6 @@
     $scope.selectedTags=[];
     $scope.selTagCount;  
 
-    $scope.groupName = $stateParams.groupName;
-
     var userId, groupId;
     if($stateParams.groupId == undefined){
       userId = $rootScope.currentUser.id;
@@ -271,6 +268,9 @@
       userId = $stateParams.ownerId;
       groupId = $stateParams.groupId;
     }  
+    $scope.groupName = $stateParams.groupName;    
+    $scope.userId = userId;
+    $scope.groupId = groupId;
 
     Store
       .find({
@@ -367,6 +367,7 @@
       ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, null);
     } 
     */
+
     $scope.Receipts = function(){
       if($stateParams.groupId == undefined){
         $state.go('Receipts');
@@ -438,7 +439,149 @@
       $scope.selTagCount=$scope.selectedTags.length + " selected";
     }
       
-  }])  
+  }]) 
+  .controller('ModalTagReceiptsCtrl', function ($scope, $modal, $log) {
+
+    $scope.open = function (tagId, userId, groupId, groupName) {
+
+        $scope.params = {
+          tagId: tagId,
+          userId: userId,
+          groupId: groupId,
+          groupName: groupName
+        };
+
+        var modalInstance = $modal.open({
+          templateUrl: 'ModalTagReceipts.html',
+          controller: 'ModalTagReceiptsInstanceCtrl',
+          size: 'lg',
+          resolve: {
+            params: function(){
+              return $scope.params;
+          }}
+        });
+      };
+  })
+  .controller('ModalTagReceiptsInstanceCtrl', [
+    '$scope', '$state', '$modalInstance', 'params', 'Tag', '$filter', 
+      function($scope, $state, $modalInstance, params, Tag, $filter) {           
+
+      //$scope.tagId = params.tagId;
+      //console.log("Instance params: ", params);
+
+      $scope.receipts = [];
+      $scope.userId = params.userId;
+      $scope.groupId = params.groupId;
+      $scope.groupName = params.groupName;
+      $scope.tagId = params.tagId;
+
+      Tag.find({
+          filter: { 
+              include: {
+                relation: 'receipts',
+                scope: {
+                    include: {
+                        relation: 'store'
+                    }
+                }
+              },
+              where: {and: [
+                  {id: params.tagId},
+                  {and: [
+                      {customerId: params.userId},
+                      {groupId: params.groupId}
+                  ]}                  
+              ]}
+          }
+      })
+      .$promise
+      .then(function(tags){
+          //console.log("tags: ", tags);
+          $scope.tagname = tags[0].name;
+          if(tags[0].receipts.length > 0){
+            $scope.receipts = tags[0].receipts;
+            //console.log("$scope.receipts: ", $scope.receipts);
+          }
+      });    
+
+      // Pagination
+      $scope.pageUnits = [5, 10, 15];
+      $scope.pageSize = 10;
+      $scope.currentPage = 0; 
+
+      // Sorting
+      $scope.tablehead = {
+        store: "Store",
+        total: "Total",
+        numberOfItem: "# Item",
+        date: "Date"
+      };
+
+      $scope.sort = {
+          column: 'date',
+          descending: '-',
+          symbol: true
+      };      
+      
+      $scope.selectedCls = function(column) {
+          return column == $scope.sort.column && 'sort-' + $scope.sort.symbol;
+      };
+
+      $scope.changeSorting = function(column) {
+          var sort = $scope.sort;
+          if (sort.column == column) {
+             if(sort.descending == ''){
+                sort.descending = '-';
+             }else{
+                sort.descending = '';
+             }
+             sort.symbol = !sort.symbol;
+          } else {
+              sort.column = column;
+              sort.descending = '';
+              sort.symbol = false;
+          }
+      };  
+      // Sorting 
+      //Pagination - angular
+      $scope.getData = function(){
+        return $filter('filter')($scope.receipts)
+      }
+
+      $scope.numberOfPages=function(){
+          return Math.ceil($scope.getData().length/$scope.pageSize);                
+      }
+      //$scope.number = $scope.numberOfPages();
+      $scope.getNumber = function(num) {
+          return new Array(num);   
+      }
+      $scope.changePageSize = function(){
+        $scope.currentPage = 0;
+      }     
+      //Pagination - angular
+
+      $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+      };
+
+      $scope.viewReceipt = function(receiptId){
+        $modalInstance.close('viewReceipt');
+        if($scope.groupId == undefined){
+          $state.go('viewReceipt', {'id': receiptId});
+        }else{
+             $state.go(
+              'groupViewReceipt', 
+              {
+                'id':         receiptId, 
+                'groupId':    $scope.groupId, 
+                'groupName':  $scope.groupName,
+                'ownerId':    $scope.userId
+              }
+            );
+        }        
+      }      
+
+  }]) 
   .controller('EditReceiptController', ['$scope', 'Receipt', '$state',
       '$stateParams', 'Store', 'Item', 'ReceiptItem', 'Category', 
       'Tag', 'ReceiptTag', '$location', '$rootScope', 

@@ -32,7 +32,7 @@
         .then(function() {
           //Check the invalid user, and giving a message will need
           $modalInstance.close('login');
-          $state.go('Dashboard');
+          //$state.go('Dashboard');
         });
     };
 

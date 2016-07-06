@@ -1,7 +1,10 @@
 <div class="container">
 <section>
 <div class="container">
-<h1 class="page-title">{{ action }} {{groupName}} receipt</h1>
+<h1 class="page-title">
+	<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+	{{ action }} {{groupName}} receipt
+</h1>
 <hr>
 <form name="receiptForm" novalidate>
  	<div class="form-group" >
@@ -114,7 +117,10 @@
 				<button class="btn btn-default"  ng-click="Receipts()">Receipts</button>
 			</div>
 			<div ng-show="receipt.id" class="col-sm-2">
-				<button class="btn btn-default" ng-click="viewReceipt()">View Receipt</button>
+				<button class="btn btn-default" ng-click="viewReceipt()">
+					<i class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></i> 
+					View Receipt
+				</button>
 			</div>				
 			<div ng-show="receipt.id" class="col-sm-2">
 				<button class="btn btn-danger" ng-click="deleteReceipt()">Delete Receipt</button>

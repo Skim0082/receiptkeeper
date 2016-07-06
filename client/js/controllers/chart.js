@@ -12,6 +12,7 @@ angular.module('app')
     function ($scope, $timeout, Receipt, $rootScope, $state, $stateParams) {      
 
     $scope.groupName = $stateParams.groupName;   
+    $scope.receipts;
 
     var userId, groupId;
     if($stateParams.groupId == undefined){
@@ -22,11 +23,11 @@ angular.module('app')
       groupId = $stateParams.groupId;
     } 
 
-      $scope.viewGroup = function(){
-        if($stateParams.groupId != undefined){
-             $state.go('viewGroup', {'id': $stateParams.groupId});
-        }        
-      }    
+    $scope.viewGroup = function(){
+    if($stateParams.groupId != undefined){
+         $state.go('viewGroup', {'id': $stateParams.groupId});
+    }        
+    }    
 
     var totals;
     var dates; 
@@ -126,192 +127,202 @@ angular.module('app')
         })
         .$promise
         .then(function(receipts){
-            // Line and Bar charts
-            totals = receipts.map(function(receipt){ return receipt.total});
-            dates = receipts.map(function(receipt){ return receipt.date});
 
-            var monthTotal = 0;
-            var thisMonth = 0;
-            var nextMonth = 0;
-            for(var i = totals.length -1 ; i >= 0 ; i--){
-                monthTotal += totals[i];
-                thisMonth = (new Date(dates[i])).getMonth();
-                if((i-1 >= 0)){
-                    nextMonth = (new Date(dates[i-1])).getMonth();
-                    if(thisMonth != nextMonth){
-                        monthlyTotal.push(monthTotal);
-                        monthNum.push(thisMonth);
-                        monthTotal = 0;
-                    }
-                }else{
-                    monthlyTotal.push(monthTotal);
-                    monthNum.push(thisMonth);
-                    monthTotal = 0;
-                }
-            }
-            for(var i = 0; i < monthNum.length ; i++){
-                monthNameFromDate.push(monthNames[monthNum[i]]);
-            } 
-
-            // Get the monthly total as range of months for last year
-            // Set the range first day of start and end month
-            var endDate;
-            if(month + 1 > 11){
-                endDate = new Date(year, 0, 1);
+            if(receipts.length < 1){
+                $('#chart').hide();
+                $('#noChart').show();
             }else{
-                endDate = new Date(year -1, month + 1, 1);
-            }
-            startDate = new Date(startDate.getFullYear() -1, startDate.getMonth(), 1);
-            Receipt.find({
-                filter: {
-                    order: 'date DESC', 
-                    include: [
-                        'tags', 
-                        {
-                            relation: 'store',
-                            scope: {
-                                include: {
-                                    relation: 'categories'
-                                }
-                            }
-                        }
-                    ],                
-                    where: {and: [
-                        {and: [
-                            {customerId: userId},
-                            {groupId: groupId}
-                        ]}, 
-                        {and: [
-                                {date: {lt: endDate}},
-                                {date: {gt: startDate}}
-                        ]}                        
-                    ]}
-                }
-            })
-            .$promise
-            .then(function(lastYearReceipts){
+                $('#noChart').hide();
 
-                totals = [];
-                dates = [];
-                totals = lastYearReceipts.map(function(receipt){ return receipt.total});
-                dates = lastYearReceipts.map(function(receipt){ return receipt.date});
+                // Line and Bar charts
+                totals = receipts.map(function(receipt){ return receipt.total});
+                dates = receipts.map(function(receipt){ return receipt.date});
 
-                monthTotal = 0;
-                thisMonth = 0;
-                nextMonth = 0;
-                //randomValue = 0;
+                var monthTotal = 0;
+                var thisMonth = 0;
+                var nextMonth = 0;
                 for(var i = totals.length -1 ; i >= 0 ; i--){
                     monthTotal += totals[i];
                     thisMonth = (new Date(dates[i])).getMonth();
                     if((i-1 >= 0)){
                         nextMonth = (new Date(dates[i-1])).getMonth();
                         if(thisMonth != nextMonth){
-                            monthlyTotalLastYear.push(monthTotal);
+                            monthlyTotal.push(monthTotal);
+                            monthNum.push(thisMonth);
                             monthTotal = 0;
                         }
                     }else{
-                        monthlyTotalLastYear.push(monthTotal);
+                        monthlyTotal.push(monthTotal);
+                        monthNum.push(thisMonth);
                         monthTotal = 0;
                     }
                 }
-                //When laste year's monthly data is less than this year, set total 0    
-                if(monthlyTotalLastYear.length < monthlyTotal.length){
-                    var count = monthlyTotal.length - monthlyTotalLastYear.length;
-                    for(var i = 0 ; i < count ; i++){
-                        monthlyTotalLastYear.splice(0,0,0);
-                    }
-                }
-                // Bar Chart comparion of monthly of this year and last year
-                $scope.bar = {
-                    labels: monthNameFromDate,
-                    series: [$scope.thisYear-1, $scope.thisYear],
-                    data: [
-                       monthlyTotalLastYear,
-                       monthlyTotal
-                    ]            
-                };   
+                for(var i = 0; i < monthNum.length ; i++){
+                    monthNameFromDate.push(monthNames[monthNum[i]]);
+                } 
 
-            });  // .then(function(lastYearReceipts){         
-
-            // Donut and pie charts
-            countOfReceipts = receipts.length;
-            angular.forEach(receipts, function(receipt, key){
-                // category ID of receipt to get the name of category
-                var categoryId = receipt.categoryId;
-
-                if(receipt.tags.length > 0){
-                    for(var i = 0 ; i < receipt.tags.length ; i++){
-                        var tagname = receipt.tags[i].name;
-                        if(tags[tagname] == undefined){
-                            tags[tagname] = 1;
-                            countOfTags += 1; 
-                        }else{
-                            tags[tagname] += 1;  
-                            countOfTags += 1;  
-                        }                        
-                    }                    
-                }
-                if(stores[receipt.store.name] == undefined){
-                    stores[receipt.store.name] = 1;
+                // Get the monthly total as range of months for last year
+                // Set the range first day of start and end month
+                var endDate;
+                if(month + 1 > 11){
+                    endDate = new Date(year, 0, 1);
                 }else{
-                    stores[receipt.store.name] += 1;
+                    endDate = new Date(year -1, month + 1, 1);
                 }
-                if(receipt.store.categories.length > 0){
-                    for(var i = 0 ; i < receipt.store.categories.length ; i++){
-                        if(receipt.store.categories[i].id == categoryId){
-                            var categoryName = receipt.store.categories[i].name;
-                            if(categories[categoryName] == undefined){
-                                categories[categoryName] = 1;
-                            }else{
-                                categories[categoryName] += 1;
+                startDate = new Date(startDate.getFullYear() -1, startDate.getMonth(), 1);
+                Receipt.find({
+                    filter: {
+                        order: 'date DESC', 
+                        include: [
+                            'tags', 
+                            {
+                                relation: 'store',
+                                scope: {
+                                    include: {
+                                        relation: 'categories'
+                                    }
+                                }
                             }
-                            break;
+                        ],                
+                        where: {and: [
+                            {and: [
+                                {customerId: userId},
+                                {groupId: groupId}
+                            ]}, 
+                            {and: [
+                                    {date: {lt: endDate}},
+                                    {date: {gt: startDate}}
+                            ]}                        
+                        ]}
+                    }
+                })
+                .$promise
+                .then(function(lastYearReceipts){
+
+                    totals = [];
+                    dates = [];
+                    totals = lastYearReceipts.map(function(receipt){ return receipt.total});
+                    dates = lastYearReceipts.map(function(receipt){ return receipt.date});
+
+                    monthTotal = 0;
+                    thisMonth = 0;
+                    nextMonth = 0;
+                    //randomValue = 0;
+                    for(var i = totals.length -1 ; i >= 0 ; i--){
+                        monthTotal += totals[i];
+                        thisMonth = (new Date(dates[i])).getMonth();
+                        if((i-1 >= 0)){
+                            nextMonth = (new Date(dates[i-1])).getMonth();
+                            if(thisMonth != nextMonth){
+                                monthlyTotalLastYear.push(monthTotal);
+                                monthTotal = 0;
+                            }
+                        }else{
+                            monthlyTotalLastYear.push(monthTotal);
+                            monthTotal = 0;
                         }
                     }
-                }
-            }); // angular.forEach(receipts, function(receipt, key){
+                    //When laste year's monthly data is less than this year, set total 0    
+                    if(monthlyTotalLastYear.length < monthlyTotal.length){
+                        var count = monthlyTotal.length - monthlyTotalLastYear.length;
+                        for(var i = 0 ; i < count ; i++){
+                            monthlyTotalLastYear.splice(0,0,0);
+                        }
+                    }
+                    // Bar Chart comparion of monthly of this year and last year
+                    $scope.bar = {
+                        labels: monthNameFromDate,
+                        series: [$scope.thisYear-1, $scope.thisYear],
+                        data: [
+                           monthlyTotalLastYear,
+                           monthlyTotal
+                        ]            
+                    };   
 
-            angular.forEach(categories, function(category, key){
-                catetory_donut_labels.push(key);
-                catetory_donut_data.push(Number(((categories[key]/countOfReceipts)*100).toFixed(2)));
-            });
+                });  // .then(function(lastYearReceipts){         
 
-            angular.forEach(stores, function(store, key){
-                store_pie_labels.push(key);
-                store_pie_data.push(Number(((stores[key]/countOfReceipts)*100).toFixed(2)));
-            });
+                // Donut and pie charts
+                countOfReceipts = receipts.length;
+                angular.forEach(receipts, function(receipt, key){
+                    // category ID of receipt to get the name of category
+                    var categoryId = receipt.categoryId;
 
-            angular.forEach(tags, function(tag, key){
-                tag_donut_labels.push(key);
-                tag_donut_data.push(Number(((tags[key]/countOfTags)*100).toFixed(2)));
-            });                        
+                    if(receipt.tags.length > 0){
+                        for(var i = 0 ; i < receipt.tags.length ; i++){
+                            var tagname = receipt.tags[i].name;
+                            if(tags[tagname] == undefined){
+                                tags[tagname] = 1;
+                                countOfTags += 1; 
+                            }else{
+                                tags[tagname] += 1;  
+                                countOfTags += 1;  
+                            }                        
+                        }                    
+                    }
+                    if(stores[receipt.store.name] == undefined){
+                        stores[receipt.store.name] = 1;
+                    }else{
+                        stores[receipt.store.name] += 1;
+                    }
+                    if(receipt.store.categories.length > 0){
+                        for(var i = 0 ; i < receipt.store.categories.length ; i++){
+                            if(receipt.store.categories[i].id == categoryId){
+                                var categoryName = receipt.store.categories[i].name;
+                                if(categories[categoryName] == undefined){
+                                    categories[categoryName] = 1;
+                                }else{
+                                    categories[categoryName] += 1;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }); // angular.forEach(receipts, function(receipt, key){
+
+                angular.forEach(categories, function(category, key){
+                    catetory_donut_labels.push(key);
+                    catetory_donut_data.push(Number(((categories[key]/countOfReceipts)*100).toFixed(2)));
+                });
+
+                angular.forEach(stores, function(store, key){
+                    store_pie_labels.push(key);
+                    store_pie_data.push(Number(((stores[key]/countOfReceipts)*100).toFixed(2)));
+                });
+
+                angular.forEach(tags, function(tag, key){
+                    tag_donut_labels.push(key);
+                    tag_donut_data.push(Number(((tags[key]/countOfTags)*100).toFixed(2)));
+                });                        
+
+                // Line Chart retrieved from real data of database
+                // Monthly total consumption as range of months
+                $scope.line = {
+                    labels: monthNameFromDate,      //['January', 'February', 'March', 'April', 'May', 'June'],        
+                    series: [$scope.thisYear],      //series: ['2016'],
+                    data: [
+                        monthlyTotal                //[1900, 1650, 1700, 2100, 1600, 1800]
+                    ]
+                };
+                // Donut chart for Category
+                $scope.donut = {
+                    labels: catetory_donut_labels,
+                    data: catetory_donut_data
+                }; 
+                // Pie chart for Store
+                $scope.pie = {
+                    labels: store_pie_labels,
+                    data: store_pie_data            
+                };
+                // Donut chart for Tags
+                $scope.donut1 = {
+                    labels: tag_donut_labels,
+                    data: tag_donut_data            
+                };  
+
+            }   // if(receipts)
 
         }); // .then(function(receipts){
 
-        // Line Chart retrieved from real data of database
-        // Monthly total consumption as range of months
-        $scope.line = {
-            labels: monthNameFromDate,      //['January', 'February', 'March', 'April', 'May', 'June'],        
-            series: [$scope.thisYear],      //series: ['2016'],
-            data: [
-                monthlyTotal                //[1900, 1650, 1700, 2100, 1600, 1800]
-            ]
-        };
-        // Donut chart for Category
-        $scope.donut = {
-            labels: catetory_donut_labels,
-            data: catetory_donut_data
-        }; 
-        // Pie chart for Store
-        $scope.pie = {
-            labels: store_pie_labels,
-            data: store_pie_data            
-        };
-        // Donut chart for Tags
-        $scope.donut1 = {
-            labels: tag_donut_labels,
-            data: tag_donut_data            
-        };  
 
     } // $scope.monthConsumptionChart = function(rangeOfMonth){
 

@@ -1,7 +1,10 @@
 <div class="container">
 <section>
 <div class="container">
-<h1 class="page-title">{{groupName? groupName + ' r': 'R'}}eceipt details</h1>
+<h1 class="page-title">
+	<i class="fa fa-wpforms" aria-hidden="true"></i>
+	{{groupName? groupName + ' r': 'R'}}eceipt details
+</h1>
 <hr>
 <div class="row">
 	<label class="col-sm-2 control-label">Store name</label>
@@ -45,7 +48,7 @@
 	<div class="col-sm-4">
 		{{receipt.total}}
 	</div>
-	<label class="col-sm-2 control-label" style="text-align:right;"># Items</label>
+	<label class="col-sm-2 control-label" style="text-align:right;"># Item(s)</label>
 	<div class="col-sm-4">
 		{{receipt.numberOfItem}}    
 	</div>
@@ -63,12 +66,14 @@
   	<label>Tag</label>
   	<br><span style="text-align:center;">{{selTagCount}}</span>
   	</div>
-  	<div class="col-sm-4">
+  	<div class="col-sm-4" ng-controller="ModalTagReceiptsCtrl">
   		<!--
   		<ul>
   			<li ng-repeat="tag in selectedTags">{{tag.name}}</li>
   		</ul>
-  		--><span class="gh-tag" ng-repeat="tag in selectedTags">{{tag.name}}</span> 
+  		--><span class="gh-tag" 
+  				ng-repeat="tag in selectedTags" 
+  				ng-click="open(tag.id, userId, groupId, groupName)">{{tag.name}}</span>&nbsp;
   	</div>
 </div>
 <div class="row" ng-show="receipt.imageFilePath">
@@ -84,7 +89,10 @@
 <!-- button -->
 <div class="row">
 	<div  class="col-sm-offset-2 col-sm-2">
-		<button class="btn btn-default"  ng-click="Receipts()">Receipts</button>
+		<button class="btn btn-default"  ng-click="Receipts()">
+			<i class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></i> 
+			Receipts
+		</button>
 	</div>
 	<div  class="col-sm-2">
 		<button class="btn btn-default" ng-click="editReceipt()">Edit Receipt</button>
@@ -99,4 +107,98 @@
 </div>
 </section>
 </div>
+<!-- Tag Receipts Modal Window -->
+<div ng-controller="ModalTagReceiptsCtrl" style="background-color:#fff;">
+    <script type="text/ng-template" id="ModalTagReceipts.html">
+        <div class="modal-header">
+            <h1 class="page-title text-center">
+              <i class="fa fa-tag" aria-hidden="true"></i>
+              Receipts in Tag
+            </h1>
+        </div>
+        <div class="modal-body">
+            <div style="margin:25px;">
+
+		        <div class="row">
+		            <div class="col-sm-12">
+		                <div class="panel panel-default">
+		                    <div class="panel-heading">
+		                        <strong>Receipts in '{{tagname}}'</strong>
+		                    </div>
+		                    <div class="panel-body">
+
+	<div class="row">
+		<label class="col-sm-1 control-label text-right">Search</label>
+		<div class="col-sm-3">			
+			<input ng-model="searchText" id="search" class="form-control" placeholder="Search text">
+		</div>
+	</div>
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr style="background:#ffffff;">
+					<th style="display:none;">ID</th>
+					<!--<th style="text-align: center; ">Store</th>-->
+					<th class="sortable" 
+						style="text-align: center; "
+						ng-repeat="(key,value) in tablehead" 
+					    ng-class="selectedCls(key)" 
+					    ng-click="changeSorting(key)">{{value}}</th>
+					<th style="text-align: center; "colspan="2">Comment</th>
+				</tr>
+			</thead>
+			<tbody>
+		    <tr ng-repeat="receipt in receipts | orderBy : sort.descending + sort.column | receiptFilter:searchText | startFrom:currentPage*pageSize | limitTo:pageSize">
+		        <td style="display:none;">{{receipt.id}}</td>
+		        <td style="margin-left:15px;">{{receipt.store.name}}</td>
+		        <td style="text-align: center; ">$ {{receipt.total}}</td>
+		        <td style="text-align: center; ">{{receipt.numberOfItem}}</td>
+		        <td style="text-align: center; ">{{(receipt.date).substring(0, 10)}}</td>
+		        <td>
+		        	{{receipt.comment}}
+				 	<i class="glyphicon glyphicon-search pull-right text-primary" 
+				 		style="padding-right:10px" 
+				 		ng-click="viewReceipt(receipt.id)" tooltip-html-unsafe="View Details"></i>
+		        </td>
+		    </tr>
+		    </tbody>
+		</table>
+
+	</div>
+	<div style="margin-bottom:20px;">
+	<div class="row">
+		<div class="col-sm-2">
+			<select ng-model="pageSize" 
+				id="pageSize" 
+				class="form-control" 
+				style="width:100px;"
+				ng-change="changePageSize()"
+				ng-options="unit for unit in pageUnits">
+			</select>
+		</div>
+		<div class="col-sm-4">
+			<ul class="list-group list-group-horizontal">
+				<button  class="btn btn-primary" ng-disabled="currentPage == 0"  ng-click="currentPage=currentPage-1">Previous</button>
+				<button  class="btn btn-primary" ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="currentPage=currentPage+1">Next</button>
+			</ul>
+		</div>
+		<div class="col-sm-6 text-center">
+			<pre>Selected page: {{currentPage+1}}/{{numberOfPages()==0? 1:numberOfPages();}}</pre>
+		</div>
+	</div>
+
+
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+
+            </div>
+        </div>
+		<div class="modal-footer">
+		<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+		</div>        
+    </script>
+</div>
+<!-- Tag Receipts Modal Window -->
 
