@@ -41,9 +41,10 @@ div.tabcontent .row{
   <tabset>
     <tab>
       <tab-heading>
-        <i class="fa fa-file-text-o" aria-hidden="true"></i> Receipt View
+        <i class="fa fa-file-text-o" aria-hidden="true"></i> 
+        <span>Receipt View</span>
       </tab-heading>
-      <div class="tabcontent">
+      <div class="tabcontent" >
 
 		<div class="row">
 			<label class="col-sm-2 control-label">Store name</label>
@@ -118,7 +119,8 @@ div.tabcontent .row{
     </tab> 
     <tab  disabled="!receipt.imageFilePath">
       <tab-heading>
-        <i class="fa fa-file-image-o" aria-hidden="true"></i> Receipt Photo
+        <i class="fa fa-file-image-o" aria-hidden="true"></i> 
+        <span>Receipt Photo</span>
       </tab-heading>
 	     <div  class="tabcontent">
 			<div class="row" ng-show="receipt.imageFilePath">
@@ -260,7 +262,7 @@ div.tabcontent .row{
             </div>
         </div>
 		<div class="modal-footer">
-		<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+		<button class="btn btn-warning" ng-click="close()">Close</button>
 		</div>        
     </script>
 </div>

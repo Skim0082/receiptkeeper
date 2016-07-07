@@ -560,8 +560,8 @@
       }     
       //Pagination - angular
 
-      $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
+      $scope.close = function () {
+        $modalInstance.dismiss('close');
       };
 
       $scope.viewReceipt = function(receiptId){
