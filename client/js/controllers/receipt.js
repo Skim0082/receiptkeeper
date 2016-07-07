@@ -853,7 +853,9 @@
         $scope.receipt.categoryId = $scope.selectedCategory.id;
       }
       $scope.receipt.storeId = $scope.selectedStore.id;  
-      $scope.receipt.date = $scope.receipt.date = $('#receiptdate input').prop('value');    
+      var receiptDate = $('#receiptdate input').prop('value');
+      $scope.receipt.date = new Date(receiptDate);    
+      console.log("$scope.receipt.date: ", $scope.receipt.date);
       $scope.receipt
       .$save()
       .then(function(){
@@ -1089,7 +1091,8 @@
       }  
     }
     $scope.submitForm = function() {
-      $scope.receipt.date = $scope.receipt.date = $('#receiptdate input').prop('value');
+      var receiptDate = $('#receiptdate input').prop('value');
+      $scope.receipt.date = new Date(receiptDate);
 
       Receipt
         .create({

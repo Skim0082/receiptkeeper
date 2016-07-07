@@ -13,6 +13,7 @@ angular.module('app')
 
     $scope.groupName = $stateParams.groupName;   
     $scope.receipts;
+    $scope.tagchartpercent = [];
 
     var userId, groupId;
     if($stateParams.groupId == undefined){
@@ -31,18 +32,18 @@ angular.module('app')
 
     var totals;
     var dates; 
-    var monthlyTotal;
-    var monthlyTotalLastYear;
-    var monthNum;
+    var monthlyTotal, monthlyTotalKey;
+    var monthlyTotalLastYear, monthlyTotalLastYearKey;
+    var monthNum, monthRangeArray;
     var monthNameFromDate; 
-    var stores, tags, categories;
+    var stores, storesTotal, tags, categories;
     var countOfTags, countOfReceipts;
     var catetory_donut_labels;
     var catetory_donut_data; 
     var tag_donut_labels;
     var tag_donut_data;  
     var store_pie_labels;
-    var store_pie_data;       
+    var store_pie_data, store_pie_data_total;       
 
     $scope.selectedMonth;
     $scope.thisYear = (new Date()).getFullYear();
@@ -83,13 +84,31 @@ angular.module('app')
             startDate = new Date(year -1 , 12 + (month-rangeOfMonth), 1);
         }
 
+        var j = 0;
+        var m = 0;
+        var s = 0;
+        monthRangeArray = new Array(rangeOfMonth+1);
+        for(var i = 0 ; i <= rangeOfMonth  ; i++){
+            m = startDate.getMonth() + j;
+            if(m < 12){
+                monthRangeArray[i] = m;
+            }else{
+                monthRangeArray[i] = s;
+                s++;
+            }            
+            j++;
+        }
+
         totals = [];
         dates = []; 
         monthlyTotal = [];
+        monthlyTotalKey = {};
         monthlyTotalLastYear = [];
+        monthlyTotalLastYearKey = {};
         monthNum = [];
         monthNameFromDate = [];
         stores = {};
+        storesTotal = {};
         tags = {};
         categories = {};  
         countOfReceipts = countOfTags = 0;  
@@ -99,12 +118,13 @@ angular.module('app')
         tag_donut_data = [];  
         store_pie_labels = [];
         store_pie_data = []; 
+        store_pie_data_total = []; 
 
-        //{date: {gt: new Date('2015-12-31T00:00:00.000Z')}}                             
+        //{date: {gte: new Date('2015-12-31T00:00:00.000Z')}}   
+        //Wed Jun 01 2016 00:00:00 GMT-0400 (Eastern Daylight Time)                          
 
         Receipt.find({
             filter: {
-                order: 'date DESC', 
                 include: [
                     'tags', 
                     {
@@ -117,12 +137,13 @@ angular.module('app')
                     }
                 ],                
                 where: {and: [
-                    {date: {gt: startDate}},
+                    {date: {gte: startDate}},
                     {and: [
                         {customerId: userId},
                         {groupId: groupId}
                     ]}                  
-                ]}
+                ]},
+                order: 'date DESC'                
             }
         })
         .$promise
@@ -149,16 +170,25 @@ angular.module('app')
                         if(thisMonth != nextMonth){
                             monthlyTotal.push(monthTotal);
                             monthNum.push(thisMonth);
+                            monthlyTotalKey[thisMonth] = monthTotal;
                             monthTotal = 0;
                         }
                     }else{
                         monthlyTotal.push(monthTotal);
                         monthNum.push(thisMonth);
+                        monthlyTotalKey[thisMonth] = monthTotal;
                         monthTotal = 0;
                     }
                 }
-                for(var i = 0; i < monthNum.length ; i++){
-                    monthNameFromDate.push(monthNames[monthNum[i]]);
+                //if no monthly data exist, set total value = 0
+                monthlyTotal = [];
+                for(var i = 0; i < monthRangeArray.length ; i++){
+                    monthNameFromDate.push(monthNames[monthRangeArray[i]]);   
+                    if(monthlyTotalKey[monthRangeArray[i]] == undefined){
+                        monthlyTotal.push(0);
+                    }else{
+                        monthlyTotal.push(monthlyTotalKey[monthRangeArray[i]]);
+                    }
                 } 
 
                 // Get the monthly total as range of months for last year
@@ -191,7 +221,7 @@ angular.module('app')
                             ]}, 
                             {and: [
                                     {date: {lt: endDate}},
-                                    {date: {gt: startDate}}
+                                    {date: {gte: startDate}}
                             ]}                        
                         ]}
                     }
@@ -207,7 +237,6 @@ angular.module('app')
                     monthTotal = 0;
                     thisMonth = 0;
                     nextMonth = 0;
-                    //randomValue = 0;
                     for(var i = totals.length -1 ; i >= 0 ; i--){
                         monthTotal += totals[i];
                         thisMonth = (new Date(dates[i])).getMonth();
@@ -215,20 +244,25 @@ angular.module('app')
                             nextMonth = (new Date(dates[i-1])).getMonth();
                             if(thisMonth != nextMonth){
                                 monthlyTotalLastYear.push(monthTotal);
+                                monthlyTotalLastYearKey[thisMonth] = monthTotal;
                                 monthTotal = 0;
                             }
                         }else{
                             monthlyTotalLastYear.push(monthTotal);
+                            monthlyTotalLastYearKey[thisMonth] = monthTotal;
                             monthTotal = 0;
                         }
                     }
-                    //When laste year's monthly data is less than this year, set total 0    
-                    if(monthlyTotalLastYear.length < monthlyTotal.length){
-                        var count = monthlyTotal.length - monthlyTotalLastYear.length;
-                        for(var i = 0 ; i < count ; i++){
-                            monthlyTotalLastYear.splice(0,0,0);
+                    //if no monthly data exist, set total value = 0
+                    monthlyTotalLastYear = [];
+                    for(var i = 0; i < monthRangeArray.length ; i++){ 
+                        if(monthlyTotalLastYearKey[monthRangeArray[i]] == undefined){
+                            monthlyTotalLastYear.push(0);
+                        }else{
+                            monthlyTotalLastYear.push(monthlyTotalLastYearKey[monthRangeArray[i]]);
                         }
-                    }
+                    } 
+
                     // Bar Chart comparion of monthly of this year and last year
                     $scope.bar = {
                         labels: monthNameFromDate,
@@ -261,8 +295,10 @@ angular.module('app')
                     }
                     if(stores[receipt.store.name] == undefined){
                         stores[receipt.store.name] = 1;
+                        storesTotal[receipt.store.name] = receipt.total;
                     }else{
                         stores[receipt.store.name] += 1;
+                        storesTotal[receipt.store.name] += receipt.total;
                     }
                     if(receipt.store.categories.length > 0){
                         for(var i = 0 ; i < receipt.store.categories.length ; i++){
@@ -279,20 +315,83 @@ angular.module('app')
                     }
                 }); // angular.forEach(receipts, function(receipt, key){
 
+                // more than 7 items, get rest of items named as "Others" and sum their values
+                var count = 1;
+                var otherTotal = 0;
                 angular.forEach(categories, function(category, key){
-                    catetory_donut_labels.push(key);
-                    catetory_donut_data.push(Number(((categories[key]/countOfReceipts)*100).toFixed(2)));
+                    if(count < 8){
+                        catetory_donut_labels.push(key);
+                        catetory_donut_data.push(Number(((categories[key]/countOfReceipts)*100).toFixed(2)));
+                        count++;
+                    }else{
+                        
+                        otherTotal = otherTotal + Number(((categories[key]/countOfReceipts)*100).toFixed(2));
+                    }                    
                 });
+                if(count >= 8){
+                    catetory_donut_labels.push('others');
+                    catetory_donut_data.push(otherTotal);                    
+                }
 
+                count = 1;
+                otherTotal = 0;
+                var otherStoreAmount = 0;
                 angular.forEach(stores, function(store, key){
-                    store_pie_labels.push(key);
-                    store_pie_data.push(Number(((stores[key]/countOfReceipts)*100).toFixed(2)));
+                    if(count < 8){
+                        store_pie_labels.push(key);
+                        store_pie_data.push(Number(((stores[key]/countOfReceipts)*100).toFixed(2)));
+                        store_pie_data_total.push(storesTotal[key]);
+                        count++;
+                    }else{
+                        otherTotal = otherTotal + Number(((stores[key]/countOfReceipts)*100).toFixed(2));
+                        otherStoreAmount = otherStoreAmount + storesTotal[key];
+                    }
                 });
+                if(count >= 8){
+                    store_pie_labels.push('others');
+                    store_pie_data.push(otherTotal);                    
+                    store_pie_data_total.push(otherTotal); 
+                }                
 
+                count = 1;
+                otherTotal = 0;
+                var tagprogresschart = [];
+                var tagValue = 0;
+                var tagType;
                 angular.forEach(tags, function(tag, key){
-                    tag_donut_labels.push(key);
-                    tag_donut_data.push(Number(((tags[key]/countOfTags)*100).toFixed(2)));
-                });                        
+                  if(count < 8){
+                        tag_donut_labels.push(key);
+                        tag_donut_data.push(Number(((tags[key]/countOfTags)*100).toFixed(2)));
+                        count++;
+                    }else{
+                        otherTotal = otherTotal + Number(((tags[key]/countOfTags)*100).toFixed(2));
+                    }
+                    tagValue = Number(((tags[key]/countOfTags)*100).toFixed(2));
+                    if (tagValue <= 5) {
+                      tagType = 'danger';
+                    } else if (tagValue <= 10) {
+                      tagType = 'success';
+                    } else if (tagValue <= 15) {
+                      tagType = 'primary';
+                    } else if (tagValue <= 20) {
+                      tagType = 'info';
+                    } else if (tagValue <= 55) {
+                      tagType = 'warning';
+                    } else {
+                      tagType = 'danger';
+                    }
+                    tagprogresschart.push({
+                        name: key,
+                        value: tagValue,
+                        type: tagType
+                    });
+                });
+                if(count >= 8){
+                    tag_donut_labels.push('others');
+                    tag_donut_data.push(otherTotal);                    
+                } 
+                $scope.tagchartpercent =  tagprogresschart;
+                console.log("tagprogresschart: ", tagprogresschart);                                      
 
                 // Line Chart retrieved from real data of database
                 // Monthly total consumption as range of months
@@ -318,6 +417,25 @@ angular.module('app')
                     labels: tag_donut_labels,
                     data: tag_donut_data            
                 };  
+                // Donut chart for Tags
+                $scope.radar = {
+                    labels:tag_donut_labels,
+                    data:[
+                        tag_donut_data
+                    ]
+                };
+
+                // Polar Area Chart Monthly Comsumption 
+                $scope.dynamic = {
+                    labels : store_pie_labels,
+                    data : store_pie_data_total,
+                    type : 'PolarArea',
+
+                    toggle : function () 
+                    {
+                        this.type = this.type === 'PolarArea' ? 'Pie' : 'PolarArea';
+                    }
+                };                                
 
             }   // if(receipts)
 
@@ -332,66 +450,5 @@ angular.module('app')
     }
     // default range of month is 6 months
     $scope.monthConsumptionChart($scope.selectedMonth.number);   
-    
-    /*
-    // Dummy data for line chart
-    $scope.line = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-        series: ['Series A', 'Series B'],
-        data: [
-          [1900, 1650, 1700, 2100, 1600, 1800],
-          [28, 48, 40, 19, 86, 27, 90]
-        ],
-        onClick: function (points, evt) {
-          console.log(points, evt);
-        }
-    };    
-
-    $scope.bar = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-    	series: ['2015', '2016'],
-
-    	data: [
-    	   [2100, 1750, 1600, 1800, 1450, 1750],
-    	   [1900, 1650, 1700, 2100, 1600, 1800]
-    	]
-    	
-    };
-    
-    $scope.donut = {
-    	labels: ["Applicances", "Clothing", "Electronics", "Helth & Pharmacy", "Furniture", "Grocery"],
-    	data: [130, 70, 100, 300, 200, 1000]
-    };
-    
-    $scope.pie = {
-    	labels : ["Walmart", "Zehrs", "Shoppers", "Food basic", "Canadian Tire", "Sobei"],
-    	data : [40, 20, 10, 10, 5, 5]
-    };
-
-    $scope.donut1 = {
-    	labels : ["Gift", "Re", "Mail-Order Sales", "Tele Sales", "Corporate Sales"],
-    	data : [300, 500, 100, 40, 120]
-    };
-    */
-    $scope.radar = {
-        labels:["Eating", "Drinking", "Wearing", "Entertaining", "Buying", "Training"],
-
-        data:[
-            [30, 15, 20, 10, 15, 10]
-            //, [28, 48, 40, 19, 96, 27, 100]
-        ]
-    };
-
-    $scope.dynamic = {
-    	labels : ["Download Sales", "In-Store Sales", "Mail-Order Sales", "Tele Sales", "Corporate Sales"],
-    	data : [300, 500, 100, 40, 120],
-    	type : 'PolarArea',
-
-    	toggle : function () 
-    	{
-    		this.type = this.type === 'PolarArea' ? 'Pie' : 'PolarArea';
-    	}
-    };
-
-
+   
 }]);

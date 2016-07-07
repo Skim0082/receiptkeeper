@@ -109,39 +109,6 @@
               <span ng-click="open()" style="cursor:pointer;">Log In</span>
             </a>
           </li>         
-          <li ng-show="currentUser" class="dropdown">
-            <a href="" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="glyphicon glyphicon-inbox"></i>
-              Config <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-              <li>
-                <a href="/#/Items">
-                  <i class="glyphicon glyphicon-cd"></i>
-                  Item
-                </a>
-              </li>
-              <li>
-                <a href="/#/Tags">
-                  <i class="glyphicon glyphicon-tag"></i>
-                  Tag
-                  </a>
-              </li>
-              <li class="divider"></li>
-              <li>
-                <a href="/#/Stores">
-                  <i class="glyphicon glyphicon-shopping-cart"></i>
-                  Store
-                </a>
-              </li>           
-              <li>
-                <a href="/#/Categories">
-                  <i class="glyphicon glyphicon-duplicate"></i>
-                  Category
-                </a>
-              </li> 
-            </ul>
-          </li>
           <li ng-show="currentUser">
             <a href="/#/chart">
               <i class="fa fa-bar-chart" aria-hidden="true"></i>
@@ -168,7 +135,42 @@
               <i class="glyphicon glyphicon-blackboard"></i> 
               Group
             </a>
-          </li>                
+          </li>  
+          <li ng-show="currentUser" class="dropdown">
+            <a href="" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="glyphicon glyphicon-inbox"></i>
+              Config <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <!--
+              <li>
+                <a href="/#/Items">
+                  <i class="glyphicon glyphicon-cd"></i>
+                  Item
+                </a>
+              </li>
+              -->          
+              <li>
+                <a href="/#/Categories">
+                  <i class="glyphicon glyphicon-duplicate"></i>
+                  Category
+                </a>
+              </li> 
+              <li>
+                <a href="/#/Stores">
+                  <i class="glyphicon glyphicon-shopping-cart"></i>
+                  Store
+                </a>
+              </li>  
+              <li class="divider"></li>                            
+              <li>
+                <a href="/#/Tags">
+                  <i class="glyphicon glyphicon-tag"></i>
+                  Tag
+                  </a>
+              </li>
+            </ul>
+          </li>
           <li ng-show="currentUser" class="dropdown">
             <a href="" class="dropdown-toggle" data-toggle="dropdown">
               <i class="glyphicon glyphicon-user"></i>
