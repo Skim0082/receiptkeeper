@@ -23,7 +23,7 @@
       function($scope, AuthService, $state, $rootScope, $modalInstance) {           
 
     $scope.user = {
-      email: "aaa@gmail.com",
+      email: "joe@gmail.com",
       password: "aaa"
     };
 

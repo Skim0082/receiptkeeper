@@ -1,3 +1,14 @@
+<style>
+    .fade.in{
+        opacity: 1;
+    }
+    .modal-backdrop.in {
+        opacity: .5 !important;
+    }
+    .modal-backdrop.fade {
+        opacity: 0  !important;
+    }
+</style>
 <div class="container">
 <section>
 <div class="container">
@@ -14,11 +25,13 @@
 <!-- Tag Cloud -->
 <div class="row ng-scope" ng-show="tagcloud">
     <div class="col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading"> Tag Cloud</div>
+        <div class="panel panel-info">
+            <div class="panel-heading"> 
+                <strong>Tags Cloud</strong>
+            </div>
             <!-- .panel-heading -->
             <div style="margin:15px;">
-                <button class="btn btn-sm btn-primary" id="update-tagcloud">Narrow down</button>
+                <button class="btn btn-sm btn-info" id="update-tagcloud">Narrow down</button>
                 <div id="tagcloud" class="jqcloud panel-body" style="width:100%; height:300px; max-width:500px;margin:0 auto;">
                 </div>
             </div>
@@ -30,73 +43,210 @@
 </div>
 <!-- Tag Cloud -->
 <div class="row">
-    <div class="col-lg-3 col-md-6 ng-isolate-scope" number="6" comments="New comments!" colour="primary" type="comments">
-        <div class="panel panel-green">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3"> <i class="fa fa-comments fa-5x"></i> </div>
-                    <div class="col-xs-9 text-right">
-                        <div class="huge ng-binding">6</div>
-                        <div class="ng-binding">New comments!</div>
-                    </div>
-                </div>
-            </div>
-            <a href="#">
-                <div class="panel-footer"> <span class="pull-left">View Details</span> <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-6 ng-isolate-scope" number="12" comments="New tasks!" colour="primary" type="user">
+    <div ng-controller="DashboardUserController" 
+        class="col-lg-3 col-md-6 col-sm-6 ng-isolate-scope" 
+        colour="primary">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3"> <i class="fa fa-user fa-5x"></i> </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge ng-binding">12</div>
-                        <div class="ng-binding">New tasks!</div>
+                        <div class="huge ng-binding">{{username}}</div>
+                        <div class="ng-binding">Profile</div>
                     </div>
                 </div>
             </div>
-            <a href="#">
-                <div class="panel-footer"> <span class="pull-left">View Details</span> <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
+            <div class="panel-body" ng-show="showProfile">
+                <div class="col-sm-4">
+                    <div class="row text-center" style="margin-bottom:10px;">
+                    <img src="images/assets/default-user01.png" 
+                        class="member-img img-circle" alt="profile photo" 
+                        style="margin: 0 auto;width:100%;height:auto;max-width:150px;min-width:80px;">
+                    </div>
                 </div>
+                <div class="col-sm-8">
+                    <ul class="list-group" style="margin-bottom:5px;">
+                        <li class="list-group-item" style="border:0;padding-bottom:0;">
+                            <label class="control-label" style="color:#4e4e4e">User Name:</label>
+                            <span>{{customer.username}}</span>
+                        </li>
+                        <li class="list-group-item" style="border:0;padding-bottom:0;">
+                            <label class="control-label" style="color:#4e4e4e">First Name:</label>
+                            <span>{{customer.firstName}}</span>
+                        </li>
+                        <li class="list-group-item" style="border:0;">
+                            <label class="control-label" style="color:#4e4e4e">Last Name:</label>
+                            <span>{{customer.lastName}}</span>
+                        </li>                        
+                    </ul>
+                </div>
+                <div class="col-sm-12">
+                    <span ng-show="customer.groupName">
+                        <label class="control-label" style="color:#4e4e4e">
+                            Group Name:
+                        </label>
+                        <span>{{customer.groupName}}</span>   
+                    </span>             
+                    <div
+                        class="pull-right" 
+                        style="margin-right:5px;margin-top:10px;">
+                        <button class="btn btn-primary"  
+                            ng-click="editCustomer(userId, customer.username, customer.firstName, customer.lastName)">
+                            <i class="glyphicon glyphicon-edit" aria-hidden="true"></i> 
+                            Edit
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <a>            
+            <div class="panel-footer" style="cursor:pointer;" ng-click="openUser()"> 
+                <span class="pull-left">{{email}}</span> 
+                <span class="pull-right">
+                    <i class="fa fa-arrow-circle-right"></i>
+                </span>
+                <div class="clearfix"></div>
+            </div>
             </a>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 ng-isolate-scope" number="18" comments="New orders!" colour="yellow" type="shopping-cart">
-        <div class="panel panel-yellow">
+
+    <div class="col-lg-3 col-md-6 col-sm-6 ng-isolate-scope" number="18" comments="New orders!" colour="yellow" type="shopping-cart">
+        <div class="panel panel-green">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3"> <i class="fa fa-shopping-cart fa-5x"></i> </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge ng-binding">18</div>
-                        <div class="ng-binding">New orders!</div>
+                        <div class="huge ng-binding">5</div>
+                        <div class="ng-binding">New receipts</div>
                     </div>
                 </div>
             </div>
-            <a href="#">
-                <div class="panel-footer"> <span class="pull-left">View Details</span> <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+            <div class="panel-body" ng-show="showReceipts">
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <span>Canadian Tire</span> 
+                        <span>$100</span>
+                        <span>2016-07-02</span>
+                    </div>
+                    <span class="list-group-item">Lorem ipsum dolor sit amet, con</span>
+                    <span class="list-group-item">Lorem ipsum dolor sit amet, con</span>
+                    <span class="list-group-item">Lorem ipsum dolor sit amet, con</span>
+                    <span class="list-group-item">Lorem ipsum dolor sit amet, con</span>
+                </div> 
+            </div>           
+            <a >
+                <div class="panel-footer" style="cursor:pointer;" ng-click="showReceipts = !showReceipts"> 
+                    <span class="pull-left">View Receipts</span> 
+                    <span class="pull-right">
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </span>
                     <div class="clearfix"></div>
                 </div>
             </a>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 ng-isolate-scope" number="24" comments="Support tickets!" colour="red" type="support">
-        <div class="panel panel-red">
+
+    <div class="col-lg-3 col-md-6 col-sm-6 ng-isolate-scope" number="6" comments="New comments!" colour="primary" type="comments">
+        <div class="panel panel-yellow">
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-xs-3"> <i class="fa fa-support fa-5x"></i> </div>
+                    <div class="col-xs-3"> <i class="fa fa-bell fa-5x" aria-hidden="true"></i> </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge ng-binding">24</div>
-                        <div class="ng-binding">Support tickets!</div>
+                        <div class="huge ng-binding">4</div>
+                        <div class="ng-binding">New notification!</div>
                     </div>
                 </div>
             </div>
-            <a href="#">
-                <div class="panel-footer"> <span class="pull-left">View Details</span> <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+            <div class="panel-body" ng-show="showNotification">
+
+                <div class="list-group">
+                    <div class="list-group-item" style="background-color:#eee;"> Group Member </div>
+                    <div class="list-group-item">
+                        <i class="glyphicon glyphicon-bell" style="margin-right:10px;" ></i>
+                        <span>Invitation of Group: </span> 
+                        <span>AAA Group</span>
+                        <span>2016-06-25</span>
+                    </div>
+                    <div class="list-group-item">
+                        <i class="glyphicon glyphicon-bell" style="margin-right:10px;" ></i>
+                        <span>Invitation of Group: </span> 
+                        <span>BBB Group</span>
+                        <span>2016-07-01</span>
+                    </div>                 
+                </div> 
+
+                <div class="list-group">
+                    <div class="list-group-item" style="background-color:#eee;"> Group Owner </div>
+                    <div class="list-group-item">
+                        <i class="glyphicon glyphicon-bell" style="margin-right:10px;" ></i>
+                        <span>Invitation: </span> 
+                        <span>bbb@gmail.com</span>
+                        <span>2016-06-25</span>
+                    </div>
+                    <div class="list-group-item">
+                        <i class="glyphicon glyphicon-bell" style="margin-right:10px;" ></i>
+                        <span>Invitation of Group: </span> 
+                        <span>kkk@gmail.com</span>
+                        <span>2016-06-29</span>
+                    </div>                 
+                </div>                 
+            </div>              
+            <a >
+                <div class="panel-footer" style="cursor:pointer;" ng-click="showNotification = !showNotification"> 
+                    <span class="pull-left">View Details</span> 
+                    <span class="pull-right">
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-6 ng-isolate-scope" number="24" comments="Support tickets!" colour="red" type="support">
+        <div class="panel panel-red">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3"> <i class="fa fa-users fa-5x" aria-hidden="true"></i> </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge ng-binding">3</div>
+                        <div class="ng-binding">Recent woks!</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body" ng-show="groupReceipts">
+                <div class="list-group">
+                    <div class="list-group-item" style="background-color:#eee;">
+                        Owner : AAA Group
+                    </div>
+                    <div class="list-group-item">
+                        <span>Canadian Tire</span> 
+                        <span>$100</span>
+                        <span>2016-07-02</span>
+                    </div>
+                    <div class="list-group-item">
+                        <span>Walmart</span> 
+                        <span>$300</span>
+                        <span>2016-06-30</span>
+                    </div>                    
+                </div> 
+                <div class="list-group">
+                    <div class="list-group-item" style="background-color:#eee;">
+                        Member : BBB Group
+                    </div>
+                    <div class="list-group-item">
+                        <span>Best Buy</span> 
+                        <span>$70</span>
+                        <span>2016-06-19</span>
+                    </div>
+                </div>                 
+            </div>              
+            <a >
+                <div class="panel-footer" style="cursor:pointer;" ng-click="groupReceipts = !groupReceipts"> 
+                    <span class="pull-left">Group Receipts</span> 
+                    <span class="pull-right">
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </span>
                     <div class="clearfix"></div>
                 </div>
             </a>
@@ -105,16 +255,16 @@
 </div>
 
 <div class="row">
-    <div class="col-lg-8">
+    <div class="col-sm-12">
         <div class="panel panel-default">
-            <div class="panel-heading"> <i class="fa fa-clock-o fa-fw"></i> Responsive Timeline </div>
+            <div class="panel-heading"> <i class="fa fa-tasks fa-fw"></i> Summary </div>
             <!-- /.panel-heading -->
             <div class="panel-body">
 
                 <div class="row ng-scope">
-                    <div class="col-lg-12">
+                    <div class="col-sm-12">
                         <div class="panel panel-default">
-                            <div class="panel-heading"> Collapsible Accordion Panel Group </div>
+                            <div class="panel-heading"> Receipts </div>
                             <!-- .panel-heading -->
                             <div class="panel-body">
 
@@ -129,72 +279,128 @@
                 </div>
 
                 <div class="row ng-scope">
-                    <div class="col-lg-4">
+                    <div class="col-lg-4 col-md-12 col-sm-12">
                         <div class="panel panel-green">
-                            <div class="panel-heading"> Green Panel </div>
+                            <div class="panel-heading"> Stores </div>
                             <div class="panel-body">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.
                             </div>
                             <div class="panel-footer"> Panel Footer </div>
                         </div>
                         <!-- /.col-lg-4 -->
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-4 col-md-6 col-sm-6">
                         <div class="panel panel-yellow">
-                            <div class="panel-heading"> Yellow Panel </div>
+                            <div class="panel-heading"> Tags </div>
                             <div class="panel-body">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.
                             </div>
                             <div class="panel-footer"> Panel Footer </div>
                         </div>
                         <!-- /.col-lg-4 -->
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-4 col-md-6 col-sm-6">
                         <div class="panel panel-red">
-                            <div class="panel-heading"> Red Panel </div>
+                            <div class="panel-heading"> Categories </div>
                             <div class="panel-body">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.
                             </div>
                             <div class="panel-footer"> Panel Footer </div>
                         </div>
                         <!-- /.col-lg-4 -->
                     </div>
                 </div>
-
-
-
+                <!-- Combo chart using Hight Chart Open Source for non comercial -->
+                <div class="row ng-scope" ng-init="combChart()">
+                  <div class="col-sm-12">
+                      <div class="panel panel-default">
+                        <div class="panel-heading"> 
+                            <strong>June Weekly Consumption</strong>
+                        </div>
+                        <div class="panel-body">
+                            <div id="container1" style="min-width: 310px; height: 400px; margin: 0 auto">                        
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                <!-- Combo chart using Hight Chart Open Source for non comercial -->
             </div>
             <!-- /.panel-body -->
         </div>
         <!-- /.panel -->
     </div>
     <!-- /.col-lg-8 -->
-    <div class="col-lg-4">
-        <div class="panel panel-default">
-            <div class="panel-heading"> <i class="fa fa-bell fa-fw"></i> Notifications Panel </div>
-            <!-- /.panel-heading -->
-            <div class="panel-body">
-                <div class="list-group">
-                    <a href="#" class="list-group-item"> <i class="fa fa-comment fa-fw"></i> New Comment <span class="pull-right text-muted small"><em>4 minutes ago</em> </span> </a>
-                    <a href="#" class="list-group-item"> <i class="fa fa-twitter fa-fw"></i> 3 New Followers <span class="pull-right text-muted small"><em>12 minutes ago</em> </span> </a>
-                    <a href="#" class="list-group-item"> <i class="fa fa-envelope fa-fw"></i> Message Sent <span class="pull-right text-muted small"><em>27 minutes ago</em> </span> </a>
-                    <a href="#" class="list-group-item"> <i class="fa fa-tasks fa-fw"></i> New Task <span class="pull-right text-muted small"><em>43 minutes ago</em> </span> </a>
-                    <a href="#" class="list-group-item"> <i class="fa fa-upload fa-fw"></i> Server Rebooted <span class="pull-right text-muted small"><em>11:32 AM</em> </span> </a>
-                    <a href="#" class="list-group-item"> <i class="fa fa-bolt fa-fw"></i> Server Crashed! <span class="pull-right text-muted small"><em>11:13 AM</em> </span> </a>
-                    <a href="#" class="list-group-item"> <i class="fa fa-warning fa-fw"></i> Server Not Responding <span class="pull-right text-muted small"><em>10:57 AM</em> </span> </a>
-                    <a href="#" class="list-group-item"> <i class="fa fa-shopping-cart fa-fw"></i> New Order Placed <span class="pull-right text-muted small"><em>9:49 AM</em> </span> </a>
-                    <a href="#" class="list-group-item"> <i class="fa fa-money fa-fw"></i> Payment Received <span class="pull-right text-muted small"><em>Yesterday</em> </span> </a>
-                </div>
-                <!-- /.list-group --><a href="/#/Receipts" class="btn btn-default btn-block">View All Receipt</a>
-            </div>
-            <!-- /.panel-body -->
-        </div>
-        <!-- /.panel -->
 
-        <!-- /.panel .chat-panel -->
-    </div>
-    <!-- /.col-lg-4 -->
 </div>
 </div>
 </section>
 </div>
+
+<!-- Edit Customer Modal Window -->
+<div ng-controller="DashboardUserController">
+    <script type="text/ng-template" id="ModalEditCustomer.html">
+        <div class="modal-header">
+            <h1 class="page-title text-center">
+              <i class="fa fa-edit" aria-hidden="true"></i>
+              Edit Profile
+            </h1>
+        </div>
+        <div class="modal-body">
+            <div style="margin:25px;">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Edit Customer profile
+                            </div>
+                            <div class="panel-body">
+
+                              <form  name="customerEditForm" ng-submit="register()">
+                                  <div class="form-group" 
+                                      ng-class="{'has-error': (customerEditForm.username.$invalid && customerEditForm.username.$dirty) }">
+                                    <div class="row">
+                                        <label class="col-xs-3 text-right" for="username">User Name</label>
+                                        <div class="col-xs-8">
+                                            <input class="form-control" type="text" required 
+                                                ng-model="customer.username" name="username" placeholder="User Name">
+                                            <span class="has-error control-label" ng-show="customerEditForm.username.$invalid && customerEditForm.username.$dirty">
+                                              User Name is required.
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-xs-3 text-right" for="firstName">First Name</label>
+                                        <div class="col-xs-8">      
+                                            <input class="form-control" type="text"  
+                                                ng-model="customer.firstName" name="firstName" placeholder="First Name">  
+                                        </div>
+                                    </div>       
+                                    <div class="row">
+                                        <label class="col-xs-3 text-right" for="lastName">Last Name</label>
+                                        <div class="col-xs-8">
+                                            <input class="form-control" type="text"  
+                                                ng-model="customer.lastName" name="lastName" placeholder="Last Name"> 
+                                        </div>
+                                    </div>      
+                                  </div>
+                              </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-disabled="customerEditForm.$invalid" ng-click="submit()">
+                <i class="glyphicon glyphicon-edit" aria-hidden="true"></i>
+                Edit
+            </button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>        
+    </script>
+</div>
+<!-- Edit Customer Modal Window -->

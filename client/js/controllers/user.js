@@ -13,7 +13,7 @@ angular
     //}        
 
     $scope.user = {
-      email: "aaa@gmail.com",
+      email: "joe@gmail.com",
       password: "aaa"
     };
 

@@ -22,9 +22,6 @@ angular
             };
             sessionStorage.setItem('access_token', JSON.stringify($rootScope.currentUser));
             $state.go('Dashboard');            
-        })
-        .then(function(err){
-          console.log("Err: ", err);
         });
     }
 
