@@ -97,7 +97,8 @@
               }
           }else{
             $scope.Receipts2localStorage(receipts, 'recentReceipts');  
-          }  
+          } 
+           
           if(receipts.length>5){
             $scope.setValue2localStorage(5, 'recentReceiptsCount');
           }else{
