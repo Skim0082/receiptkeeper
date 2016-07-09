@@ -95,6 +95,10 @@ angular
       console.info('Success', response, status, headers);
       $scope.$broadcast('uploadCompleted', item);
     };
+    //response.result.files.file[0].container
+    //response.result.files.file[0].name --> filename
+    //response.result.files.file[0].originalFilename --> original file name
+    //   '/api/containers/575595b333f5bf0c15c0f272/download/default-user01_1468038941183.png'
     // --------------------
     uploader.onErrorItem = function(item, response, status, headers) {
       console.info('Error', response, status, headers);

@@ -111,20 +111,24 @@
 				</div>
 				<hr>
 				<div class="row">
-					<div  class="col-sm-offset-2 col-sm-2">
+					<div  class="col-sm-2" ng-controller="ModalReceiptFileCtrl">
+						<button class="btn btn-default"  
+							ng-click="open(receiptId, groupId, groupName, ownerId)">Upload</button>
+					</div>				
+					<div  class="col-sm-2">
 						<button class="btn btn-primary"  ng-click="submitForm()"
 							ng-disabled="isDisabled">{{ action }} Receipt</button>
 					</div>
 					<div  class="col-sm-2">
 						<button class="btn btn-default"  ng-click="Receipts()">Receipts</button>
 					</div>
-					<div ng-show="receipt.id" class="col-sm-2">
+					<div ng-show="receipt.id" class="col-sm-3">
 						<button class="btn btn-default" ng-click="viewReceipt()">
 							<i class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></i> 
 							View Receipt
 						</button>
 					</div>				
-					<div ng-show="receipt.id" class="col-sm-2">
+					<div ng-show="receipt.id" class="col-sm-3">
 						<button class="btn btn-danger" ng-click="deleteReceipt()">Delete Receipt</button>
 					</div>						
 				</div>
@@ -135,3 +139,93 @@
 </div>
 </section>
 </div>
+
+<!-- Receipts File Upload Modal Window -->
+<div ng-controller="ModalReceiptFileCtrl" uploader="uploader">
+    <script type="text/ng-template" id="ModalReceiptFile.html">
+        <div class="modal-header">
+            <h1 class="page-title text-center">
+              <i class="fa fa-file-image-o" aria-hidden="true"></i> 
+              Upload Receipts
+            </h1>
+        </div>
+        <div class="modal-body" style="padding-bottom:0;">
+            <div style="margin-top:0;margin-bottom:0;margin-left:10px;margin-right:10px;">
+		        <div class="row">
+		            <div class="col-sm-12">
+		                <div class="panel panel-default">
+		                    <div class="panel-heading">
+		                        <strong>Receipts File</strong>		                        
+		                    </div>
+		                    <div class="panel-body">
+						        <!-- file upload -->
+					            <table class="table">
+					                <thead>
+					                <tr>
+					                    <th>Name</th>
+					                    <th ng-show="uploader.isHTML5">Progress</th>
+					                    <th>Status</th>
+					                    <th>Actions</th>
+					                </tr>
+					                </thead>
+					                <tbody>
+					                <tr ng-repeat="item in uploader.queue">
+					                    <td>
+					                        <strong>{{ item.file.name }}</strong>
+					                        <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100 }"></div>
+					                        <span style="margin-left:10px;">{{item.file.size/1024/1024|number:2 }} MB</span>
+					                    </td>
+					                    <td ng-show="uploader.isHTML5">
+					                        <div class="progress" style="margin-bottom: 0;">
+					                            <div class="progress-bar" role="progressbar"
+					                                 ng-style="{ 'width': item.progress + '%' }"></div>
+					                        </div>
+					                    </td>
+					                    <td class="text-center">
+					                        <span ng-show="item.isSuccess"><i
+					                                class="glyphicon glyphicon-ok"></i></span>
+					                        <span ng-show="item.isCancel"><i
+					                                class="glyphicon glyphicon-ban-circle"></i></span>
+					                        <span ng-show="item.isError"><i
+					                                class="glyphicon glyphicon-remove"></i></span>
+					                    </td>
+					                    <td nowrap>
+					                        <button type="button" class="btn btn-success btn-xs"
+					                                ng-click="item.upload()"
+					                                ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+					                            <span class="glyphicon glyphicon-upload"></span>
+					                            Upload
+					                        </button>
+					                        <button type="button" class="btn btn-danger btn-xs"
+					                                ng-click="item.remove()">
+					                            <span class="glyphicon glyphicon-trash"></span>
+					                            Remove
+					                        </button>
+					                    </td>
+					                </tr>
+					                </tbody>
+					            </table>
+					           	<!-- file upload -->
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+
+            </div>
+        </div>
+		<div class="modal-footer">
+        <!-- The fileinput-button span is used to style the file input field as button -->
+        <div>
+            <span style="margin-left:10px;"
+            	class="btn btn-primary fileinput-button pull-left" 
+            	ng-class="{disabled: disabled}">
+                <i class="glyphicon glyphicon-plus"></i>
+                <span>Add Receipt...</span>
+                <input nv-file-select uploader="uploader" type="file" ng-disabled="disabled"/>
+            </span> 
+        </div>		
+		<button class="btn btn-warning" ng-click="close()" style="margin-right:10px;">Close</button>
+		</div>        
+    </script>
+</div>
+<!-- Receipts File Upload Modal Window -->

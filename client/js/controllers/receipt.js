@@ -442,6 +442,162 @@
     }
       
   }]) 
+  .controller('ModalReceiptFileCtrl', function ($scope, $modal, $log) {
+
+    $scope.open = function (receiptId, groupId, groupName, ownerId) {
+
+        $scope.params = {
+          receiptId: receiptId,
+          ownerId: ownerId,
+          groupId: groupId,
+          groupName: groupName
+        };
+
+        console.log("$scope.params: ", $scope.params);
+
+        var modalInstance = $modal.open({
+          templateUrl: 'ModalReceiptFile.html',
+          controller: 'ModalReceiptFileInstanceCtrl',
+          size: 'lg',
+          resolve: {
+            params: function(){
+              return $scope.params;
+          }}
+        });
+      };
+  })
+  .controller('ModalReceiptFileInstanceCtrl', [
+    '$scope', '$state', '$modalInstance', 'params', 
+    'Receipt', 'FileUploader', 'Container', '$rootScope', 
+      function($scope, $state, $modalInstance, params, Receipt, 
+        FileUploader, Container, $rootScope) {
+      
+      $scope.params = params;
+
+      var userId = "";
+      var repositoryPath = "";
+      var storageId = "";     
+      
+      $scope.groupName = params.groupName;
+
+      if(params.groupId == undefined){
+        userId = params.ownerId;
+        storageId = userId;
+      }else{
+        userId = params.ownerId;
+        storageId = params.groupId;
+      }        
+
+      repositoryPath = storageId + '/'; 
+
+      Container.getContainers(function(container){
+        //console.log("container: ", container);
+        var isContainer = false;
+        for(var i = 0; i < container.length; i++){
+          if(container[i].name == storageId){
+            isContainer = true;
+            break;
+          }           
+        }
+        if(isContainer == false){
+          Container.createContainer({
+            name: storageId
+          },function(data){
+              console.log("new container: ", data);
+            }
+          );               
+        }          
+      });   
+
+    // create a uploader with options
+    var uploader = $scope.uploader = new FileUploader({
+      scope: $scope,                          // to automatically update the html. Default: $rootScope
+      url: '/api/containers/' + repositoryPath + 'upload',
+      formData: [
+        { key: 'value' }
+      ]
+    });
+
+    // ADDING FILTERS
+    uploader.filters.push({
+        name: 'imageFilter',
+        fn: function (item, options) { // second user filter
+          var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+          return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+    });
+
+    // REGISTER HANDLERS
+    // --------------------
+    uploader.onAfterAddingFile = function(item) {
+      console.info('After adding a file', item);
+    };
+    // --------------------
+    uploader.onAfterAddingAll = function(items) {
+      console.info('After adding all files', items);
+    };
+    // --------------------
+    uploader.onWhenAddingFileFailed = function(item, filter, options) {
+      console.info('When adding a file failed', item);
+    };
+    // --------------------
+    uploader.onBeforeUploadItem = function(item) {
+      console.info('Before upload', item);
+    };
+    // --------------------
+    uploader.onProgressItem = function(item, progress) {
+      $scope.disabled = true;
+      console.info('Progress: ' + progress, item);
+    };
+    // --------------------
+    uploader.onProgressAll = function(progress) {
+      console.info('Total progress: ' + progress);
+    };
+    // --------------------
+    uploader.onSuccessItem = function(item, response, status, headers) {
+      console.info('Success', response, status, headers); 
+      $scope.disabled = true;   
+      var filePath = '/api/containers/' + storageId + '/download/' + response.result.files.file[0].name
+      Receipt.prototype$updateAttributes(
+          { id: params.receiptId }, 
+          { 
+            imageFilePath: filePath
+          }
+      )
+      .$promise
+      .then(function(receipt){            
+          console.log("receiptFile: ", receipt.imageFilePath);
+      }); 
+      $scope.$broadcast('uploadCompleted', item);
+    };
+    //response.result.files.file[0].container
+    //response.result.files.file[0].name --> filename
+    //response.result.files.file[0].originalFilename --> original file name
+    //   '/api/containers/575595b333f5bf0c15c0f272/download/default-user01_1468038941183.png'    
+    // --------------------
+    uploader.onErrorItem = function(item, response, status, headers) {
+      $scope.disabled = true;
+      console.info('Error', response, status, headers);
+    };
+    // --------------------
+    uploader.onCancelItem = function(item, response, status, headers) {
+      console.info('Cancel', response, status);
+    };
+    // --------------------
+    uploader.onCompleteItem = function(item, response, status, headers) {
+      console.info('Complete', response, status, headers);
+    };
+    // --------------------
+    uploader.onCompleteAll = function() {
+      console.info('Complete all');
+    };
+    // --------------------
+    //console.info('uploader: ', uploader);
+
+    $scope.close = function () {
+      $modalInstance.dismiss('close');
+    };
+  }])  
   .controller('ModalTagReceiptsCtrl', function ($scope, $modal, $log) {
 
     $scope.open = function (tagId, userId, groupId, groupName) {
@@ -601,8 +757,6 @@
     $scope.selectedTags=[];
     $scope.selTagCount;  
 
-    $scope.groupName = $stateParams.groupName;
-
     var userId, groupId;
     if($stateParams.groupId == undefined){
       userId = $rootScope.currentUser.id;
@@ -610,7 +764,12 @@
     }else{
       userId = $stateParams.ownerId;
       groupId = $stateParams.groupId;
-    }     
+    }  
+
+    $scope.receiptId = $stateParams.id;
+    $scope.groupId = $stateParams.groupId;
+    $scope.groupName = $stateParams.groupName;
+    $scope.ownerId = userId;
 
     Store
       .find({
@@ -1092,6 +1251,22 @@
         $scope.isDisabled = true;
       }  
     }
+
+    $scope.Receipts = function(){
+      if($stateParams.groupId == undefined){
+        $state.go('Receipts');
+      }else{
+           $state.go(
+            'groupReceipts', 
+            {
+              'groupId':    $stateParams.groupId, 
+              'groupName':  $stateParams.groupName,
+              'ownerId':    $stateParams.ownerId
+            }
+          );
+      }        
+    } 
+
     $scope.submitForm = function() {
       var receiptDate = $('#receiptdate input').prop('value');
       $scope.receipt.date = new Date(receiptDate);

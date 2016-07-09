@@ -23,6 +23,7 @@
         userId = $stateParams.ownerId;
         groupId = $stateParams.groupId;
       } 
+      $scope.userId = userId;
 
       Receipt.find({ 
         filter: {
@@ -430,9 +431,6 @@
 
           });
 
-
-
-
         } // if($scope.showNotification){
         
       } //  $scope.openNotification = function(){ 
@@ -535,7 +533,8 @@
           });
       } // Combo chart using Hight Chart Open Source for non comercial
 
-  }])  .controller('DashboardUserController', [
+  }])  
+  .controller('DashboardUserController', [
     '$scope', 'Receipt', '$rootScope', '$stateParams', 'Customer', '$modal',  
     function($scope, Receipt, $rootScope, $stateParams, Customer, $modal) {
 
@@ -575,6 +574,9 @@
             });
         }else{
           $scope.customer = JSON.parse(localStorage.customer);
+          if($scope.customer.photoFile != ""){
+            $('#userPhoto').attr('src', $scope.customer.photoFile);
+          }
         }
         $scope.showProfile =! $scope.showProfile;
       }
@@ -591,12 +593,19 @@
             }
           }          
         }
+        var photoFile = "images/assets/default-user01.png";
+        if(customer.photoFilePath != ""){        
+          photoFile = customer.photoFilePath;
+          $('#userPhoto').attr('src', photoFile);
+          //console.log('photoFile: ', photoFile);
+        }
         var user = {
           'userId': customer.id,
           'username': customer.username,
           'firstName': customer.firstName,
           'lastName': customer.lastName,
           'groupId': customer.groupId,
+          'photoFile': photoFile,
           'groupName': groupName,
           'email': customer.email,
           'groupOwnerId': groupOwnerId
@@ -651,4 +660,156 @@
       $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
       };
+  }])
+  .controller('ModalUserPohtoFileCtrl', function ($scope, $modal, $log) {
+
+    $scope.open = function (userId) {
+
+        $scope.params = {
+          userId: userId
+        };
+
+        console.log("$scope.params: ", $scope.params);
+
+        var modalInstance = $modal.open({
+          templateUrl: 'ModalUserPohtoFile.html',
+          controller: 'ModalUserPohtoFileInstanceCtrl',
+          size: 'lg',
+          resolve: {
+            params: function(){
+              return $scope.params;
+          }}
+        });
+      };
+  })
+  .controller('ModalUserPohtoFileInstanceCtrl', [
+    '$scope', '$state', '$modalInstance', 'params', 
+    'Customer', 'FileUploader', 'Container', '$rootScope', 
+      function($scope, $state, $modalInstance, params, Customer, 
+        FileUploader, Container, $rootScope) {
+      
+      $scope.params = params;
+
+      var userId = "";
+      var repositoryPath = "";
+      var storageId = "";    
+
+      userId = params.userId;
+      storageId = userId + 'photo';
+
+      repositoryPath = storageId + '/'; 
+
+      Container.getContainers(function(container){
+        //console.log("container: ", container);
+        var isContainer = false;
+        for(var i = 0; i < container.length; i++){
+          if(container[i].name == storageId){
+            isContainer = true;
+            break;
+          }           
+        }
+        if(isContainer == false){
+          Container.createContainer({
+            name: storageId
+          },function(data){
+              console.log("new container: ", data);
+            }
+          );               
+        }          
+      });   
+
+    // create a uploader with options
+    var uploader = $scope.uploader = new FileUploader({
+      scope: $scope,                          // to automatically update the html. Default: $rootScope
+      url: '/api/containers/' + repositoryPath + 'upload',
+      formData: [
+        { key: 'value' }
+      ]
+    });
+
+    // ADDING FILTERS
+    uploader.filters.push({
+        name: 'imageFilter',
+        fn: function (item, options) { // second user filter
+          var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+          return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+    });
+
+    // REGISTER HANDLERS
+    // --------------------
+    uploader.onAfterAddingFile = function(item) {
+      console.info('After adding a file', item);
+    };
+    // --------------------
+    uploader.onAfterAddingAll = function(items) {
+      console.info('After adding all files', items);
+    };
+    // --------------------
+    uploader.onWhenAddingFileFailed = function(item, filter, options) {
+      console.info('When adding a file failed', item);
+    };
+    // --------------------
+    uploader.onBeforeUploadItem = function(item) {
+      console.info('Before upload', item);
+    };
+    // --------------------
+    uploader.onProgressItem = function(item, progress) {
+      $scope.disabled = true;
+      console.info('Progress: ' + progress, item);
+    };
+    // --------------------
+    uploader.onProgressAll = function(progress) {
+      console.info('Total progress: ' + progress);
+    };
+    // --------------------
+    uploader.onSuccessItem = function(item, response, status, headers) {
+      console.info('Success', response, status, headers); 
+      $scope.disabled = true;   
+      var filePath = '/api/containers/' + storageId + '/download/' + response.result.files.file[0].name
+      Customer.prototype$updateAttributes(
+          { id: params.userId }, 
+          { 
+            photoFilePath: filePath
+          }
+      )
+      .$promise
+      .then(function(customer){  
+          $('#userPhoto').attr('src', customer.photoFilePath);          
+          var user = JSON.parse(localStorage.customer);
+          user['photoFile'] = customer.photoFilePath;
+          localStorage.setItem('customer', JSON.stringify(user));
+          $scope.customer = user;
+          $modalInstance.close('success');
+          //console.log("photo File: ", customer.photoFilePath);
+      }); 
+      $scope.$broadcast('uploadCompleted', item);
+    };
+    //response.result.files.file[0].container
+    //response.result.files.file[0].name --> filename
+    //response.result.files.file[0].originalFilename --> original file name
+    //   '/api/containers/575595b333f5bf0c15c0f272/download/default-user01_1468038941183.png'    
+    // --------------------
+    uploader.onErrorItem = function(item, response, status, headers) {
+      $scope.disabled = true;
+      console.info('Error', response, status, headers);
+    };
+    // --------------------
+    uploader.onCancelItem = function(item, response, status, headers) {
+      console.info('Cancel', response, status);
+    };
+    // --------------------
+    uploader.onCompleteItem = function(item, response, status, headers) {
+      console.info('Complete', response, status, headers);
+    };
+    // --------------------
+    uploader.onCompleteAll = function() {
+      console.info('Complete all');
+    };
+    // --------------------
+    //console.info('uploader: ', uploader);
+
+    $scope.close = function () {
+      $modalInstance.dismiss('close');
+    };
   }]);
