@@ -449,7 +449,7 @@
       $scope.combChart =    function () {
           $('#container1').highcharts({
               title: {
-                  text: '2016 June weekly chart'
+                  text: '2016-06 day of the week (Total: $1,375)'
               },
               xAxis: {
                   categories: ['Jun.01', 'Jun.06', 'Jun.13', 'Jun.20', 'Jun.27']
@@ -467,31 +467,31 @@
               series: [{
                   type: 'column',
                   name: 'Mon',
-                  data: [0, 20, 10, 30, 40]
+                  data: [0, 32, 42, 22, 67]
               }, {
                   type: 'column',
                   name: 'Tue',
-                  data: [0, 30, 50, 70, 60]
+                  data: [0, 28, 15, 50, 33]
               }, {
                   type: 'column',
                   name: 'Wed',
-                  data: [40, 30, 30, 90, 50]
+                  data: [45,30,15,100,85]
               }, {
                   type: 'column',
                   name: 'Thr',
-                  data: [40, 30, 30, 90, 20]
+                  data: [50,55,20,66,54]
               }, {
                   type: 'column',
                   name: 'Fri',
-                  data: [40, 30, 30, 90, 0]
+                  data: [35,20,33,80,0]
               }, {
                   type: 'column',
                   name: 'Sat/Sun',
-                  data: [40, 30, 30, 90, 0]
+                  data: [60,88,130,120,0]
               }, {
                   type: 'spline',
                   name: 'Average',
-                  data: [30, 20.67, 30, 60.33, 30.33],
+                  data: [31.67,42.17,42.50,73.00,39.83],
                   marker: {
                       lineWidth: 2,
                       lineColor: Highcharts.getOptions().colors[6],
@@ -502,27 +502,27 @@
                   name: 'Total consumption',
                   data: [{
                       name: 'Mon',
-                      y: 100,
+                      y: 163,
                       color: Highcharts.getOptions().colors[0] // Jane's color
                   }, {
                       name: 'Tue',
-                      y: 100,
+                      y: 126,
                       color: Highcharts.getOptions().colors[1] // John's color
                   }, {
                       name: 'Wed',
-                      y: 150,
+                      y: 275,
                       color: Highcharts.getOptions().colors[2] // Joe's color
                   }, {
                       name: 'Thr',
-                      y: 150,
+                      y: 245,
                       color: Highcharts.getOptions().colors[3] // Joe's color
                   }, {
                       name: 'Fri',
-                      y: 200,
+                      y: 168,
                       color: Highcharts.getOptions().colors[4] // Joe's color
                   }, {
                       name: 'Sat/Sun',
-                      y: 400,
+                      y: 398,
                       color: Highcharts.getOptions().colors[5] // Joe's color
                   }],
                   center: [100, 80],

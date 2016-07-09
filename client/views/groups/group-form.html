@@ -33,13 +33,21 @@
 		</div>
 	</div>
 	<div class="row">
+
 		<div class="col-sm-offset-3 col-sm-3">
+			<button class="btn btn-default"  ng-click="backToPage()">
+				<i class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></i> 
+				Back
+			</button>
+		</div>
+
+		<div class="col-sm-2">
 				<button class="btn btn-primary" ng-disabled="groupForm.$invalid" ng-hide="isDisabled" ng-disabled="isDisabled" ng-click="submitForm()">{{ action }} Group</button>
 		</div>
-		<div  class="col-sm-3">
+		<div  class="col-sm-2">
 			<button class="btn btn-default"  ui-sref="Groups">Groups</button>
 		</div>	
-		<div ng-show="group.id" class="col-sm-3 text-right">
+		<div ng-show="group.id" class="col-sm-2">
 			<button class="btn btn-danger" ng-disabled="groupForm.$invalid" ng-click="deleteGroup()">Delete Group</button>
 		</div>
 	</div>

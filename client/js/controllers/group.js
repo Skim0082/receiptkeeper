@@ -111,7 +111,11 @@
         //alert("groupId: " + groupId);
         $state.go('groupReceipts', {'groupId': groupId, 'ownerId': ownerId, 'groupName': groupName});
       }
-        
+
+      $scope.backToPage = function(){
+        window.history.back();
+      }
+
       $scope.acceptJoin = function(notificationId){
         if(confirm("Are you joining this group?")){
             var index = $scope.notifications.map(function(notification){
@@ -467,6 +471,10 @@
           });
         }); // .then(function(group){
 
+        $scope.backToPage = function(){
+          window.history.back();
+        }
+        
         $scope.removeMember = function(memberId){
           if(confirm("Are you sure?")){
             CustomerGroup

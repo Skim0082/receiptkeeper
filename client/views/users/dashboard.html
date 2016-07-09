@@ -273,10 +273,26 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <div class="panel panel-default">
+        <div class="panel panel-success">
             <div class="panel-heading"> <i class="fa fa-tasks fa-fw"></i> Summary </div>
             <!-- /.panel-heading -->
             <div class="panel-body">
+
+                <!-- Combo chart using Hight Chart Open Source for non comercial -->
+                <div class="row ng-scope" ng-init="combChart()">
+                  <div class="col-sm-12">
+                      <div class="panel panel-info">
+                        <div class="panel-heading"> 
+                            <strong>2015 June - days of the week Consumption</strong>
+                        </div>
+                        <div class="panel-body">
+                            <div id="container1" style="min-width: 310px; height: 400px; margin: 0 auto">                        
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                <!-- Combo chart using Hight Chart Open Source for non comercial -->            
 
                 <div class="row ng-scope">
                     <div class="col-sm-12">
@@ -327,21 +343,7 @@
                         <!-- /.col-lg-4 -->
                     </div>
                 </div>
-                <!-- Combo chart using Hight Chart Open Source for non comercial -->
-                <div class="row ng-scope" ng-init="combChart()">
-                  <div class="col-sm-12">
-                      <div class="panel panel-default">
-                        <div class="panel-heading"> 
-                            <strong>June Weekly Consumption</strong>
-                        </div>
-                        <div class="panel-body">
-                            <div id="container1" style="min-width: 310px; height: 400px; margin: 0 auto">                        
-                            </div>
-                        </div>
-                      </div>
-                  </div>
-                </div>
-                <!-- Combo chart using Hight Chart Open Source for non comercial -->
+
             </div>
             <!-- /.panel-body -->
         </div>
