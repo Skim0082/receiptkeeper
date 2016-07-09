@@ -111,7 +111,7 @@
 				</div>
 				<hr>
 				<div class="row">
-					<div  class="col-sm-2" ng-controller="ModalReceiptFileCtrl">
+					<div ng-show="receipt.id" class="col-sm-2" ng-controller="ModalReceiptFileCtrl">
 						<button class="btn btn-default"  
 							ng-click="open(receiptId, groupId, groupName, ownerId)">Upload</button>
 					</div>				
