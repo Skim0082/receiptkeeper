@@ -3,8 +3,10 @@
  angular
   .module('app') 
   .controller('DashboardController', [
-  	'$scope', 'Receipt', '$rootScope', '$stateParams', '$state', 'Customer', 
-    function($scope, Receipt, $rootScope, $stateParams, $state, Customer) {     
+  	'$scope', 'Receipt', '$rootScope', '$stateParams', 
+    '$state', 'Customer', 'Notification', 'Group', 
+    function($scope, Receipt, $rootScope, $stateParams, 
+      $state, Customer, Notification, Group) {     
 
       $scope.groupName = $stateParams.groupName;
       $scope.receipts = [];
@@ -316,7 +318,132 @@
             'ownerId':    ownerId
           }
         );       
-      }        
+      }  
+
+      $scope.showNotification;
+      $scope.notifications;
+      $scope.ownerNotifications
+      $scope.notificationCount;
+      if($scope.getValue2localStorage('notificationCount') != undefined){
+        $scope.notificationCount = $scope.getValue2localStorage('notificationCount');
+      }else{
+        $scope.notificationCount = 0;
+      }
+      $scope.openNotification = function(){
+        $scope.showNotification = !$scope.showNotification
+        if($scope.showNotification){
+           // Find invitation notification
+          Notification.find({
+            filter: {
+              limit: 3,
+              where: { and: [
+                {receiverId: userId},
+                {seen: false}                  
+              ]}
+            }
+          })
+          .$promise
+          .then(function(notifications){
+            //console.log("notifications: ", notifications);
+
+            if(notifications.length > 0){
+
+              $scope.notifications = notifications;
+              $scope.notificationCount = notifications.length;
+              $scope.setValue2localStorage(notifications.length, 'notificationCount');
+
+              var groupIDs = notifications.map(function(notification){
+                return notification.groupId;
+              });
+              //console.log("groupIDs: ", groupIDs);
+              Group.find({
+                filter: {
+                  include: 'grouptype',                  
+                  where: {
+                    id: {inq: groupIDs}
+                  }
+                }
+              })
+              .$promise
+              .then(function(groups){
+                //console.log("groups: ", groups);
+                for(var i = 0 ; i < notifications.length ; i++){
+                  $scope.notifications[i].group = groups[i];
+                }
+              });
+            }else{
+              $scope.setValue2localStorage(0, 'notificationCount');
+            }
+          }); // Notification.find({   
+
+          Customer.findById({
+            id: userId,
+            filter: {
+              fields: { id: true, groupId: true}
+            }
+          })
+          .$promise
+          .then(function(customer){
+            //console.log("customer: ", customer);
+            if(customer.groupId != undefined){
+
+              //Find notification
+              Notification.find({
+                filter: {
+                  limit: 3,
+                  where: { and: [
+                    {senderId: customer.id},
+                    {and: [
+                        {groupId: customer.groupId},
+                        {accepted: false}
+                      ]
+                    }                  
+                  ]}
+                }
+              })
+              .$promise
+              .then(function(notifications){
+                //console.log("ownerNotifications: ", notifications);
+                $scope.ownerNotifications = notifications;
+                if($scope.ownerNotifications.length > 0){
+                  var invitationCount = $scope.getValue2localStorage('notificationCount');
+                  $scope.notificationCount = notifications.length + invitationCount;
+                  $scope.setValue2localStorage($scope.notificationCount, 'notificationCount');
+
+                  for(var i = 0 ; i < $scope.ownerNotifications.length ; i++){
+                    if($scope.ownerNotifications[i].seen == true && 
+                        $scope.ownerNotifications[i].left == true){
+                      $scope.ownerNotifications[i].display = 
+                        $scope.ownerNotifications[i].receiverEmail + " (refused)";
+                    }else if($scope.ownerNotifications[i].seen == false && 
+                              $scope.ownerNotifications[i].left == true){
+                      $scope.ownerNotifications[i].display = 
+                        $scope.ownerNotifications[i].receiverEmail + " (refused - invite again)";
+                    }else{
+                      $scope.ownerNotifications[i].display = $scope.ownerNotifications[i].receiverEmail;
+                    }
+                  }
+                }
+              }); 
+                           
+            }
+
+          });
+
+
+
+
+        } // if($scope.showNotification){
+        
+      } //  $scope.openNotification = function(){ 
+
+      $scope.viewGroups = function(){
+        $state.go('Groups');
+      }
+
+      $scope.viewEditGroup = function(groupId){
+        $state.go('editGroup', {id: groupId});
+      }
 
       //Combo chart using Hight Chart Open Source for non comercial
       $scope.combChart =    function () {

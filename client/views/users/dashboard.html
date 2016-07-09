@@ -156,47 +156,48 @@
                 <div class="row">
                     <div class="col-xs-3"> <i class="fa fa-comments fa-5x"></i></i> </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge ng-binding">4</div>
+                        <div class="huge ng-binding">{{notificationCount}}</div>
                         <div class="ng-binding">New notification!</div>
                     </div>
                 </div>
             </div>
-            <div class="panel-body" ng-show="showNotification">
+            <div class="panel-body" ng-show="showNotification">           
 
-                <div class="list-group">
-                    <div class="list-group-item" style="background-color:#eee;"> Group Member </div>
-                    <div class="list-group-item">
+                <div class="list-group" ng-show="notifications">
+                    <div class="list-group-item" style="background-color:#eee;color:#757575;"><strong>Receive invitation as a member </strong></div>
+                    <div class="list-group-item" 
+                        ng-repeat="notification in notifications"
+                        ng-if="$index < notifications.length">
+                        <a style="text-decoration:none;">
                         <i class="glyphicon glyphicon-bell" style="margin-right:10px;" ></i>
-                        <span>Invitation of Group: </span> 
-                        <span>AAA Group</span>
-                        <span>2016-06-25</span>
+                        <span><strong>{{notification.group.name}} </strong></span> 
+                        <span>({{notification.senderEmail}})</span>
+                        <i class="glyphicon glyphicon-search pull-right" 
+                            style="padding-right:10px" 
+                            ng-click="viewGroups()" tooltip-html-unsafe="view Details"></i>                        
+                        </a>
                     </div>
-                    <div class="list-group-item">
+                </div>             
+               
+                <div class="list-group" ng-show="ownerNotifications">
+                    <div class="list-group-item" style="background-color:#eee;color:#757575;"><strong>Send invitation as a member </strong></div>
+                    <div class="list-group-item" 
+                        ng-repeat="notification in ownerNotifications"
+                        ng-if="$index < ownerNotifications.length">
+                        <a style="text-decoration:none;">
                         <i class="glyphicon glyphicon-bell" style="margin-right:10px;" ></i>
-                        <span>Invitation of Group: </span> 
-                        <span>BBB Group</span>
-                        <span>2016-07-01</span>
-                    </div>                 
+                        <span>({{notification.display}})</span>
+                        <i class="glyphicon glyphicon-search pull-right" 
+                            style="padding-right:10px" 
+                            ng-click="viewEditGroup(notification.groupId)" tooltip-html-unsafe="view Details"></i>                        
+                        </a>
+                    </div>
                 </div> 
 
-                <div class="list-group">
-                    <div class="list-group-item" style="background-color:#eee;"> Group Owner </div>
-                    <div class="list-group-item">
-                        <i class="glyphicon glyphicon-bell" style="margin-right:10px;" ></i>
-                        <span>Invitation: </span> 
-                        <span>bbb@gmail.com</span>
-                        <span>2016-06-25</span>
-                    </div>
-                    <div class="list-group-item">
-                        <i class="glyphicon glyphicon-bell" style="margin-right:10px;" ></i>
-                        <span>Invitation of Group: </span> 
-                        <span>kkk@gmail.com</span>
-                        <span>2016-06-29</span>
-                    </div>                 
-                </div>                 
             </div>              
             <a >
-                <div class="panel-footer" style="cursor:pointer;" ng-click="showNotification = !showNotification"> 
+                <div class="panel-footer" style="cursor:pointer;" 
+                    ng-click="openNotification()"> 
                     <span class="pull-left">View Details</span> 
                     <span class="pull-right">
                         <i class="fa fa-arrow-circle-right"></i>
@@ -220,7 +221,7 @@
             </div>
             <div class="panel-body" ng-show="groupReceipts">
                 <div class="list-group" ng-show="ownerGroupRecentReceipts">
-                    <div class="list-group-item" style="background-color:#eee;">
+                    <div class="list-group-item" style="background-color:#eee;color:#757575;">
                         <strong>Owner : {{ownerGroup.groupName}}</strong>
                     </div>                
                     <div class="list-group-item text-default" 
@@ -238,7 +239,7 @@
                 </div> 
 
                 <div class="list-group" ng-show="memberGroupRecentReceipts">
-                    <div class="list-group-item" style="background-color:#eee;">
+                    <div class="list-group-item" style="background-color:#eee;color:#757575;">
                         <strong>Member : {{memberGroup.groupName}}</strong>
                     </div>                
                     <div class="list-group-item text-default" 
