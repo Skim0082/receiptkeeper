@@ -252,13 +252,15 @@
       function($scope, Receipt, $state, $stateParams, Store, 
         Item, ReceiptItem, Category, Tag, ReceiptTag, $location, $rootScope) {
 
+    window.scrollTo(0,0); // Always move to top of page
+
     $scope.stores = [];
     $scope.selectedStore;
     $scope.selectedCategory;
     $scope.receipt = {};
     $scope.tags = [];  
     $scope.selectedTags=[];
-    $scope.selTagCount;  
+    //$scope.selTagCount;  
 
     var userId, groupId;
     if($stateParams.groupId == undefined){
@@ -353,7 +355,7 @@
                   }).indexOf(receipt.tags[i].id);
                   $scope.selectedTags.push(tags[selectedTagIndex]);
                 }
-                $scope.selTagCount=receipt.tags.length + " selected";
+                //$scope.selTagCount=receipt.tags.length + " selected";
               }
             });
 
@@ -435,8 +437,8 @@
       });
     } 
 
-    $scope.countSelectedTag = function(){
-      $scope.selTagCount=$scope.selectedTags.length + " selected";
+    $scope.backToPage = function(){
+      window.history.back();
     }
       
   }]) 

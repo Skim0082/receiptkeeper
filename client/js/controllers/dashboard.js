@@ -3,12 +3,13 @@
  angular
   .module('app') 
   .controller('DashboardController', [
-  	'$scope', 'Receipt', '$rootScope', '$stateParams', 
-    function($scope, Receipt, $rootScope, $stateParams) {     
+  	'$scope', 'Receipt', '$rootScope', '$stateParams', '$state', 'Customer', 
+    function($scope, Receipt, $rootScope, $stateParams, $state, Customer) {     
 
       $scope.groupName = $stateParams.groupName;
       $scope.receipts = [];
       $scope.tagcloud = true;
+      $scope.recentReceiptsCount;
       var tagnames = {};
       var userId, groupId;
       var tagWords = [];
@@ -21,10 +22,26 @@
         groupId = $stateParams.groupId;
       } 
 
-      Receipt.find({
+      Receipt.find({ 
         filter: {
+          fields: {
+            id: true,
+            date: true,
+            total: true,
+            storeId: true
+          },          
           order: 'date DESC', 
-          include: 'tags',               
+          include: ['tags', 
+            {
+              relation: 'store',
+              scope: {
+                fields: {
+                  id: true,
+                  name: true
+                }
+              }
+            }
+          ],               
           where: 
             {and: [
                 {customerId: userId},
@@ -34,8 +51,10 @@
       })
       .$promise
       .then(function(receipts){
-        $scope.receipts = receipts;
         //console.log("receipts: ", receipts);
+
+        $scope.receipts = receipts;
+
         var name;
         if(receipts.length > 0){
           angular.forEach(receipts, function(receipt, receipt_key){
@@ -59,7 +78,6 @@
           $scope.tagcloud =false;
         }else{
           $(function() {
-            // When DOM is ready, select the container element and call the jQCloud method, passing the array of words as the first argument.
             $("#tagcloud").jQCloud(tagWords, {
               delay: 50,
               autoResize: true
@@ -70,6 +88,26 @@
             });        
           });          
         }
+        // Set Receipts into localStorate
+        if(receipts.length > 0){
+          if(localStorage[userId] != undefined && 
+              JSON.parse(localStorage[userId])['recentReceipts'] != undefined){
+              if(JSON.parse(localStorage[userId])['recentReceipts'].length != receipts.length){
+                $scope.Receipts2localStorage(receipts, 'recentReceipts');  
+              }
+          }else{
+            $scope.Receipts2localStorage(receipts, 'recentReceipts');  
+          }  
+          if(receipts.length>5){
+            $scope.setValue2localStorage(5, 'recentReceiptsCount');
+          }else{
+            $scope.setValue2localStorage(receipts.length, 'recentReceiptsCount');          
+          }
+        }else{
+          $scope.setValue2localStorage(0, 'recentReceiptsCount');
+        }
+        $scope.recentReceiptsCount = $scope.getValue2localStorage('recentReceiptsCount'); 
+
       });
       /* Sample word format JSON Array format
       var tag_array = [
@@ -78,6 +116,206 @@
           {text: "Dolor", weight: 6, html: {title: "I can haz any html attribute"}},
       ];
       */
+      $scope.setValue2localStorage = function(value, storageKey){
+        var temp_localStorage = {};
+        if(localStorage[userId] != undefined){
+          temp_localStorage = JSON.parse(localStorage[userId]);  
+        }
+        temp_localStorage[storageKey] = value;
+        localStorage.setItem(userId, JSON.stringify(temp_localStorage));        
+      }
+      $scope.getValue2localStorage = function(storageKey){
+        if(localStorage[userId] != undefined){
+          return JSON.parse(localStorage[userId])[storageKey];  
+        }        
+      }
+      // Set Receipts into localStorate
+      $scope.Receipts2localStorage = function(receipts, storageKey){
+        var tmp_receipts = [];
+        for(var i = 0 ; i < receipts.length ; i++){
+          var receipt = {
+            id: receipts[i].id,
+            date: (receipts[i].date).substring(0, 10),
+            total: receipts[i].total,
+            storeName: receipts[i].store.name
+          };
+          tmp_receipts.push(receipt);
+        }
+        var temp_localStorage = {};
+        if(localStorage[userId] != undefined){
+          temp_localStorage = JSON.parse(localStorage[userId]);  
+        }
+        temp_localStorage[storageKey] = tmp_receipts;
+        localStorage.setItem(userId, JSON.stringify(temp_localStorage));
+      }
+
+      $scope.showReceipts;
+      $scope.recentReceipts = {};
+      $scope.showRecentReceipts = function(){
+        $scope.showReceipts = !$scope.showReceipts;
+        if($scope.showReceipts){
+          $scope.recentReceipts = JSON.parse(localStorage[userId])['recentReceipts'];  
+        }       
+      }
+
+      $scope.viewReceipt = function(receiptId){
+        $state.go('viewReceipt', {'id': receiptId});
+      }
+
+      // Show Recent Group Receipts
+      $scope.groupReceipts;
+      $scope.ownerGroup;
+      $scope.memberGroup;
+      $scope.ownerGroupRecentReceipts;
+      $scope.memberGroupRecentReceipts;  
+      $scope.recentGroupReceiptsCount;
+      if($scope.getValue2localStorage('recentGroupReceiptsCount') == undefined){
+        $scope.setValue2localStorage(0, 'recentGroupReceiptsCount');
+        $scope.recentGroupReceiptsCount = 0;
+      }else{
+        $scope.recentGroupReceiptsCount = $scope.getValue2localStorage('recentGroupReceiptsCount');
+      }
+
+      $scope.showRecentGroupReceipts = function(){
+        $scope.groupReceipts = !$scope.groupReceipts; 
+        if($scope.groupReceipts){
+          Customer.findById({
+            id: userId,
+            filter: { 
+              include: 'groups',
+              fields: {
+                id: true,
+                groupId: true
+              }
+            }
+          })
+          .$promise
+          .then(function(customer){
+            //console.log("customer: ", customer);
+            if(customer.groups != undefined){
+              if(customer.groups.length > 0){
+                for(var i = 0 ; i < customer.groups.length ; i++){
+                  if(customer.groups[i].ownerId == customer.id){
+                    $scope.ownerGroup = {
+                      ownerId: customer.groups[i].ownerId,
+                      groupId: customer.groups[i].id,
+                      groupName: customer.groups[i].name
+                    };                      
+                  }else{
+                    $scope.memberGroup = {
+                      ownerId: customer.groups[i].ownerId,
+                      groupId: customer.groups[i].id,
+                      groupName: customer.groups[i].name
+                    }; 
+                  }
+                }
+              }          
+            } // if(customer.groups != undefined){
+
+            if($scope.ownerGroup != undefined){
+              // Get Owner Group Receipts
+              Receipt.find({ 
+                filter: {
+                  fields: {
+                    id: true,
+                    date: true,
+                    total: true,
+                    storeId: true,
+                    groupId: true
+                  },
+                  limit: 3,         
+                  order: 'date DESC', 
+                  include:  
+                  {
+                    relation: 'store',
+                    scope: {
+                      fields: {
+                        id: true,
+                        name: true
+                      }
+                    }
+                  },               
+                  where: {and: [
+                    {customerId: $scope.ownerGroup.ownerId},
+                    {groupId: $scope.ownerGroup.groupId}
+                  ]}
+                }
+              })
+              .$promise
+              .then(function(receipts){
+                //console.log("ownerGroupReceipts: ", receipts);
+                if(receipts.length>0){ 
+                  $scope.Receipts2localStorage(receipts, 'ownerGroupReceipts');
+                  $scope.ownerGroupRecentReceipts = JSON.parse(localStorage[userId])['ownerGroupReceipts'];
+
+                  $scope.setValue2localStorage(receipts.length, 'recentGroupReceiptsCount'); 
+                  $scope.recentGroupReceiptsCount = receipts.length; 
+                }else{
+                  $scope.setValue2localStorage(0, 'recentGroupReceiptsCount'); 
+                  $scope.recentGroupReceiptsCount = 0; 
+                }
+              });
+            } //if($scope.ownerGroup != undefined){
+
+            if($scope.memberGroup != undefined){
+              // Get Member Group Receipts
+              Receipt.find({ 
+                filter: {
+                  fields: {
+                    id: true,
+                    date: true,
+                    total: true,
+                    storeId: true,
+                    groupId: true
+                  },
+                  limit: 3,          
+                  order: 'date DESC', 
+                  include:  
+                  {
+                    relation: 'store',
+                    scope: {
+                      fields: {
+                        id: true,
+                        name: true
+                      }
+                    }
+                  },               
+                  where: {and: [
+                    {customerId: $scope.memberGroup.ownerId},
+                    {groupId: $scope.memberGroup.groupId}
+                  ]}
+                }
+              })
+              .$promise
+              .then(function(receipts){
+                //console.log("memberGroupReceipts: ", receipts);  
+                if(receipts.length>0){
+                  $scope.Receipts2localStorage(receipts, 'memberGroupReceipts');  
+                  $scope.memberGroupRecentReceipts = JSON.parse(localStorage[userId])['memberGroupReceipts'];
+
+                  var temp_count = $scope.getValue2localStorage('recentGroupReceiptsCount');
+                  temp_count += receipts.length;
+                  $scope.setValue2localStorage(temp_count, 'recentGroupReceiptsCount');
+                  $scope.recentGroupReceiptsCount = temp_count;
+                  //console.log("member db");
+                }                
+              });               
+            } //if($scope.memberGroup != undefined){            
+          }); // .then(function(customer){
+        }
+      } //$scope.showRecentGroupReceipts = function(){
+
+      $scope.viewGroupReceipt = function(receiptId, groupId, groupName, ownerId){
+        $state.go(
+          'groupViewReceipt', 
+          {
+            'id':         receiptId, 
+            'groupId':    groupId, 
+            'groupName':  groupName,
+            'ownerId':    ownerId
+          }
+        );       
+      }        
 
       //Combo chart using Hight Chart Open Source for non comercial
       $scope.combChart =    function () {
@@ -204,6 +442,7 @@
             })
             .$promise
             .then(function(customer){
+              console.log("customer: ", customer);
               $scope.setCustomer2LocalStorage(customer);
             });
         }else{
@@ -213,10 +452,15 @@
       }
 
       $scope.setCustomer2LocalStorage = function(customer){
-        var groupName;
+        var groupName, groupOwnerId;
         if(customer.groups != undefined){
           if(customer.groups.length > 0){
-            groupName = customer.groups[0].name;
+            for(var i = 0 ; i < customer.groups.length ; i++){
+              if(customer.groups[i].ownerId == customer.id){
+                groupName = customer.groups[i].name;
+                groupOwnerId = customer.groups[i].ownerId;
+              }
+            }
           }          
         }
         var user = {
@@ -226,7 +470,8 @@
           'lastName': customer.lastName,
           'groupId': customer.groupId,
           'groupName': groupName,
-          'email': customer.email
+          'email': customer.email,
+          'groupOwnerId': groupOwnerId
         }
         localStorage.setItem('customer', JSON.stringify(user));
         $scope.customer = user;

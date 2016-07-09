@@ -110,32 +110,36 @@
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-6 col-sm-6 ng-isolate-scope" number="18" comments="New orders!" colour="yellow" type="shopping-cart">
-        <div class="panel panel-green">
+    <div class="col-lg-3 col-md-6 col-sm-6 ng-isolate-scope" 
+        colour="yellow">
+            <div class="panel panel-green">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3"> <i class="fa fa-shopping-cart fa-5x"></i> </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge ng-binding">5</div>
-                        <div class="ng-binding">New receipts</div>
+                        <div class="huge ng-binding">{{recentReceiptsCount}}</div>
+                        <div class="ng-binding">Recent receipts</div>
                     </div>
                 </div>
             </div>
             <div class="panel-body" ng-show="showReceipts">
                 <div class="list-group">
-                    <div class="list-group-item">
-                        <span>Canadian Tire</span> 
-                        <span>$100</span>
-                        <span>2016-07-02</span>
+                    <div class="list-group-item" 
+                        ng-repeat="recentReceipt in recentReceipts"
+                        ng-if="$index < recentReceiptsCount">
+                        <a style="text-decoration:none;">
+                        <span><strong>{{recentReceipt.storeName}}</strong></span> 
+                        <span>${{recentReceipt.total}}</span>
+                        <span>{{recentReceipt.date}}</span>
+                        <i class="glyphicon glyphicon-search pull-right" 
+                            style="padding-right:10px" 
+                            ng-click="viewReceipt(recentReceipt.id)" tooltip-html-unsafe="View Details"></i>                        
+                        </a>
                     </div>
-                    <span class="list-group-item">Lorem ipsum dolor sit amet, con</span>
-                    <span class="list-group-item">Lorem ipsum dolor sit amet, con</span>
-                    <span class="list-group-item">Lorem ipsum dolor sit amet, con</span>
-                    <span class="list-group-item">Lorem ipsum dolor sit amet, con</span>
                 </div> 
             </div>           
             <a >
-                <div class="panel-footer" style="cursor:pointer;" ng-click="showReceipts = !showReceipts"> 
+                <div class="panel-footer" style="cursor:pointer;" ng-click="showRecentReceipts()"> 
                     <span class="pull-left">View Receipts</span> 
                     <span class="pull-right">
                         <i class="fa fa-arrow-circle-right"></i>
@@ -150,7 +154,7 @@
         <div class="panel panel-yellow">
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-xs-3"> <i class="fa fa-bell fa-5x" aria-hidden="true"></i> </div>
+                    <div class="col-xs-3"> <i class="fa fa-comments fa-5x"></i></i> </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge ng-binding">4</div>
                         <div class="ng-binding">New notification!</div>
@@ -203,46 +207,58 @@
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-6 col-sm-6 ng-isolate-scope" number="24" comments="Support tickets!" colour="red" type="support">
+    <div class="col-lg-3 col-md-6 col-sm-6 ng-isolate-scope" colour="red">
         <div class="panel panel-red">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3"> <i class="fa fa-users fa-5x" aria-hidden="true"></i> </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge ng-binding">3</div>
+                        <div class="huge ng-binding">{{recentGroupReceiptsCount}}</div>
                         <div class="ng-binding">Recent woks!</div>
                     </div>
                 </div>
             </div>
             <div class="panel-body" ng-show="groupReceipts">
-                <div class="list-group">
+                <div class="list-group" ng-show="ownerGroupRecentReceipts">
                     <div class="list-group-item" style="background-color:#eee;">
-                        Owner : AAA Group
+                        <strong>Owner : {{ownerGroup.groupName}}</strong>
+                    </div>                
+                    <div class="list-group-item text-default" 
+                        ng-repeat="recentReceipt in ownerGroupRecentReceipts"
+                        ng-if="$index < ownerGroupRecentReceipts.length">
+                        <a style="text-decoration:none;">
+                        <span><strong>{{recentReceipt.storeName}}</strong></span> 
+                        <span>${{recentReceipt.total}}</span>
+                        <span>{{recentReceipt.date}}</span>
+                        <i class="glyphicon glyphicon-search pull-right" 
+                            style="padding-right:10px" 
+                            ng-click="viewGroupReceipt(recentReceipt.id, ownerGroup.groupId, ownerGroup.groupName, ownerGroup.ownerId)" tooltip-html-unsafe="View Details"></i>                        
+                        </a>
                     </div>
-                    <div class="list-group-item">
-                        <span>Canadian Tire</span> 
-                        <span>$100</span>
-                        <span>2016-07-02</span>
-                    </div>
-                    <div class="list-group-item">
-                        <span>Walmart</span> 
-                        <span>$300</span>
-                        <span>2016-06-30</span>
-                    </div>                    
                 </div> 
-                <div class="list-group">
+
+                <div class="list-group" ng-show="memberGroupRecentReceipts">
                     <div class="list-group-item" style="background-color:#eee;">
-                        Member : BBB Group
+                        <strong>Member : {{memberGroup.groupName}}</strong>
+                    </div>                
+                    <div class="list-group-item text-default" 
+                        ng-repeat="recentReceipt in memberGroupRecentReceipts"
+                        ng-if="$index < memberGroupRecentReceipts.length">
+                        <a style="text-decoration:none;">
+                        <span><strong>{{recentReceipt.storeName}}</strong></span> 
+                        <span>${{recentReceipt.total}}</span>
+                        <span>{{recentReceipt.date}}</span>
+                        <i class="glyphicon glyphicon-search pull-right" 
+                            style="padding-right:10px" 
+                            ng-click="viewGroupReceipt(recentReceipt.id, memberGroup.groupId, memberGroup.groupName, memberGroup.ownerId)" tooltip-html-unsafe="View Details"></i>                        
+                        </a>
                     </div>
-                    <div class="list-group-item">
-                        <span>Best Buy</span> 
-                        <span>$70</span>
-                        <span>2016-06-19</span>
-                    </div>
-                </div>                 
+                </div>  
+
+                
             </div>              
             <a >
-                <div class="panel-footer" style="cursor:pointer;" ng-click="groupReceipts = !groupReceipts"> 
+                <div class="panel-footer" style="cursor:pointer;" ng-click="showRecentGroupReceipts()"> 
                     <span class="pull-left">Group Receipts</span> 
                     <span class="pull-right">
                         <i class="fa fa-arrow-circle-right"></i>

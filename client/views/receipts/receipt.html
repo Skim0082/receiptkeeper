@@ -101,16 +101,10 @@ div.tabcontent .row{
 				{{receipt.comment}} 
 			</div>
 
-			<div class="col-sm-2 control-label" style="text-align:right;">
-		  	<label>Tag</label>
-		  	<br><span style="text-align:center;">{{selTagCount}}</span>
-		  	</div>
+			
+		  	<label class="col-sm-2 control-label" style="text-align:right;">Tag</label>		  	
 		  	<div class="col-sm-4" ng-controller="ModalTagReceiptsCtrl">
-		  		<!--
-		  		<ul>
-		  			<li ng-repeat="tag in selectedTags">{{tag.name}}</li>
-		  		</ul>
-		  		--><span class="gh-tag" 
+				<span class="gh-tag" 
 		  				ng-repeat="tag in selectedTags" 
 		  				ng-click="open(tag.id, userId, groupId, groupName)">{{tag.name}}</span>&nbsp;
 		  	</div>
@@ -151,9 +145,15 @@ div.tabcontent .row{
 <hr>
 <!-- button -->
 <div class="row">
+	<div  class="col-sm-2">
+		<button class="btn btn-default"  ng-click="backToPage()">
+			<i class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></i> 
+			Back
+		</button>
+	</div>
 	<div  class="col-sm-offset-2 col-sm-2">
 		<button class="btn btn-default"  ng-click="Receipts()">
-			<i class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></i> 
+			<i class="fa fa-files-o" aria-hidden="true"></i>
 			Receipts
 		</button>
 	</div>
@@ -162,12 +162,7 @@ div.tabcontent .row{
 			<i class="glyphicon glyphicon-edit"></i> 
 			Edit Receipt
 		</button>
-	</div>
-	<!--	
-	<div ng-show="receipt.id" class="col-sm-offset-2 col-sm-4">
-		<button class="btn btn-danger" ng-click="delReceipt()">Delete Receipt</button>
-	</div>	
-	-->					
+	</div>				
 </div>
 <!-- button -->
 </div>
