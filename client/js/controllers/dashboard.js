@@ -13,6 +13,7 @@
       $scope.tagcloud = true;
       $scope.recentReceiptsCount;
       var tagnames = {};
+      var tagIds = {};
       var userId, groupId;
       var tagWords = [];
 
@@ -66,15 +67,24 @@
                 name = tag.name;
                 if(tagnames[name] == undefined){
                   tagnames[name] = 1;
+                  tagIds[name] = tag.id;
                 }else{
                   tagnames[name] += 1;
+                  tagIds[name] = tag.id;
                 }                
               });
             }
           });
         }
         angular.forEach(tagnames, function(tagname, key){
-          var word = {text: key, weight: tagnames[key]};
+          var strlink = "javascript:angular.element(document.getElementById('dashboardTagController')).scope().open('";
+          strlink  +=  tagIds[key];
+          strlink += "','" + userId + "');";
+          var word = {
+            text: key, 
+            weight: tagnames[key],
+            link: strlink
+          };
           tagWords.push(word);
         });
         if(tagWords.length < 1){
@@ -812,4 +822,141 @@
     $scope.close = function () {
       $modalInstance.dismiss('close');
     };
+  }])
+  .controller('ModalDashboardTagReceiptsCtrl', function ($scope, $modal, $log) {
+
+    $scope.open = function (tagId, userId, groupId, groupName) {
+
+        $scope.params = {
+          tagId: tagId,
+          userId: userId,
+          groupId: groupId,
+          groupName: groupName
+        };
+
+        var modalInstance = $modal.open({
+          templateUrl: 'ModalTagReceipts.html',
+          controller: 'ModalDashboardTagReceiptsInstanceCtrl',
+          size: 'lg',
+          resolve: {
+            params: function(){
+              return $scope.params;
+          }}
+        });
+      };
+  })
+  .controller('ModalDashboardTagReceiptsInstanceCtrl', [
+    '$scope', '$state', '$modalInstance', 'params', 'Tag', '$filter', 
+      function($scope, $state, $modalInstance, params, Tag, $filter) {           
+
+      $scope.receipts = [];
+      $scope.userId = params.userId;
+      $scope.groupId = params.groupId;
+      $scope.groupName = params.groupName;
+      $scope.tagId = params.tagId;
+
+      Tag.find({
+          filter: { 
+              include: {
+                relation: 'receipts',
+                scope: {
+                    include: {
+                        relation: 'store'
+                    }
+                }
+              },
+              where: {and: [
+                  {id: params.tagId},
+                  {and: [
+                      {customerId: params.userId},
+                      {groupId: params.groupId}
+                  ]}                  
+              ]}
+          }
+      })
+      .$promise
+      .then(function(tags){
+          $scope.tagname = tags[0].name;
+          if(tags[0].receipts.length > 0){
+            $scope.receipts = tags[0].receipts;
+          }
+      });    
+
+      // Pagination
+      $scope.pageUnits = [5, 10, 15];
+      $scope.pageSize = 10;
+      $scope.currentPage = 0; 
+
+      // Sorting
+      $scope.tablehead = {
+        store: "Store",
+        total: "Total",
+        numberOfItem: "# Item",
+        date: "Date"
+      };
+
+      $scope.sort = {
+          column: 'date',
+          descending: '-',
+          symbol: true
+      };      
+      
+      $scope.selectedCls = function(column) {
+          return column == $scope.sort.column && 'sort-' + $scope.sort.symbol;
+      };
+
+      $scope.changeSorting = function(column) {
+          var sort = $scope.sort;
+          if (sort.column == column) {
+             if(sort.descending == ''){
+                sort.descending = '-';
+             }else{
+                sort.descending = '';
+             }
+             sort.symbol = !sort.symbol;
+          } else {
+              sort.column = column;
+              sort.descending = '';
+              sort.symbol = false;
+          }
+      };  
+      // Sorting 
+      //Pagination - angular
+      $scope.getData = function(){
+        return $filter('filter')($scope.receipts)
+      }
+
+      $scope.numberOfPages=function(){
+          return Math.ceil($scope.getData().length/$scope.pageSize);                
+      }
+      //$scope.number = $scope.numberOfPages();
+      $scope.getNumber = function(num) {
+          return new Array(num);   
+      }
+      $scope.changePageSize = function(){
+        $scope.currentPage = 0;
+      }     
+      //Pagination - angular
+
+      $scope.close = function () {
+        $modalInstance.dismiss('close');
+      };
+
+      $scope.viewReceipt = function(receiptId){
+        $modalInstance.close('viewReceipt');
+        if($scope.groupId == undefined){
+          $state.go('viewReceipt', {'id': receiptId});
+        }else{
+             $state.go(
+              'groupViewReceipt', 
+              {
+                'id':         receiptId, 
+                'groupId':    $scope.groupId, 
+                'groupName':  $scope.groupName,
+                'ownerId':    $scope.userId
+              }
+            );
+        }        
+      }      
+
   }]);

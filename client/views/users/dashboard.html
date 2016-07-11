@@ -230,8 +230,8 @@
                         ng-if="$index < ownerGroupRecentReceipts.length">
                         <a style="text-decoration:none;">
                         <span><strong>{{recentReceipt.storeName}}</strong></span> 
-                        <span>${{recentReceipt.total}}</span>
-                        <span>{{recentReceipt.date}}</span>
+                        <span>/ ${{recentReceipt.total}}</span>
+                        <span>/ {{(recentReceipt.date).substring(5, 10)}}</span>
                         <i class="glyphicon glyphicon-search pull-right" 
                             style="padding-right:10px" 
                             ng-click="viewGroupReceipt(recentReceipt.id, ownerGroup.groupId, ownerGroup.groupName, ownerGroup.ownerId)" tooltip-html-unsafe="View Details"></i>                        
@@ -248,8 +248,8 @@
                         ng-if="$index < memberGroupRecentReceipts.length">
                         <a style="text-decoration:none;">
                         <span><strong>{{recentReceipt.storeName}}</strong></span> 
-                        <span>${{recentReceipt.total}}</span>
-                        <span>{{recentReceipt.date}}</span>
+                        <span>/ ${{recentReceipt.total}}</span>
+                        <span>/ {{(recentReceipt.date).substring(5, 10)}}</span>
                         <i class="glyphicon glyphicon-search pull-right" 
                             style="padding-right:10px" 
                             ng-click="viewGroupReceipt(recentReceipt.id, memberGroup.groupId, memberGroup.groupName, memberGroup.ownerId)" tooltip-html-unsafe="View Details"></i>                        
@@ -507,3 +507,98 @@
     </script>
 </div>
 <!-- Receipts File Upload Modal Window -->
+
+<!-- Tag Receipts Modal Window -->
+<div ng-controller="ModalDashboardTagReceiptsCtrl" id="dashboardTagController">
+    <script type="text/ng-template" id="ModalTagReceipts.html">
+        <div class="modal-header">
+            <h1 class="page-title text-center">
+              <i class="fa fa-tag" aria-hidden="true"></i>
+              Receipts in Tag
+            </h1>
+        </div>
+        <div class="modal-body">
+            <div style="margin:25px;">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <strong>Receipts in '{{tagname}}'</strong>
+                            </div>
+                            <div class="panel-body">
+
+    <div class="row">
+        <label class="col-sm-1 control-label text-right">Search</label>
+        <div class="col-sm-3">          
+            <input ng-model="searchText" id="search" class="form-control" placeholder="Search text">
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr style="background:#ffffff;">
+                    <th style="display:none;">ID</th>
+                    <!--<th style="text-align: center; ">Store</th>-->
+                    <th class="sortable" 
+                        style="text-align: center; "
+                        ng-repeat="(key,value) in tablehead" 
+                        ng-class="selectedCls(key)" 
+                        ng-click="changeSorting(key)">{{value}}</th>
+                    <th style="text-align: center; "colspan="2">Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="receipt in receipts | orderBy : sort.descending + sort.column | receiptFilter:searchText | startFrom:currentPage*pageSize | limitTo:pageSize">
+                <td style="display:none;">{{receipt.id}}</td>
+                <td style="margin-left:15px;">{{receipt.store.name}}</td>
+                <td style="text-align: center; ">$ {{receipt.total}}</td>
+                <td style="text-align: center; ">{{receipt.numberOfItem}}</td>
+                <td style="text-align: center; ">{{(receipt.date).substring(0, 10)}}</td>
+                <td>
+                    {{receipt.comment}}
+                    <i class="glyphicon glyphicon-search pull-right text-primary" 
+                        style="padding-right:10px" 
+                        ng-click="viewReceipt(receipt.id)" tooltip-html-unsafe="View Details"></i>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div style="margin-bottom:20px;">
+    <div class="row">
+        <div class="col-sm-2">
+            <select ng-model="pageSize" 
+                id="pageSize" 
+                class="form-control" 
+                style="width:100px;"
+                ng-change="changePageSize()"
+                ng-options="unit for unit in pageUnits">
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <ul class="list-group list-group-horizontal">
+                <button  class="btn btn-primary" ng-disabled="currentPage == 0"  ng-click="currentPage=currentPage-1">Previous</button>
+                <button  class="btn btn-primary" ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="currentPage=currentPage+1">Next</button>
+            </ul>
+        </div>
+        <div class="col-sm-6 text-center">
+            <pre>Selected page: {{currentPage+1}}/{{numberOfPages()==0? 1:numberOfPages();}}</pre>
+        </div>
+    </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button class="btn btn-warning" ng-click="close()">Close</button>
+        </div>        
+    </script>
+</div>
+<!-- Tag Receipts Modal Window -->

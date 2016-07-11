@@ -320,7 +320,7 @@
         }
 
         if (this.options.encodeURI) {
-          word.link.href = encodeURI(word.link.href).replace(/'/g, '%27');
+          //word.link.href = encodeURI(word.link.href).replace(/'/g, '%27');
         }
 
         word_span.append($('<a>').attr(word.link).text(word.text));
