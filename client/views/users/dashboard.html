@@ -130,8 +130,8 @@
                         ng-if="$index < recentReceiptsCount">
                         <a style="text-decoration:none;">
                         <span><strong>{{recentReceipt.storeName}}</strong></span> 
-                        <span>${{recentReceipt.total}}</span>
-                        <span>{{recentReceipt.date}}</span>
+                        <span>/ ${{recentReceipt.total}}</span>
+                        <span>/ {{(recentReceipt.date).substring(5,10)}}</span>
                         <i class="glyphicon glyphicon-search pull-right" 
                             style="padding-right:10px" 
                             ng-click="viewReceipt(recentReceipt.id)" tooltip-html-unsafe="View Details"></i>                        
