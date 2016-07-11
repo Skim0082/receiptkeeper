@@ -109,9 +109,20 @@
 				  	</div>
 
 				</div>
+				<div class="row" ng-show="receipt.imageFilePath">
+					<div class="row">
+						<div class="col-sm-offset-2 col-sm-10">
+							<hr style="margin-top:0">
+						</div>		
+						<label class="col-sm-2 control-label">Receipt Photo</label>
+						<div class="col-sm-8" style="margin-left:15px;margin-bottom:15px;">
+							<img ng-src="{{receipt.imageFilePath}}" style="margin:0 auto;width:100%; height: auto; max-width:600px;" />
+						</div>
+					</div>
+				</div>
 				<hr>
 				<div class="row">
-					<div ng-show="receipt.id" class="col-sm-2" ng-controller="ModalReceiptFileCtrl">
+					<div ng-show="receipt.id" class="col-sm-2">
 						<button class="btn btn-default"  
 							ng-click="open(receiptId, groupId, groupName, ownerId)">Upload</button>
 					</div>				

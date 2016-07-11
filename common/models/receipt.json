@@ -30,6 +30,7 @@
     },
     "imageFilePath": {
       "type": "string",
+      "default": "",
       "required": false
     },
     "categoryId": {

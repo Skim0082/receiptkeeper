@@ -441,31 +441,7 @@
       window.history.back();
     }
       
-  }]) 
-  .controller('ModalReceiptFileCtrl', function ($scope, $modal, $log) {
-
-    $scope.open = function (receiptId, groupId, groupName, ownerId) {
-
-        $scope.params = {
-          receiptId: receiptId,
-          ownerId: ownerId,
-          groupId: groupId,
-          groupName: groupName
-        };
-
-        console.log("$scope.params: ", $scope.params);
-
-        var modalInstance = $modal.open({
-          templateUrl: 'ModalReceiptFile.html',
-          controller: 'ModalReceiptFileInstanceCtrl',
-          size: 'lg',
-          resolve: {
-            params: function(){
-              return $scope.params;
-          }}
-        });
-      };
-  })
+  }])
   .controller('ModalReceiptFileInstanceCtrl', [
     '$scope', '$state', '$modalInstance', 'params', 
     'Receipt', 'FileUploader', 'Container', '$rootScope', 
@@ -491,7 +467,6 @@
       repositoryPath = storageId + '/'; 
 
       Container.getContainers(function(container){
-        //console.log("container: ", container);
         var isContainer = false;
         for(var i = 0; i < container.length; i++){
           if(container[i].name == storageId){
@@ -525,12 +500,13 @@
           var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
           return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
-    });
+    });  
 
     // REGISTER HANDLERS
     // --------------------
     uploader.onAfterAddingFile = function(item) {
       console.info('After adding a file', item);
+      $scope.disabled = true;
     };
     // --------------------
     uploader.onAfterAddingAll = function(items) {
@@ -556,18 +532,7 @@
     // --------------------
     uploader.onSuccessItem = function(item, response, status, headers) {
       console.info('Success', response, status, headers); 
-      $scope.disabled = true;   
-      var filePath = '/api/containers/' + storageId + '/download/' + response.result.files.file[0].name
-      Receipt.prototype$updateAttributes(
-          { id: params.receiptId }, 
-          { 
-            imageFilePath: filePath
-          }
-      )
-      .$promise
-      .then(function(receipt){            
-          console.log("receiptFile: ", receipt.imageFilePath);
-      }); 
+      $scope.disabled = true;          
       $scope.$broadcast('uploadCompleted', item);
     };
     //response.result.files.file[0].container
@@ -586,6 +551,10 @@
     // --------------------
     uploader.onCompleteItem = function(item, response, status, headers) {
       console.info('Complete', response, status, headers);
+      $scope.disabled = true;   
+      var filePath = '/api/containers/' + storageId + '/download/' + response.result.files.file[0].name;
+      console.log("receiptFile: ", filePath);
+      $modalInstance.close(filePath);         
     };
     // --------------------
     uploader.onCompleteAll = function() {
@@ -624,9 +593,6 @@
     '$scope', '$state', '$modalInstance', 'params', 'Tag', '$filter', 
       function($scope, $state, $modalInstance, params, Tag, $filter) {           
 
-      //$scope.tagId = params.tagId;
-      //console.log("Instance params: ", params);
-
       $scope.receipts = [];
       $scope.userId = params.userId;
       $scope.groupId = params.groupId;
@@ -654,11 +620,9 @@
       })
       .$promise
       .then(function(tags){
-          //console.log("tags: ", tags);
           $scope.tagname = tags[0].name;
           if(tags[0].receipts.length > 0){
             $scope.receipts = tags[0].receipts;
-            //console.log("$scope.receipts: ", $scope.receipts);
           }
       });    
 
@@ -742,9 +706,9 @@
   }]) 
   .controller('EditReceiptController', ['$scope', 'Receipt', '$state',
       '$stateParams', 'Store', 'Item', 'ReceiptItem', 'Category', 
-      'Tag', 'ReceiptTag', '$location', '$rootScope', 
+      'Tag', 'ReceiptTag', '$location', '$rootScope', '$modal', 
       function($scope, Receipt, $state, $stateParams, Store, 
-        Item, ReceiptItem, Category, Tag, ReceiptTag, $location, $rootScope) {   
+        Item, ReceiptItem, Category, Tag, ReceiptTag, $location, $rootScope, $modal) {   
 
     $scope.action = 'Edit';
     $scope.stores = [];
@@ -1008,6 +972,35 @@
       }    
     }
 
+    $scope.open = function (receiptId, groupId, groupName, ownerId) {
+
+        $scope.params = {
+          receiptId: receiptId,
+          ownerId: ownerId,
+          groupId: groupId,
+          groupName: groupName
+        };
+
+        console.log("$scope.params: ", $scope.params);
+
+        var modalInstance = $modal.open({
+          templateUrl: 'ModalReceiptFile.html',
+          controller: 'ModalReceiptFileInstanceCtrl',
+          size: 'lg',
+          resolve: {
+            params: function(){
+              return $scope.params;
+          }}
+        });
+
+        modalInstance.result.then(function (imageFilePath) {
+          $scope.receipt.imageFilePath = imageFilePath;
+        }, function () {
+          console.info('Receipt Photo Upload Modal dismissed.');
+        });
+
+    };    
+
     $scope.submitForm = function() {
       //console.log("selectedCategory: ", $scope.selectedCategory);
       if($scope.selectedCategory !== undefined){
@@ -1016,7 +1009,7 @@
       $scope.receipt.storeId = $scope.selectedStore.id;  
       var receiptDate = $('#receiptdate input').prop('value');
       $scope.receipt.date = new Date(receiptDate);    
-      console.log("$scope.receipt.date: ", $scope.receipt.date);
+      //console.log("$scope.receipt.date: ", $scope.receipt.date);
       $scope.receipt
       .$save()
       .then(function(){
