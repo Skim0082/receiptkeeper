@@ -265,6 +265,15 @@ footer nav ul li{
   margin-right:5%;
 }
 
+#loginErrorMessage,
+#signUpErrorMessage {
+  position: fixed;
+  top: 52px;
+  margin-right:5%;  
+  width: 300px;
+  right:5%;
+}
+
 #memberlist {
   padding: 8px 20px;
   display: block;
@@ -419,5 +428,8 @@ thead {
 }
 .gh-btn, .gh-tag, .gh-ico {
     float: left;
+}
+h1 {
+  text-transform: uppercase;
 }
 

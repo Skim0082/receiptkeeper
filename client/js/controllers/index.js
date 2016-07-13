@@ -27,12 +27,18 @@
       password: "aaa"
     };
 
+    var flashMessage;
+
     $scope.login = function() {
       AuthService.login($scope.user.email, $scope.user.password)
-        .then(function() {
-          //Check the invalid user, and giving a message will need
+        .then(function(login) {
+          if($rootScope.currentUser == undefined){
+          	flashMessage = "#loginErrorMessage"
+          	$scope.showMessage(flashMessage); 
+          }
           $modalInstance.close('login');
-          //$state.go('Dashboard');
+        }, function(err){
+        	console.log("Error of login at Index page: ", err);
         });
     };
 
@@ -41,8 +47,15 @@
 	};
 
 	$scope.signup = function(){
-      $modalInstance.close('signup');
-      $state.go('Signup');			
+    	$modalInstance.close('signup');
+      	$state.go('Signup');			
 	};
+
+    $scope.showMessage = function(flashMessage){
+      $(flashMessage).addClass("in"); 
+      window.setTimeout(function(){
+        $(flashMessage).removeClass("in"); 
+      }, 3000);          
+    } 	
 
   }]);  
