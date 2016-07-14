@@ -42,10 +42,10 @@
 
       // Sorting
       $scope.tablehead = {
-        store: "Store",
-        total: "Total",
-        numberOfItem: "# Item",
-        date: "Date"
+        'store.name': "Store",
+        'total': "Total",
+        'numberOfItem': "# Item",
+        'date': "Date"
       };
 
       $scope.sort = {
@@ -633,10 +633,10 @@
 
       // Sorting
       $scope.tablehead = {
-        store: "Store",
-        total: "Total",
-        numberOfItem: "# Item",
-        date: "Date"
+        'store.name': "Store",
+        'total': "Total",
+        'numberOfItem': "# Item",
+        'date': "Date"
       };
 
       $scope.sort = {
