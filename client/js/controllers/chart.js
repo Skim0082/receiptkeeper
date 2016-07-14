@@ -65,7 +65,7 @@ angular.module('app')
     $scope.selectedMonth = $scope.twelvemonths[5];
 
     // Get recent 6 months receipts
-    var ONE_MONTH = 30 * 24 * 60 * 60 * 1000; // Month in milliseconds
+    //var ONE_MONTH = 30 * 24 * 60 * 60 * 1000; // Month in milliseconds
     var monthNames = [  "January", "February", "March", "April", 
                         "May", "June", "July", "August", 
                         "September", "October", "November", "December"
@@ -78,11 +78,15 @@ angular.module('app')
         var year = date.getFullYear();
         var month = date.getMonth();
         var startDate;  // Every month first
+        var startDateThisYear, startDateLastYear;
         if(month - rangeOfMonth >= 0){
             startDate = new Date(year, month-rangeOfMonth, 1);
         }else{
-            startDate = new Date(year -1 , 12 + (month-rangeOfMonth), 1);
+            startDate = new Date(year -1 , 12 + (month-rangeOfMonth), 1);        
         }
+        startDateThisYear = new Date(startDate - 1);
+        //console.log("startDate: ", startDate);
+        //console.log("startDateThisYear: ", startDateThisYear);
 
         var j = 0;
         var m = 0;
@@ -137,7 +141,7 @@ angular.module('app')
                     }
                 ],                
                 where: {and: [
-                    {date: {gte: startDate}},
+                    {date: {gt: startDateThisYear}},
                     {and: [
                         {customerId: userId},
                         {groupId: groupId}
@@ -200,6 +204,10 @@ angular.module('app')
                     endDate = new Date(year -1, month + 1, 1);
                 }
                 startDate = new Date(startDate.getFullYear() -1, startDate.getMonth(), 1);
+                startDateLastYear = new Date(startDate - 1);
+                //console.log("startDateLastYear: ", startDateLastYear);
+                //console.log("endDate: ", endDate);
+
                 Receipt.find({
                     filter: {
                         order: 'date DESC', 
@@ -220,15 +228,14 @@ angular.module('app')
                                 {groupId: groupId}
                             ]}, 
                             {and: [
-                                    {date: {lt: endDate}},
-                                    {date: {gte: startDate}}
+                                    {date: {gt: startDateLastYear}},
+                                    {date: {lt: endDate}}
                             ]}                        
                         ]}
                     }
                 })
                 .$promise
                 .then(function(lastYearReceipts){
-
                     totals = [];
                     dates = [];
                     totals = lastYearReceipts.map(function(receipt){ return receipt.total});
@@ -391,7 +398,7 @@ angular.module('app')
                     tag_donut_data.push(otherTotal);                    
                 } 
                 $scope.tagchartpercent =  tagprogresschart;
-                console.log("tagprogresschart: ", tagprogresschart);                                      
+                //console.log("tagprogresschart: ", tagprogresschart);                                      
 
                 // Line Chart retrieved from real data of database
                 // Monthly total consumption as range of months

@@ -478,7 +478,7 @@
           Container.createContainer({
             name: storageId
           },function(data){
-              console.log("new container: ", data);
+              //console.log("new container: ", data);
             }
           );               
         }          
@@ -505,33 +505,33 @@
     // REGISTER HANDLERS
     // --------------------
     uploader.onAfterAddingFile = function(item) {
-      console.info('After adding a file', item);
+      //console.info('After adding a file', item);
       $scope.disabled = true;
     };
     // --------------------
     uploader.onAfterAddingAll = function(items) {
-      console.info('After adding all files', items);
+      //console.info('After adding all files', items);
     };
     // --------------------
     uploader.onWhenAddingFileFailed = function(item, filter, options) {
-      console.info('When adding a file failed', item);
+      //console.info('When adding a file failed', item);
     };
     // --------------------
     uploader.onBeforeUploadItem = function(item) {
-      console.info('Before upload', item);
+      //console.info('Before upload', item);
     };
     // --------------------
     uploader.onProgressItem = function(item, progress) {
       $scope.disabled = true;
-      console.info('Progress: ' + progress, item);
+      //console.info('Progress: ' + progress, item);
     };
     // --------------------
     uploader.onProgressAll = function(progress) {
-      console.info('Total progress: ' + progress);
+      //console.info('Total progress: ' + progress);
     };
     // --------------------
     uploader.onSuccessItem = function(item, response, status, headers) {
-      console.info('Success', response, status, headers); 
+      //console.info('Success', response, status, headers); 
       $scope.disabled = true;          
       $scope.$broadcast('uploadCompleted', item);
     };
@@ -542,23 +542,23 @@
     // --------------------
     uploader.onErrorItem = function(item, response, status, headers) {
       $scope.disabled = true;
-      console.info('Error', response, status, headers);
+      //console.info('Error', response, status, headers);
     };
     // --------------------
     uploader.onCancelItem = function(item, response, status, headers) {
-      console.info('Cancel', response, status);
+      //console.info('Cancel', response, status);
     };
     // --------------------
     uploader.onCompleteItem = function(item, response, status, headers) {
-      console.info('Complete', response, status, headers);
+      //console.info('Complete', response, status, headers);
       $scope.disabled = true;   
       var filePath = '/api/containers/' + storageId + '/download/' + response.result.files.file[0].name;
-      console.log("receiptFile: ", filePath);
+      //console.log("receiptFile: ", filePath);
       $modalInstance.close(filePath);         
     };
     // --------------------
     uploader.onCompleteAll = function() {
-      console.info('Complete all');
+      //console.info('Complete all');
     };
     // --------------------
     //console.info('uploader: ', uploader);
@@ -863,7 +863,6 @@
     $scope.getStoreCategories = function(storeId, categoryId){      
       if(storeId === null){
         storeId = $scope.selectedStore.id;
-        //console.log("changeStoreId: ", storeId);
       }
       Store.findById({ 
         id: storeId,
@@ -886,7 +885,6 @@
       .$promise
       .then(function(store){
         var categories = $scope.categories = store.categories;
-        //console.log("store.categories: ", store.categories);
         if(store.categories.length > 0 && categoryId != null){
             var selectedCategoryIndex = categories.map(function(category){ 
               return category.id;
@@ -981,7 +979,7 @@
           groupName: groupName
         };
 
-        console.log("$scope.params: ", $scope.params);
+        //console.log("$scope.params: ", $scope.params);
 
         var modalInstance = $modal.open({
           templateUrl: 'ModalReceiptFile.html',
@@ -996,7 +994,7 @@
         modalInstance.result.then(function (imageFilePath) {
           $scope.receipt.imageFilePath = imageFilePath;
         }, function () {
-          console.info('Receipt Photo Upload Modal dismissed.');
+          //console.info('Receipt Photo Upload Modal dismissed.');
         });
 
     };    
@@ -1008,7 +1006,8 @@
       }
       $scope.receipt.storeId = $scope.selectedStore.id;  
       var receiptDate = $('#receiptdate input').prop('value');
-      $scope.receipt.date = new Date(receiptDate);    
+      var temp_date = new Date(receiptDate);
+      $scope.receipt.date = temp_date.setHours(temp_date.getHours() + 12);
       //console.log("$scope.receipt.date: ", $scope.receipt.date);
       $scope.receipt
       .$save()
@@ -1152,40 +1151,40 @@
 
     // Get categories by selected store using Controller's function (but duplicated)
     $scope.getStoreCategories = function(storeId, categoryId){
-      if(storeId === null){
-        storeId = $scope.selectedStore.id;
-        //console.log("changeStore: ", storeId);
-      }      
-      Store.findById({ 
-        id: storeId,
-        fields: {
-          id: true,
-          name: true
-        },            
-        filter: {
-          include: {
-            relation: 'categories',
-            scope:{
-              where: {and: [
-                {customerId: userId},
-                {groupId: groupId}
-              ]}                 
+
+        if(storeId == null){
+          storeId = $scope.selectedStore.id;         
+        }
+        Store.findById({ 
+          id: storeId,
+          fields: {
+            id: true,
+            name: true
+          },            
+          filter: {
+            include: {
+              relation: 'categories',
+              scope:{
+                where: {and: [
+                  {customerId: userId},
+                  {groupId: groupId}
+                ]}                 
+              }
             }
           }
-        }
-      })
-      .$promise
-      .then(function(store){
-        var categories = $scope.categories = store.categories;
-        //console.log("store.categories: ", store.categories);
-        if(store.categories.length > 0 && categoryId != null){
-            var selectedCategoryIndex = categories.map(function(category){ 
-              return category.id;
-            }).indexOf(categoryId);
-            $scope.selectedCategory = categories[selectedCategoryIndex];
-        }
-      });
-    }    
+        })
+        .$promise
+        .then(function(store){
+          var categories = $scope.categories = store.categories;
+          if(store.categories.length > 0 && categoryId != null){
+              var selectedCategoryIndex = categories.map(function(category){ 
+                return category.id;
+              }).indexOf(categoryId);
+              $scope.selectedCategory = categories[selectedCategoryIndex];
+          }
+        });
+
+    } //$scope.getStoreCategories = function(storeId, categoryId){
 
     $scope.countSelectedTag = function(){
       $scope.selTagCount=$scope.selectedTags.length + " selected";
@@ -1262,7 +1261,8 @@
 
     $scope.submitForm = function() {
       var receiptDate = $('#receiptdate input').prop('value');
-      $scope.receipt.date = new Date(receiptDate);
+      var temp_date = new Date(receiptDate);
+      $scope.receipt.date = temp_date.setHours(temp_date.getHours() + 12);
 
       Receipt
         .create({
