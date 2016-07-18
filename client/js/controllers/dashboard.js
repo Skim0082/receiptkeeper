@@ -130,6 +130,16 @@
           {text: "Dolor", weight: 6, html: {title: "I can haz any html attribute"}},
       ];
       */
+         
+      $scope.commaSeparateNumber =   function(val){
+        if(val != undefined){
+          while (/(\d+)(\d{3})/.test(val.toString())){
+            val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+          }          
+        }
+        return val;
+      };
+
       $scope.setValue2localStorage = function(value, storageKey){
         var temp_localStorage = {};
         if(localStorage[userId] != undefined){
@@ -900,7 +910,16 @@
           descending: '-',
           symbol: true
       };      
-      
+         
+      $scope.commaSeparateNumber =   function(val){
+        if(val != undefined){
+          while (/(\d+)(\d{3})/.test(val.toString())){
+            val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+          }          
+        }
+        return val;
+      };      
+
       $scope.selectedCls = function(column) {
           return column == $scope.sort.column && 'sort-' + $scope.sort.symbol;
       };

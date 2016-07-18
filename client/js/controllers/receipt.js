@@ -52,7 +52,16 @@
           column: 'date',
           descending: '-',
           symbol: true
-      };      
+      };   
+
+      $scope.commaSeparateNumber =   function(val){
+        if(val != undefined){
+          while (/(\d+)(\d{3})/.test(val.toString())){
+            val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+          }          
+        }    
+        return val;
+      };   
       
       $scope.selectedCls = function(column) {
           return column == $scope.sort.column && 'sort-' + $scope.sort.symbol;
@@ -370,6 +379,16 @@
     } 
     */
 
+
+    $scope.commaSeparateNumber =   function(val){
+      if(val != undefined){
+        while (/(\d+)(\d{3})/.test(val.toString())){
+          val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+        }        
+      }
+      return val;
+    };     
+
     $scope.Receipts = function(){
       if($stateParams.groupId == undefined){
         $state.go('Receipts');
@@ -643,8 +662,17 @@
           column: 'date',
           descending: '-',
           symbol: true
-      };      
-      
+      };   
+
+      $scope.commaSeparateNumber =   function(val){
+        if(val != undefined){
+          while (/(\d+)(\d{3})/.test(val.toString())){
+            val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+          }          
+        }
+        return val;
+      };       
+
       $scope.selectedCls = function(column) {
           return column == $scope.sort.column && 'sort-' + $scope.sort.symbol;
       };

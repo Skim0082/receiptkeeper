@@ -130,7 +130,7 @@
                         ng-if="$index < recentReceiptsCount">
                         <a style="text-decoration:none;">
                         <span><strong>{{recentReceipt.storeName}}</strong></span> 
-                        <span>/ ${{recentReceipt.total}}</span>
+                        <span>/ ${{commaSeparateNumber(recentReceipt.total)}}</span>
                         <span>/ {{(recentReceipt.date).substring(5,10)}}</span>
                         <i class="glyphicon glyphicon-search pull-right" 
                             style="padding-right:10px" 
@@ -230,7 +230,7 @@
                         ng-if="$index < ownerGroupRecentReceipts.length">
                         <a style="text-decoration:none;">
                         <span><strong>{{recentReceipt.storeName}}</strong></span> 
-                        <span>/ ${{recentReceipt.total}}</span>
+                        <span>/ ${{commaSeparateNumber(recentReceipt.total)}}</span>
                         <span>/ {{(recentReceipt.date).substring(5, 10)}}</span>
                         <i class="glyphicon glyphicon-search pull-right" 
                             style="padding-right:10px" 
@@ -248,7 +248,7 @@
                         ng-if="$index < memberGroupRecentReceipts.length">
                         <a style="text-decoration:none;">
                         <span><strong>{{recentReceipt.storeName}}</strong></span> 
-                        <span>/ ${{recentReceipt.total}}</span>
+                        <span>/ ${{commaSeparateNumber(recentReceipt.total)}}</span>
                         <span>/ {{(recentReceipt.date).substring(5, 10)}}</span>
                         <i class="glyphicon glyphicon-search pull-right" 
                             style="padding-right:10px" 
@@ -294,50 +294,6 @@
                   </div>
                 </div>
                 <!-- Combo chart using Hight Chart Open Source for non comercial -->  
-
-                <!--
-                <div class="row ng-scope">
-                    <div class="col-sm-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading"> Receipts </div>
-                            <div class="panel-body">
-
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row ng-scope">
-                    <div class="col-lg-4 col-md-12 col-sm-12">
-                        <div class="panel panel-green">
-                            <div class="panel-heading"> Stores </div>
-                            <div class="panel-body">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.
-                            </div>
-                            <div class="panel-footer"> Panel Footer </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="panel panel-yellow">
-                            <div class="panel-heading"> Tags </div>
-                            <div class="panel-body">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.
-                            </div>
-                            <div class="panel-footer"> Panel Footer </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="panel panel-red">
-                            <div class="panel-heading"> Categories </div>
-                            <div class="panel-body">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.
-                            </div>
-                            <div class="panel-footer"> Panel Footer </div>
-                        </div>
-                    </div>
-                </div>
-                -->
 
             </div>
             <!-- /.panel-body -->
@@ -527,67 +483,67 @@
                                 <strong>Receipts in '{{tagname}}'</strong>
                             </div>
                             <div class="panel-body">
+                                <!-- Receipts in Tag of Table -->
+                                <div class="row">
+                                    <label class="col-sm-1 control-label text-right">Search</label>
+                                    <div class="col-sm-3">          
+                                        <input ng-model="searchText" id="search" class="form-control" placeholder="Search text">
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr style="background:#ffffff;">
+                                                <th style="display:none;">ID</th>
+                                                <!--<th style="text-align: center; ">Store</th>-->
+                                                <th class="sortable" 
+                                                    style="text-align: center; "
+                                                    ng-repeat="(key,value) in tablehead" 
+                                                    ng-class="selectedCls(key)" 
+                                                    ng-click="changeSorting(key)">{{value}}</th>
+                                                <th style="text-align: center; "colspan="2">Comment</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="receipt in receipts | orderBy : sort.descending + sort.column | receiptFilter:searchText | startFrom:currentPage*pageSize | limitTo:pageSize">
+                                            <td style="display:none;">{{receipt.id}}</td>
+                                            <td style="margin-left:15px;">{{receipt.store.name}}</td>
+                                            <td style="text-align: center; ">$ {{commaSeparateNumber(receipt.total)}}</td>
+                                            <td style="text-align: center; ">{{receipt.numberOfItem}}</td>
+                                            <td style="text-align: center; ">{{(receipt.date).substring(0, 10)}}</td>
+                                            <td>
+                                                {{receipt.comment}}
+                                                <i class="glyphicon glyphicon-search pull-right text-primary" 
+                                                    style="padding-right:10px" 
+                                                    ng-click="viewReceipt(receipt.id)" tooltip-html-unsafe="View Details"></i>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
 
-    <div class="row">
-        <label class="col-sm-1 control-label text-right">Search</label>
-        <div class="col-sm-3">          
-            <input ng-model="searchText" id="search" class="form-control" placeholder="Search text">
-        </div>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-                <tr style="background:#ffffff;">
-                    <th style="display:none;">ID</th>
-                    <!--<th style="text-align: center; ">Store</th>-->
-                    <th class="sortable" 
-                        style="text-align: center; "
-                        ng-repeat="(key,value) in tablehead" 
-                        ng-class="selectedCls(key)" 
-                        ng-click="changeSorting(key)">{{value}}</th>
-                    <th style="text-align: center; "colspan="2">Comment</th>
-                </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="receipt in receipts | orderBy : sort.descending + sort.column | receiptFilter:searchText | startFrom:currentPage*pageSize | limitTo:pageSize">
-                <td style="display:none;">{{receipt.id}}</td>
-                <td style="margin-left:15px;">{{receipt.store.name}}</td>
-                <td style="text-align: center; ">$ {{receipt.total}}</td>
-                <td style="text-align: center; ">{{receipt.numberOfItem}}</td>
-                <td style="text-align: center; ">{{(receipt.date).substring(0, 10)}}</td>
-                <td>
-                    {{receipt.comment}}
-                    <i class="glyphicon glyphicon-search pull-right text-primary" 
-                        style="padding-right:10px" 
-                        ng-click="viewReceipt(receipt.id)" tooltip-html-unsafe="View Details"></i>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-    </div>
-    <div style="margin-bottom:20px;">
-    <div class="row">
-        <div class="col-sm-2">
-            <select ng-model="pageSize" 
-                id="pageSize" 
-                class="form-control" 
-                style="width:100px;"
-                ng-change="changePageSize()"
-                ng-options="unit for unit in pageUnits">
-            </select>
-        </div>
-        <div class="col-sm-4">
-            <ul class="list-group list-group-horizontal">
-                <button  class="btn btn-primary" ng-disabled="currentPage == 0"  ng-click="currentPage=currentPage-1">Previous</button>
-                <button  class="btn btn-primary" ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="currentPage=currentPage+1">Next</button>
-            </ul>
-        </div>
-        <div class="col-sm-6 text-center">
-            <pre>Selected page: {{currentPage+1}}/{{numberOfPages()==0? 1:numberOfPages();}}</pre>
-        </div>
-    </div>
-
+                                </div>
+                                <div style="margin-bottom:20px;">
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <select ng-model="pageSize" 
+                                            id="pageSize" 
+                                            class="form-control" 
+                                            style="width:100px;"
+                                            ng-change="changePageSize()"
+                                            ng-options="unit for unit in pageUnits">
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <ul class="list-group list-group-horizontal">
+                                            <button  class="btn btn-primary" ng-disabled="currentPage == 0"  ng-click="currentPage=currentPage-1">Previous</button>
+                                            <button  class="btn btn-primary" ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="currentPage=currentPage+1">Next</button>
+                                        </ul>
+                                    </div>
+                                    <div class="col-sm-6 text-center">
+                                        <pre>Selected page: {{currentPage+1}}/{{numberOfPages()==0? 1:numberOfPages();}}</pre>
+                                    </div>
+                                </div>
+                                <!-- Receipts in Tag of Table -->
 
                             </div>
                         </div>
