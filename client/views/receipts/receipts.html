@@ -35,7 +35,7 @@
 					    <tr ng-repeat="receipt in receipts | orderBy : sort.descending + sort.column | receiptFilter:searchText | startFrom:currentPage*pageSize | limitTo:pageSize">
 					        <td style="display:none;">{{receipt.id}}</td>
 					        <td style="margin-left:15px;">{{receipt.store.name}}</td>
-					        <td style="text-align: center; ">$ {{commaSeparateNumber(receipt.total)}}</td>
+					        <td style="text-align: center; ">${{commaSeparateNumber(receipt.total)}}</td>
 					        <td style="text-align: center; ">{{receipt.numberOfItem}}</td>
 					        <td style="text-align: center; ">{{(receipt.date).substring(0, 10)}}</td>
 					        <td>

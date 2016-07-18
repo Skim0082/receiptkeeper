@@ -133,9 +133,25 @@
          
       $scope.commaSeparateNumber =   function(val){
         if(val != undefined){
+          var tmp = ("" + val).split(".");
+          var valComma;
+          console.log("tmp: ", tmp);
+          if(tmp.length>1){
+            valComma = Math.floor(tmp[0]).toLocaleString();
+            if(tmp[1].length > 1){
+              valComma += "." + tmp[1].substring(0,2);
+            }else{
+              valComma += "." + tmp[1].substring(0,1) + "0";
+            }
+          }else{
+            valComma = Math.floor(tmp[0]).toLocaleString() + ".00";
+          }
+          val = valComma;
+          /*
           while (/(\d+)(\d{3})/.test(val.toString())){
             val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
-          }          
+          } 
+          */         
         }
         return val;
       };
@@ -913,9 +929,25 @@
          
       $scope.commaSeparateNumber =   function(val){
         if(val != undefined){
+          var tmp = ("" + val).split(".");
+          var valComma;
+          console.log("tmp: ", tmp);
+          if(tmp.length>1){
+            valComma = Math.floor(tmp[0]).toLocaleString();
+            if(tmp[1].length > 1){
+              valComma += "." + tmp[1].substring(0,2);
+            }else{
+              valComma += "." + tmp[1].substring(0,1) + "0";
+            }
+          }else{
+            valComma = Math.floor(tmp[0]).toLocaleString() + ".00";
+          }
+          val = valComma;
+          /*
           while (/(\d+)(\d{3})/.test(val.toString())){
             val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
-          }          
+          } 
+          */          
         }
         return val;
       };      
