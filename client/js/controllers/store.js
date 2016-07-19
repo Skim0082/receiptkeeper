@@ -57,23 +57,41 @@
       $scope.selCategoryCount=$scope.selectedCategory.length + " selected";
     } 
 
+    $scope.checkValues = function(){
+
+      if($scope.selectedCategory.length < 1){
+        $scope.showMessage('#invalidCategoryMessage'); 
+        return false;        
+      }
+      return true;            
+    } //$scope.checkValues = function(){     
+
+    $scope.showMessage = function(flashMessage){
+      $(flashMessage).addClass("in"); 
+      window.setTimeout(function(){
+        $(flashMessage).removeClass("in"); 
+      }, 3000);        
+    }
+
     $scope.submitForm = function() {
-      Store
-        .create({
-          name: $scope.store.name,
-          customerId: userId,
-          groupId: groupId
-        }, function(store) {
-          for(var i = 0 ; i < $scope.selectedCategory.length ; i++){
-            StoreCategory
-              .create({
-                storeId: store.id,
-                categoryId: $scope.selectedCategory[i].id
-              }).$promise;              
-          }
-          $scope.Stores();
-        });
-    };
+      if($scope.checkValues()){
+        Store
+          .create({
+            name: $scope.store.name,
+            customerId: userId,
+            groupId: groupId
+          }, function(store) {
+            for(var i = 0 ; i < $scope.selectedCategory.length ; i++){
+              StoreCategory
+                .create({
+                  storeId: store.id,
+                  categoryId: $scope.selectedCategory[i].id
+                }).$promise;              
+            }
+            $scope.Stores();
+          });        
+        } // if($scope.checkValues()){
+    };  // $scope.submitForm = function() {
   }])  
   .controller('EditStoreController', ['$scope', 'Store', 'Category', 
       '$stateParams', '$state', 'StoreCategory', '$location', '$rootScope',  
@@ -177,24 +195,42 @@
         }        
       }  
 
+      $scope.checkValues = function(){
+
+        if($scope.selectedCategory.length < 1){
+          $scope.showMessage('#invalidCategoryMessage'); 
+          return false;        
+        }
+        return true;            
+      } //$scope.checkValues = function(){     
+
+      $scope.showMessage = function(flashMessage){
+        $(flashMessage).addClass("in"); 
+        window.setTimeout(function(){
+          $(flashMessage).removeClass("in"); 
+        }, 3000);        
+      }
+
 	    $scope.submitForm = function() {
-        $scope.store
-          .$save()
-          .then(function(){
-            Store.categories.destroyAll(
-              {id: $stateParams.id},
-              function(res){
-                for(var i = 0 ; i < $scope.selectedCategory.length ; i++){
-                  StoreCategory
-                    .create({
-                      storeId: $scope.store.id,
-                      categoryId: $scope.selectedCategory[i].id
-                    })
-                    .$promise;                  
-                }
-                $scope.Stores(); 
-              });
-          });          
+        if($scope.checkValues()){          
+          $scope.store
+            .$save()
+            .then(function(){
+              Store.categories.destroyAll(
+                {id: $stateParams.id},
+                function(res){
+                  for(var i = 0 ; i < $scope.selectedCategory.length ; i++){
+                    StoreCategory
+                      .create({
+                        storeId: $scope.store.id,
+                        categoryId: $scope.selectedCategory[i].id
+                      })
+                      .$promise;                  
+                  }
+                  $scope.Stores(); 
+                });
+            });          
+        } // if($scope.checkValues()){ 
 	    };
   }])
   .controller('AllStoresController', [

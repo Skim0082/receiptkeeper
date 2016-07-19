@@ -11,10 +11,8 @@
 div.tabcontent{
 	background-color:white ;
 	padding : 30px 40px 60px 40px;
-	border-left: 1px solid #ddd;
-	border-right: 1px solid #ddd;
-	border-bottom: 1px solid #ddd;
-	border-radius:  0 0 4px 4px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
 }
 div.tabcontent .row{
 	 margin-top: 10px;
@@ -30,22 +28,9 @@ div.tabcontent .row{
     opacity: 0  !important;
 }
 </style>
-<!-- Start Tab -->
+<!-- Start Receipt View -->
 <div>
-<div class="pull-right" style="margin-right:5px;">
-	<button class="btn btn-info"  ng-click="Receipts()">
-		<i class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></i> 
-		Receipts
-	</button>
-</div>
-  <tabset>
-    <tab>
-      <tab-heading>
-        <i class="fa fa-file-text-o" aria-hidden="true"></i> 
-        <span>Receipt View</span>
-      </tab-heading>
-      <div class="tabcontent" >
-
+    <div class="tabcontent" >
 		<div class="row">
 			<label class="col-sm-2 control-label">Store name</label>
 			<div class="col-sm-4">
@@ -62,8 +47,9 @@ div.tabcontent .row{
 		    <div class='col-sm-4'>
 		    	{{(receipt.date).substring(0,10)}}
 		    </div>
-			<div class="col-sm-6">
-				
+			<label class="col-sm-2 control-label" style="text-align:right;"># Item(s)</label>
+			<div class="col-sm-4">
+				{{receipt.numberOfItem}}    
 			</div>
 			<div class="col-sm-offset-2 col-sm-10">
 
@@ -87,21 +73,6 @@ div.tabcontent .row{
 			<div class="col-sm-4">
 				${{commaSeparateNumber(receipt.total)}}
 			</div>
-			<label class="col-sm-2 control-label" style="text-align:right;"># Item(s)</label>
-			<div class="col-sm-4">
-				{{receipt.numberOfItem}}    
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-offset-2 col-sm-10">
-
-			</div>		
-			<label class="col-sm-2 control-label">Comment</label>
-			<div class="col-sm-4" style="white-space: pre-line;">
-				{{receipt.comment}} 
-			</div>
-
-			
 		  	<label class="col-sm-2 control-label" style="text-align:right;">Tag</label>		  	
 		  	<div class="col-sm-4" ng-controller="ModalTagReceiptsCtrl">
 				<span class="gh-tag" 
@@ -109,39 +80,18 @@ div.tabcontent .row{
 		  				ng-click="open(tag.id, userId, groupId, groupName)">{{tag.name}}</span>&nbsp;
 		  	</div>
 		</div>
-	</div>
-    </tab> 
-    <tab  disabled="!receipt.imageFilePath">
-      <tab-heading>
-        <i class="fa fa-file-image-o" aria-hidden="true"></i> 
-        <span>Receipt Photo</span>
-      </tab-heading>
-	     <div  class="tabcontent">
-			<div class="row" ng-show="receipt.imageFilePath">
-				<div class="col-sm-12">
-				</div>		
+		<div class="row">
+			<div class="col-sm-offset-2 col-sm-10">
 
-				<div class="col-sm-12">
-					<img ng-src="{{receipt.imageFilePath}}" style="margin:0 auto;width:100%; height: auto; max-width:600px;" />
-				</div>
-			</div>
+			</div>		
+			<label class="col-sm-2 control-label">Comment</label>
+			<div class="col-sm-10" style="white-space: pre-line;">
+				{{receipt.comment}} 
+			</div>		
 		</div>
-    </tab>
-</tabset>   
+	</div>
 </div>
-<!-- END Tab -->
-<!--
-<tab heading="Disabled Tab" disabled="true">Dynamic Title2</tab>
-<tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled">
-  {{tab.content}}
-</tab>
-<tab select="alertMe()">
-  <tab-heading>
-    <i class="glyphicon glyphicon-bell"></i> Alert!
-  </tab-heading>
-  I've got an HTML heading, and a select callback. Pretty cool!
-</tab>
--->
+<!-- END Receipt View -->
 <hr>
 <!-- button -->
 <div class="row">
@@ -151,14 +101,23 @@ div.tabcontent .row{
 			Back
 		</button>
 	</div>
-	<div  class="col-sm-offset-2 col-sm-2">
+	<div  class="col-sm-offset-1 col-sm-3">
+		<button type="button" class="btn btn-default" 
+			ng-show="receipt.imageFilePath" 
+			data-toggle="modal" 
+			data-target="#receiptPhotoModal">
+				<i class="fa fa-file-image-o" aria-hidden="true"></i>
+				Receipt Photo
+		</button>	
+	</div>
+	<div  class="col-sm-2">
 		<button class="btn btn-default"  ng-click="Receipts()">
 			<i class="fa fa-files-o" aria-hidden="true"></i>
 			Receipts
 		</button>
 	</div>
-	<div  class="col-sm-2">
-		<button class="btn btn-default" ng-click="editReceipt()">
+	<div  class="col-sm-4">
+		<button class="btn btn-default pull-right" ng-click="editReceipt()">
 			<i class="glyphicon glyphicon-edit"></i> 
 			Edit Receipt
 		</button>
@@ -205,7 +164,7 @@ div.tabcontent .row{
 						ng-repeat="(key,value) in tablehead" 
 					    ng-class="selectedCls(key)" 
 					    ng-click="changeSorting(key)">{{value}}</th>
-					<th style="text-align: center; "colspan="2">Comment</th>
+					<th colspan="2">Comment</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -232,7 +191,7 @@ div.tabcontent .row{
 			<select ng-model="pageSize" 
 				id="pageSize" 
 				class="form-control" 
-				style="width:100px;"
+				style="width:80px;"
 				ng-change="changePageSize()"
 				ng-options="unit for unit in pageUnits">
 			</select>
@@ -262,4 +221,39 @@ div.tabcontent .row{
     </script>
 </div>
 <!-- Tag Receipts Modal Window -->
+<!-- modal test -->
+<div class="container">
+  <!-- Modal -->
+  <div class="modal fade" id="receiptPhotoModal" role="dialog">
+    <div class="modal-dialog">    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h1 class="page-title text-center">
+              <i class="fa fa-file-image-o" aria-hidden="true"></i>
+              Receipt
+            </h1>          
+        </div>
+        <div class="modal-body text-center">
+        	<!-- Receipt Photo -->
+			<div class="row" ng-show="receipt.imageFilePath">
+				<div class="col-sm-12">
+				</div>
+				<div class="col-sm-12">
+					<img ng-src="{{receipt.imageFilePath}}" 
+						style="width:100%; height: auto; max-width:500px;" />
+				</div>
+			</div>
+			<!-- Receipt Photo -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      <!-- Modal content-->
+    </div>
+  </div>  
+</div>
+<!-- modal test -->
 

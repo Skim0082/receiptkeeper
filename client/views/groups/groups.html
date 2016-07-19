@@ -21,8 +21,11 @@
 		    	ui-sref="viewGroup({id: group.id})" tooltip-html-unsafe="View Details"></i>	
 		    
 		 	<i class="glyphicon glyphicon-pencil pull-right text-primary" 
-		 		style="padding-right:10px" 
+		 		style="padding-right:10px;padding-left:10px;" 
 		 		ui-sref="editGroup({id: group.id})" tooltip-html-unsafe="Edit"></i> 
+		    <i class="glyphicon glyphicon-list-alt pull-right text-info" 
+		    	style="padding-right:10px" 
+		    	ng-click="groupReceipts(group.id, group.ownerId, group.name)" tooltip-html-unsafe="Receipts"></i>		 		
 	  	</span>
 	  	<span ng-hide="groups" class="list-group-item">No group you own.</span>
 	  	</div>

@@ -25,10 +25,48 @@ angular.module('app')
     } 
 
     $scope.viewGroup = function(){
-    if($stateParams.groupId != undefined){
-         $state.go('viewGroup', {'id': $stateParams.groupId});
-    }        
-    }    
+        if($stateParams.groupId != undefined){
+             $state.go('viewGroup', {'id': $stateParams.groupId});
+        }        
+    }  
+
+    $scope.generatePDF = function(id, chart){
+        var pdfSource = '#' + id;
+        var pdfFilename = id + '.pdf';
+        var pdf = new jsPDF('l', 'pt', 'letter');
+        var source = $(pdfSource)[0];
+        var canvas = $('#' + chart)[0];
+        var imgData = canvas.toDataURL("image/png");
+        var imgWidth = pdf.internal.pageSize.width - 100;
+        var imgHeight = pdf.internal.pageSize.height - 100;
+
+        pdf.addImage(imgData, 'png', 50, 50, imgWidth, imgHeight);
+
+
+        var specialElementHandlers = {
+            '#bypassme': function(element, renderer){
+                return true;
+            }
+        };
+        var margins = {
+            top: 10,
+            left: 20,
+            width: 500
+        };
+        pdf.fromHTML(
+            source
+            , margins.left
+            , margins.top
+            , {
+                'width': margins.width
+                , 'elementHandlers': specialElementHandlers
+            },
+            function(dispose){
+                pdf.save(pdfFilename);
+            }
+        );
+
+    };
 
     var totals;
     var dates; 
@@ -424,7 +462,7 @@ angular.module('app')
                     labels: tag_donut_labels,
                     data: tag_donut_data            
                 };  
-                // Donut chart for Tags
+                // Radar chart for Tags
                 $scope.radar = {
                     labels:tag_donut_labels,
                     data:[
@@ -437,7 +475,6 @@ angular.module('app')
                     labels : store_pie_labels,
                     data : store_pie_data_total,
                     type : 'PolarArea',
-
                     toggle : function () 
                     {
                         this.type = this.type === 'PolarArea' ? 'Pie' : 'PolarArea';

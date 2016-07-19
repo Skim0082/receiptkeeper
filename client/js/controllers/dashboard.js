@@ -135,7 +135,6 @@
         if(val != undefined){
           var tmp = ("" + val).split(".");
           var valComma;
-          console.log("tmp: ", tmp);
           if(tmp.length>1){
             valComma = Math.floor(tmp[0]).toLocaleString();
             if(tmp[1].length > 1){
@@ -931,7 +930,6 @@
         if(val != undefined){
           var tmp = ("" + val).split(".");
           var valComma;
-          console.log("tmp: ", tmp);
           if(tmp.length>1){
             valComma = Math.floor(tmp[0]).toLocaleString();
             if(tmp[1].length > 1){

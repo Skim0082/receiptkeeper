@@ -116,7 +116,7 @@
             <div class="panel panel-green">
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-xs-3"> <i class="fa fa-shopping-cart fa-5x"></i> </div>
+                    <div class="col-xs-3"> <i class="fa fa-wpforms fa-5x"></i> </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge ng-binding">{{recentReceiptsCount}}</div>
                         <div class="ng-binding">Recent receipts</div>
@@ -501,7 +501,7 @@
                                                     ng-repeat="(key,value) in tablehead" 
                                                     ng-class="selectedCls(key)" 
                                                     ng-click="changeSorting(key)">{{value}}</th>
-                                                <th style="text-align: center; "colspan="2">Comment</th>
+                                                <th colspan="2">Comment</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -528,7 +528,7 @@
                                         <select ng-model="pageSize" 
                                             id="pageSize" 
                                             class="form-control" 
-                                            style="width:100px;"
+                                            style="width:80px;"
                                             ng-change="changePageSize()"
                                             ng-options="unit for unit in pageUnits">
                                         </select>

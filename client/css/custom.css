@@ -265,7 +265,11 @@ footer nav ul li{
   margin-right:5%;
 }
 
-#loginErrorMessage,
+#invalidCategoryMessage,
+#invalidTotalMessage, 
+#invalidNoItemMessage, 
+#invalidDateMessage,
+#invalidStoreMessage,
 #signUpErrorMessage {
   position: fixed;
   top: 52px;
@@ -432,4 +436,3 @@ thead {
 h1 {
   text-transform: uppercase;
 }
-

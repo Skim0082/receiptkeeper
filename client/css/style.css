@@ -56,6 +56,20 @@ canvas {
     padding:7px;
 }
 
+#line,
+#doughnut,
+#doughnut1,
+#base,
+#pie,
+#bar,
+#area,
+#radar {
+  background-color: #ffffff;
+  border:none;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
 @charset "UTF-8";
 /*
  * jQuery File Upload Plugin CSS

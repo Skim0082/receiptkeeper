@@ -28,15 +28,15 @@
 									ng-repeat="(key,value) in tablehead" 
 								    ng-class="selectedCls(key)" 
 								    ng-click="changeSorting(key)">{{value}}</th>
-								<th style="text-align: center; "colspan="2">Comment</th>
+								<th colspan="2">Comment</th>
 							</tr>
 						</thead>
 						<tbody>
 					    <tr ng-repeat="receipt in receipts | orderBy : sort.descending + sort.column | receiptFilter:searchText | startFrom:currentPage*pageSize | limitTo:pageSize">
 					        <td style="display:none;">{{receipt.id}}</td>
 					        <td style="margin-left:15px;">{{receipt.store.name}}</td>
-					        <td style="text-align: center; ">${{commaSeparateNumber(receipt.total)}}</td>
-					        <td style="text-align: center; ">{{receipt.numberOfItem}}</td>
+					        <td style="text-align: right;padding-right:15px;">${{commaSeparateNumber(receipt.total)}}</td>
+					        <td style="text-align: center;">{{receipt.numberOfItem}}</td>
 					        <td style="text-align: center; ">{{(receipt.date).substring(0, 10)}}</td>
 					        <td>
 					        	{{receipt.comment}}
@@ -54,7 +54,7 @@
 						<select ng-model="pageSize" 
 							id="pageSize" 
 							class="form-control" 
-							style="width:100px;"
+							style="width:80px;"
 							ng-change="changePageSize()"
 							ng-options="unit for unit in pageUnits">
 						</select>

@@ -13,7 +13,7 @@
     </div>
     <div id="chart">
         <div class="row">
-            <div class="col-lg-6 col-sm-6" id="line-chart">
+            <div class="col-sm-6" id="line-chart">
                 <div class="panel panel-success">
                     <div class="panel-heading">
                         <i class="fa fa-usd" aria-hidden="true"></i> 
@@ -24,7 +24,12 @@
                             ng-model="selectedMonth"
                             ng-options="month.name for month in twelvemonths">
                             <option value="" disabled selected hidden>Range...</option>
-                        </select>                
+                        </select>    
+                        <span class="pull-right" style="cursor:pointer;" 
+                            ng-click="generatePDF('line-chart', 'line')"
+                             tooltip-html-unsafe="Export PDF">
+                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                        </span>            
                     </div>
                     <div class="panel-body">
                         <canvas id="line" class="chart chart-line chart-xl" data="line.data" labels="line.labels" legend="false"
@@ -32,11 +37,16 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-sm-6" id="bar-chart">
+            <div class="col-sm-6" id="bar-chart">
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <i class="fa fa-usd" aria-hidden="true"></i> 
                         Comparison of {{thisYear-1}} (monthly)
+                        <span class="pull-right" style="cursor:pointer;" 
+                            ng-click="generatePDF('bar-chart', 'bar')"
+                             tooltip-html-unsafe="Export PDF">
+                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                        </span>
                     </div>
                     <div class="panel-body">
                         <canvas id="bar" class="chart chart-bar" data="bar.data" labels="bar.labels" series="bar.series"
@@ -50,7 +60,7 @@
                 <div class="panel panel-green">
                     <div class="panel-heading">
                         <i class="fa fa-percent" aria-hidden="true"></i> 
-                        Category ({{thisYear}}/ {{selectedMonth.name}})
+                        Category ({{thisYear}}:{{selectedMonth.name}})                     
                     </div>
                     <div class="panel-body">
                     <canvas id="doughnut" class="chart chart-doughnut chart-xs" data="donut.data" labels="donut.labels"></canvas>
@@ -61,7 +71,7 @@
                 <div class="panel panel-yellow">
                     <div class="panel-heading">
                         <i class="fa fa-percent" aria-hidden="true"></i> 
-                        Store ({{thisYear}}/ {{selectedMonth.name}})
+                        Store ({{thisYear}}/ {{selectedMonth.name}})                     
                     </div>
                     <div class="panel-body">
                         <canvas id="pie" class="chart chart-pie chart-xs" data="pie.data" labels="pie.labels"></canvas>
@@ -72,7 +82,7 @@
               <div class="panel panel-red">
                 <div class="panel-heading">
                     <i class="fa fa-percent" aria-hidden="true"></i> 
-                    Tag ({{thisYear}}/ {{selectedMonth.name}})
+                    Tag ({{thisYear}}/ {{selectedMonth.name}})                   
                 </div>
                 <div class="panel-body">
                   <canvas id="doughnut1" class="chart chart-doughnut chart-xs" data="donut1.data" labels="donut1.labels"></canvas>
@@ -80,27 +90,21 @@
               </div>
             </div>             
         </div>            
-
-
-        <!--         
-        <div class="col-lg-6 col-sm-6" id="polar area-chart">
-          <div class="panel panel-default">
-            <div class="panel-heading">Polar Chart</div>
-            <div class="panel-body">
-              <canvas id="polar" class="chart chart-polar-area" data="polar.data" labels="polar.labels"></canvas>
-            </div>
-          </div>
-        </div>
-         -->  
+ 
         <div class="row">
             <div class="col-lg-6 col-sm-6" id="radar-chart">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <i class="fa fa-percent" aria-hidden="true"></i> 
                     Tag Tendency ({{thisYear}}/ {{selectedMonth.name}})
+                    <span class="pull-right" style="cursor:pointer;" 
+                        ng-click="generatePDF('radar-chart', 'radar')"
+                         tooltip-html-unsafe="Export PDF">
+                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                    </span>                     
                 </div>
                 <div class="panel-body">
-                    <canvas id="area" class="chart chart-radar" data="radar.data" labels="radar.labels" click="onClick"></canvas>
+                    <canvas id="radar" class="chart chart-radar" data="radar.data" labels="radar.labels"></canvas>
                 </div>
             </div>
             </div> 
@@ -109,9 +113,14 @@
                 <div class="panel-heading">
                     <i class="fa fa-usd" aria-hidden="true"></i> 
                     Store Amount ({{thisYear}}/ {{selectedMonth.name}})
+                    <span class="pull-right" style="cursor:pointer;" 
+                        ng-click="generatePDF('base-chart', 'base')"
+                         tooltip-html-unsafe="Export PDF">
+                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                    </span>                     
                 </div>
                 <div class="panel-body">
-                <canvas id="base" class="chart chart-base" chart-type="dynamic.type" data="dynamic.data" labels="dynamic.labels" legend="false"></canvas>
+                    <canvas id="base" class="chart chart-base" chart-type="dynamic.type" data="dynamic.data" labels="dynamic.labels" ></canvas>
                 </div>
             </div>
             <button type="button" class="btn btn-info pull-right" ng-click="dynamic.toggle()">Toggle Chart</button>
@@ -169,3 +178,55 @@
 </div>
 </section>
 </div>
+
+<!-- modal test -->
+<div class="container">
+  <h2>Modal Example</h2>
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Open Modal</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Chart</h4>
+        </div>
+        <div class="modal-body">
+
+
+            <div class="row">
+                <div class="col-sm-12" id="bar-chart">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <i class="fa fa-usd" aria-hidden="true"></i> 
+                            Comparison of {{thisYear-1}} (monthly)
+                            <span class="pull-right" style="cursor:pointer;" 
+                                ng-click="generatePDF('bar-chart', 'bar')"
+                                 tooltip-html-unsafe="Export PDF">
+                                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <div class="panel-body">
+                            <canvas id="bar" class="chart chart-bar" data="bar.data" labels="bar.labels" series="bar.series"
+                            options="bar.options"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
+<!-- modal test -->

@@ -58,7 +58,6 @@
         if(val != undefined){
           var tmp = ("" + val).split(".");
           var valComma;
-          console.log("tmp: ", tmp);
           if(tmp.length>1){
             valComma = Math.floor(tmp[0]).toLocaleString();
             if(tmp[1].length > 1){
@@ -400,7 +399,6 @@
       if(val != undefined){
           var tmp = ("" + val).split(".");
           var valComma;
-          console.log("tmp: ", tmp);
           if(tmp.length>1){
             valComma = Math.floor(tmp[0]).toLocaleString();
             if(tmp[1].length > 1){
@@ -700,7 +698,6 @@
         if(val != undefined){
           var tmp = ("" + val).split(".");
           var valComma;
-          console.log("tmp: ", tmp);
           if(tmp.length>1){
             valComma = Math.floor(tmp[0]).toLocaleString();
             if(tmp[1].length > 1){
@@ -968,7 +965,7 @@
             $scope.selectedCategory = categories[selectedCategoryIndex];
         }
       });
-    }      
+    } // $scope.getStoreCategories = function(storeId, categoryId){  
 
     $scope.countSelectedTag = function(){
       $scope.selTagCount=$scope.selectedTags.length + " selected";
@@ -1073,7 +1070,41 @@
           //console.info('Receipt Photo Upload Modal dismissed.');
         });
 
-    };    
+    };   
+
+    $scope.checkValues = function(){
+
+      if($scope.selectedStore == undefined ){
+        $scope.showMessage('#invalidStoreMessage'); 
+        return false;        
+      }
+      if($scope.selectedCategory == undefined ){
+        $scope.showMessage('#invalidCategoryMessage'); 
+        return false;        
+      }
+      var receiptDate = $('#receiptdate input').prop('value');
+      if(receiptDate == undefined || receiptDate == ""){
+        $scope.showMessage('#invalidDateMessage'); 
+        return false;        
+      }
+      if($scope.receipt.total == undefined || $scope.receipt.total == "0"){
+        $scope.showMessage('#invalidTotalMessage'); 
+        return false;        
+      }      
+      if($scope.receipt.numberOfItem == undefined || $scope.receipt.numberOfItem == "0"){
+        $scope.showMessage('#invalidNoItemMessage'); 
+        return false;        
+      }      
+
+      return true;            
+    } //$scope.checkValues = function(){     
+
+    $scope.showMessage = function(flashMessage){
+      $(flashMessage).addClass("in"); 
+      window.setTimeout(function(){
+        $(flashMessage).removeClass("in"); 
+      }, 3000);        
+    }
 
     $scope.submitForm = function() {
       //console.log("selectedCategory: ", $scope.selectedCategory);
@@ -1081,81 +1112,72 @@
         $scope.receipt.categoryId = $scope.selectedCategory.id;
       }
       $scope.receipt.storeId = $scope.selectedStore.id;  
-      var receiptDate = $('#receiptdate input').prop('value');
-      var temp_date = new Date(receiptDate);
-      $scope.receipt.date = temp_date.setHours(temp_date.getHours() + 12);
-      //console.log("$scope.receipt.date: ", $scope.receipt.date);
-      $scope.receipt
-      .$save()
-      .then(function(){
 
-        Receipt.items.destroyAll(
-          {id: $stateParams.id}, 
-          function(){
-            for(var i=0 ; i < $scope.items.length ; i++){
-              // need to fix, only new Item create
-              // already exist Item should be update
-              Item
-              .create({
-                name: $scope.items[i].name,
-                price: $scope.items[i].price,
-                customerId: userId,
-                groupId: groupId
-              }, function(item){
-                //console.log('new related item id : ', item.id);
-                ReceiptItem
-                  .create({
-                    receiptId: $scope.receipt.id,
-                    itemId: item.id
-                  })
-                  .$promise;                
-              });
-            }
+      if($scope.checkValues()){
+        var receiptDate = $('#receiptdate input').prop('value');
+        var temp_date = new Date(receiptDate);
+        $scope.receipt.date = temp_date.setHours(temp_date.getHours() + 12);
+        //console.log("$scope.receipt.date: ", $scope.receipt.date);
+        $scope.receipt
+        .$save()
+        .then(function(){
 
-            Receipt.tags.destroyAll({
-              id: $stateParams.id
-            })
-            .$promise
-            .then(function(){
-                for(var i = 0 ; i < $scope.selectedTags.length ; i++){
-                  ReceiptTag
+          Receipt.items.destroyAll(
+            {id: $stateParams.id}, 
+            function(){
+              for(var i=0 ; i < $scope.items.length ; i++){
+                // need to fix, only new Item create
+                // already exist Item should be update
+                Item
+                .create({
+                  name: $scope.items[i].name,
+                  price: $scope.items[i].price,
+                  customerId: userId,
+                  groupId: groupId
+                }, function(item){
+                  //console.log('new related item id : ', item.id);
+                  ReceiptItem
                     .create({
                       receiptId: $scope.receipt.id,
-                      tagId: $scope.selectedTags[i].id
+                      itemId: item.id
                     })
-                    .$promise;                  
-                }
-            });
+                    .$promise;                
+                });
+              }
 
-            if($stateParams.groupId == undefined){
-              $state.go('viewReceipt', {'id': $stateParams.id});
-            }else{
-                 $state.go(
-                  'groupViewReceipt', 
-                  {
-                    'id':         $stateParams.id, 
-                    'groupId':    $stateParams.groupId, 
-                    'groupName':  $stateParams.groupName,
-                    'ownerId':    $stateParams.ownerId
+              Receipt.tags.destroyAll({
+                id: $stateParams.id
+              })
+              .$promise
+              .then(function(){
+                  for(var i = 0 ; i < $scope.selectedTags.length ; i++){
+                    ReceiptTag
+                      .create({
+                        receiptId: $scope.receipt.id,
+                        tagId: $scope.selectedTags[i].id
+                      })
+                      .$promise;                  
                   }
-                );
-            } 
-            /*
-            if($stateParams.groupId == undefined){
-              $state.go('Receipts');
-            }else{
-              $state.go(
-                'groupReceipts', 
-                {
-                  'groupId':    $stateParams.groupId, 
-                  'groupName':  $stateParams.groupName,
-                  'ownerId':    $stateParams.ownerId
-                }
-              );
-            }
-            */
-        }); 
-      });
+              });
+
+              if($stateParams.groupId == undefined){
+                $state.go('viewReceipt', {'id': $stateParams.id});
+              }else{
+                   $state.go(
+                    'groupViewReceipt', 
+                    {
+                      'id':         $stateParams.id, 
+                      'groupId':    $stateParams.groupId, 
+                      'groupName':  $stateParams.groupName,
+                      'ownerId':    $stateParams.ownerId
+                    }
+                  );
+              } 
+
+          }); 
+        });        
+      }  //if($scope.checkValues()){    
+
     };  // Submit()
   }])
   .controller('AddReceiptController', ['$scope', '$state', 'Receipt', 'Store', 
@@ -1224,6 +1246,12 @@
       ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, null); 
     }
     */
+    $scope.showMessage = function(flashMessage){
+      $(flashMessage).addClass("in"); 
+      window.setTimeout(function(){
+        $(flashMessage).removeClass("in"); 
+      }, 3000);        
+    }    
 
     // Get categories by selected store using Controller's function (but duplicated)
     $scope.getStoreCategories = function(storeId, categoryId){
@@ -1335,59 +1363,93 @@
       }        
     } 
 
-    $scope.submitForm = function() {
-      var receiptDate = $('#receiptdate input').prop('value');
-      var temp_date = new Date(receiptDate);
-      $scope.receipt.date = temp_date.setHours(temp_date.getHours() + 12);
+    $scope.checkValues = function(){
 
-      Receipt
-        .create({
-          comment: $scope.receipt.comment, 
-          numberOfItem: $scope.receipt.numberOfItem, 
-          total: $scope.receipt.total, 
-          date: $scope.receipt.date,
-          storeId: $scope.selectedStore.id,
-          customerId: userId,
-          groupId: groupId,
-          categoryId: $scope.selectedCategory.id
-        }, function(receipt){           
-          for(var i=0 ; i < $scope.items.length ; i++){
-            Item
-              .create({
-                name: $scope.items[i].name,
-                price: $scope.items[i].price,
-                customerId: userId,
-                groupId: groupId               
-              }, function(item){
-                //console.log('item id : ', item.id);
-                ReceiptItem
-                  .create({
-                    receiptId: receipt.id,
-                    itemId: item.id
-                  });
-              });
-          };
-          for(var i = 0 ; i < $scope.selectedTags.length ; i++){
-            ReceiptTag
-              .create({
-                receiptId: receipt.id,
-                tagId: $scope.selectedTags[i].id
-              }).$promise;              
-          };            
-      });
-
-      if($stateParams.groupId == undefined){
-        $state.go('Receipts');
-      }else{
-        $state.go(
-          'groupReceipts', 
-          {
-            'groupId':    $stateParams.groupId, 
-            'groupName':  $stateParams.groupName,
-            'ownerId':    $stateParams.ownerId
-          }
-        );
+      if($scope.selectedStore == undefined ){
+        $scope.showMessage('#invalidStoreMessage'); 
+        return false;        
       }
+      if($scope.selectedCategory == undefined ){
+        $scope.showMessage('#invalidCategoryMessage'); 
+        return false;        
+      }
+      var receiptDate = $('#receiptdate input').prop('value');
+      if(receiptDate == undefined || receiptDate == ""){
+        $scope.showMessage('#invalidDateMessage'); 
+        return false;        
+      }
+      if($scope.receipt.total == undefined || $scope.receipt.total == "0"){
+        $scope.showMessage('#invalidTotalMessage'); 
+        return false;        
+      }      
+      if($scope.receipt.numberOfItem == undefined || $scope.receipt.numberOfItem == "0"){
+        $scope.showMessage('#invalidNoItemMessage'); 
+        return false;        
+      }      
 
-    };        
+      return true;            
+    } //$scope.checkValues = function(){
+
+    $scope.submitForm = function() {
+
+      if($scope.checkValues()){
+
+        var receiptDate = $('#receiptdate input').prop('value');
+        var temp_date = new Date(receiptDate);
+        $scope.receipt.date = temp_date.setHours(temp_date.getHours() + 12);        
+
+        Receipt
+          .create({
+            comment: $scope.receipt.comment, 
+            numberOfItem: $scope.receipt.numberOfItem, 
+            total: $scope.receipt.total, 
+            date: $scope.receipt.date,
+            storeId: $scope.selectedStore.id,
+            customerId: userId,
+            groupId: groupId,
+            categoryId: $scope.selectedCategory.id
+          }, function(receipt){           
+            for(var i=0 ; i < $scope.items.length ; i++){
+              Item
+                .create({
+                  name: $scope.items[i].name,
+                  price: $scope.items[i].price,
+                  customerId: userId,
+                  groupId: groupId               
+                }, function(item){
+                  //console.log('item id : ', item.id);
+                  ReceiptItem
+                    .create({
+                      receiptId: receipt.id,
+                      itemId: item.id
+                    });
+                });
+            };
+            for(var i = 0 ; i < $scope.selectedTags.length ; i++){
+              ReceiptTag
+                .create({
+                  receiptId: receipt.id,
+                  tagId: $scope.selectedTags[i].id
+                }).$promise;              
+            };            
+        });
+
+        if($stateParams.groupId == undefined){
+          $state.go('Receipts');
+        }else{
+          $state.go(
+            'groupReceipts', 
+            {
+              'groupId':    $stateParams.groupId, 
+              'groupName':  $stateParams.groupName,
+              'ownerId':    $stateParams.ownerId
+            }
+          );
+        }
+
+      } // if($scope.checkValues){
+     
+
+
+    };  // $scope.submitForm = function() {
   }]);  
