@@ -270,6 +270,7 @@ footer nav ul li{
 #invalidNoItemMessage, 
 #invalidDateMessage,
 #invalidStoreMessage,
+#loginErrorMessage,
 #signUpErrorMessage {
   position: fixed;
   top: 52px;
