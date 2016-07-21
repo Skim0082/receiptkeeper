@@ -95,16 +95,67 @@
       }
 
       $scope.actionTag = function(action, groupAction, tagId){
+
+        Tag.findById({
+          id: tagId,
+          filter: {   
+            fields: {
+              id: true
+            },          
+            include:{
+              relation: 'receipts',
+              scope: {
+                fields: {
+                  id: true
+                },
+              }
+            }
+          }
+        })
+        .$promise
+        .then(function(tag){
+          //console.log("tag: ", tag);
+          if(tag.receipts.length > 0){
+            //console.log("tag.receipts.length: ", tag.receipts.length);
+            $scope.showMessage('#deleteTagErrorMessage');
+          }else if(tag.receipts.length === 0){
+
+            if($stateParams.groupId == undefined){
+               $state.go(
+                action, 
+                {
+                  'id': tagId
+                }
+              );
+            }else{
+               $state.go(
+                groupAction, 
+                {
+                  'id': tagId, 
+                  'groupId': $stateParams.groupId, 
+                  'groupName':  $stateParams.groupName,
+                  'ownerId': $stateParams.ownerId
+                }
+              );  
+            } //if($stateParams.groupId == undefined){
+
+          } //else if(tag.receipts.length === 0){
+        }); // Tag.findById({
+ 
+      } // $scope.actionTag = function(action, groupAction, tagId){
+ 
+      $scope.editTag = function(tagId){
+        //$scope.actionTag('editTag', 'groupEditTag', tagId);  
         if($stateParams.groupId == undefined){
            $state.go(
-            action, 
+            'editTag', 
             {
               'id': tagId
             }
           );
         }else{
            $state.go(
-            groupAction, 
+            'groupEditTag', 
             {
               'id': tagId, 
               'groupId': $stateParams.groupId, 
@@ -112,11 +163,7 @@
               'ownerId': $stateParams.ownerId
             }
           );  
-        } 
-      }
- 
-      $scope.editTag = function(tagId){
-        $scope.actionTag('editTag', 'groupEditTag', tagId);  
+        } //if($stateParams.groupId == undefined){        
       }
 
       $scope.deleteTag = function(tagId){
@@ -124,6 +171,14 @@
           $scope.actionTag('deleteTag', 'groupDeleteTag', tagId);  
         }         
       }
+
+    $scope.showMessage = function(flashMessage){
+      $(flashMessage).addClass("in"); 
+      window.setTimeout(function(){
+        $(flashMessage).removeClass("in"); 
+      }, 3000);        
+    }      
+
 
   }])
   .controller('EditTagController', ['$scope', 'Tag', '$stateParams', '$state', '$location',  
@@ -158,20 +213,58 @@
           }      
         }
 
+        $scope.showMessage = function(flashMessage){
+          $(flashMessage).addClass("in"); 
+          window.setTimeout(function(){
+            $(flashMessage).removeClass("in"); 
+          }, 3000);        
+        }         
+
         $scope.deleteTag = function(){
+
           if(confirm("Are you sure?")){
-            if($stateParams.groupId == undefined){
-               $state.go(
-                'deleteTag', 
-                {
-                  'id': $stateParams.id
+
+            Tag.findById({
+              id: $stateParams.id,
+              filter: {   
+                fields: {
+                  id: true
+                },          
+                include:{
+                  relation: 'receipts',
+                  scope: {
+                    fields: {
+                      id: true
+                    },
+                  }
                 }
-              );
-            }else{
-              groupParameters['id'] = $stateParams.id;
-              $state.go('groupDeleteTag', groupParameters);
-            } 
-          }        
+              }
+            })
+            .$promise
+            .then(function(tag){
+              //console.log("tag: ", tag);
+              if(tag.receipts.length > 0){
+                //console.log("tag.receipts.length: ", tag.receipts.length);
+                $scope.showMessage('#deleteTagErrorMessage');
+              }else if(tag.receipts.length === 0){
+
+                if($stateParams.groupId == undefined){
+                   $state.go(
+                    'deleteTag', 
+                    {
+                      'id': $stateParams.id
+                    }
+                  );
+                }else{
+                  groupParameters['id'] = $stateParams.id;
+                  $state.go('groupDeleteTag', groupParameters);
+                } // if($stateParams.groupId == undefined){
+
+              } //else if(tag.receipts.length === 0){
+
+            }); // Tag.findById({
+
+          } // if(confirm("Are you sure?")){    
         }                   
 
 		    $scope.submitForm = function() {				
@@ -186,21 +279,23 @@
   }])
   .controller('DeleteTagController', ['$scope', 'Tag', '$state', '$stateParams', 
     function($scope, Tag, $state, $stateParams) {
-    Tag
-      .deleteById({ id: $stateParams.id })
-      .$promise
-      .then(function() {
-        if($stateParams.groupId == undefined){
-          $state.go('Tags');
-        }else{
-           $state.go(
-            'groupTags', 
-            {
-              'groupId': $stateParams.groupId, 
-              'groupName': $stateParams.groupName, 
-              'ownerId': $stateParams.ownerId
+        
+        Tag
+          .deleteById({ id: $stateParams.id })
+          .$promise
+          .then(function() {
+            if($stateParams.groupId == undefined){
+              $state.go('Tags');
+            }else{
+               $state.go(
+                'groupTags', 
+                {
+                  'groupId': $stateParams.groupId, 
+                  'groupName': $stateParams.groupName, 
+                  'ownerId': $stateParams.ownerId
+                }
+              );
             }
-          );
-        }
-      });
+          });
+
   }]);

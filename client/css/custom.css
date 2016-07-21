@@ -266,6 +266,7 @@ footer nav ul li{
 }
 
 #invalidCategoryMessage,
+#deleteTagErrorMessage, 
 #invalidTotalMessage, 
 #invalidNoItemMessage, 
 #invalidDateMessage,
@@ -275,7 +276,7 @@ footer nav ul li{
   position: fixed;
   top: 52px;
   margin-right:5%;  
-  width: 300px;
+  width: 350px;
   right:5%;
 }
 
