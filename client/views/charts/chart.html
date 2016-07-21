@@ -13,7 +13,7 @@
     </div>
     <div id="chart">
         <div class="row">
-            <div class="col-sm-6" id="line-chart">
+            <div class="col-sm-6" id="monthly-chart">
                 <div class="panel panel-success">
                     <div class="panel-heading">
                         <i class="fa fa-usd" aria-hidden="true"></i> 
@@ -26,7 +26,7 @@
                             <option value="" disabled selected hidden>Range...</option>
                         </select>    
                         <span class="pull-right" style="cursor:pointer;" 
-                            ng-click="generatePDF('line-chart', 'line')"
+                            ng-click="generatePDF('monthly-chart', 'line')"
                              tooltip-html-unsafe="Export PDF">
                             <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                         </span>            
@@ -37,13 +37,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6" id="bar-chart">
+            <div class="col-sm-6" id="comparison-chart">
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <i class="fa fa-usd" aria-hidden="true"></i> 
                         Comparison of {{thisYear-1}} (monthly)
                         <span class="pull-right" style="cursor:pointer;" 
-                            ng-click="generatePDF('bar-chart', 'bar')"
+                            ng-click="generatePDF('comparison-chart', 'bar')"
                              tooltip-html-unsafe="Export PDF">
                             <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                         </span>
@@ -55,6 +55,42 @@
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-lg-6 col-sm-6" id="tag-tendency-chart">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <i class="fa fa-percent" aria-hidden="true"></i> 
+                        Tag Tendency ({{thisYear}}/ {{selectedMonth.name}})
+                        <span class="pull-right" style="cursor:pointer;" 
+                            ng-click="generatePDF('tag-tendency-chart', 'radar')"
+                             tooltip-html-unsafe="Export PDF">
+                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                        </span>                     
+                    </div>
+                    <div class="panel-body">
+                        <canvas id="radar" class="chart chart-radar" data="radar.data" labels="radar.labels"></canvas>
+                    </div>
+                </div>
+            </div> 
+            <div class="col-lg-6 col-sm-6" id="store-amount-chart">
+                <div class="panel panel-info"> 
+                    <div class="panel-heading">
+                        <i class="fa fa-usd" aria-hidden="true"></i> 
+                        Store Amount ({{thisYear}}/ {{selectedMonth.name}})
+                        <span class="pull-right" style="cursor:pointer;" 
+                            ng-click="generatePDF('store-amount-chart', 'polararea')"
+                             tooltip-html-unsafe="Export PDF">
+                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                        </span>                     
+                    </div>
+                    <div class="panel-body">
+                        <canvas id="polararea" class="chart chart-polar-area" data="polararea.data" labels="polararea.labels" ></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-lg-4 col-sm-4" id="doughnut-chart">
                 <div class="panel panel-green">
@@ -89,43 +125,8 @@
                 </div>
               </div>
             </div>             
-        </div>            
- 
-        <div class="row">
-            <div class="col-lg-6 col-sm-6" id="radar-chart">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <i class="fa fa-percent" aria-hidden="true"></i> 
-                    Tag Tendency ({{thisYear}}/ {{selectedMonth.name}})
-                    <span class="pull-right" style="cursor:pointer;" 
-                        ng-click="generatePDF('radar-chart', 'radar')"
-                         tooltip-html-unsafe="Export PDF">
-                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                    </span>                     
-                </div>
-                <div class="panel-body">
-                    <canvas id="radar" class="chart chart-radar" data="radar.data" labels="radar.labels"></canvas>
-                </div>
-            </div>
-            </div> 
-            <div class="col-lg-6 col-sm-6" id="base-chart">
-            <div class="panel panel-info"> 
-                <div class="panel-heading">
-                    <i class="fa fa-usd" aria-hidden="true"></i> 
-                    Store Amount ({{thisYear}}/ {{selectedMonth.name}})
-                    <span class="pull-right" style="cursor:pointer;" 
-                        ng-click="generatePDF('base-chart', 'base')"
-                         tooltip-html-unsafe="Export PDF">
-                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                    </span>                     
-                </div>
-                <div class="panel-body">
-                    <canvas id="base" class="chart chart-base" chart-type="dynamic.type" data="dynamic.data" labels="dynamic.labels" ></canvas>
-                </div>
-            </div>
-            <button type="button" class="btn btn-info pull-right" ng-click="dynamic.toggle()">Toggle Chart</button>
-            </div>
-        </div>
+        </div>  
+
         <div class="row" style="margin-top:20px;">
             <div class="col-sm-12">
                 <div class="panel panel-warning">
@@ -133,7 +134,7 @@
                         <strong>
                         <i class="fa fa-percent" aria-hidden="true"></i> 
                         </strong>
-                        Tag Progress Bar ({{thisYear}}/ {{selectedMonth.name}})
+                        Tag Progress Bar ({{thisYear}}/ {{selectedMonth.name}})                       
                     </div>
                     <div class="panel-body" style="padding:15px; color: #4d4d4d">
                         <div class="row" ng-repeat="tag in tagchartpercent">

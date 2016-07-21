@@ -1,11 +1,5 @@
 'use strict';
-/**
- * @ngdoc function
- * @name sbAdminApp.controller:MainCtrl
- * @description
- * # MainCtrl
- * Controller of the sbAdminApp
- */
+
 angular.module('app')
   .controller('ChartCtrl', ['$scope', '$timeout', 'Receipt', '$rootScope', 
     '$state', '$stateParams', 
@@ -35,13 +29,17 @@ angular.module('app')
         var pdfFilename = id + '.pdf';
         var pdf = new jsPDF('l', 'pt', 'letter');
         var source = $(pdfSource)[0];
-        var canvas = $('#' + chart)[0];
-        var imgData = canvas.toDataURL("image/png");
+
+        var canvas;
+        var imgData;
         var imgWidth = pdf.internal.pageSize.width - 100;
-        var imgHeight = pdf.internal.pageSize.height - 100;
+        var imgHeight = pdf.internal.pageSize.height - 100;    
 
-        pdf.addImage(imgData, 'png', 50, 50, imgWidth, imgHeight);
-
+        if(chart != ''){
+            canvas = $('#' + chart)[0];
+            imgData = canvas.toDataURL("image/png");
+            pdf.addImage(imgData, 'png', 50, 50, imgWidth, imgHeight);
+        }
 
         var specialElementHandlers = {
             '#bypassme': function(element, renderer){
@@ -108,6 +106,25 @@ angular.module('app')
                         "May", "June", "July", "August", 
                         "September", "October", "November", "December"
                     ];
+
+  $scope.commaSeparateNumber =   function(val){
+    if(val != undefined){
+      var tmp = ("" + val).split(".");
+      var valComma;
+      if(tmp.length>1){
+        valComma = tmp[0];
+        if(tmp[1].length > 1){
+          valComma += "." + tmp[1].substring(0,2);
+        }else{
+          valComma += "." + tmp[1].substring(0,1) + "0";
+        }
+      }else{
+        valComma = tmp[0] + ".00";
+      }
+      val = valComma;        
+    }    
+    return val;
+  };
 
     $scope.monthConsumptionChart = function(rangeOfMonth){
 
@@ -212,13 +229,13 @@ angular.module('app')
                         if(thisMonth != nextMonth){
                             monthlyTotal.push(monthTotal);
                             monthNum.push(thisMonth);
-                            monthlyTotalKey[thisMonth] = monthTotal;
+                            monthlyTotalKey[thisMonth] = $scope.commaSeparateNumber(monthTotal);
                             monthTotal = 0;
                         }
                     }else{
                         monthlyTotal.push(monthTotal);
                         monthNum.push(thisMonth);
-                        monthlyTotalKey[thisMonth] = monthTotal;
+                        monthlyTotalKey[thisMonth] = $scope.commaSeparateNumber(monthTotal);
                         monthTotal = 0;
                     }
                 }
@@ -289,12 +306,12 @@ angular.module('app')
                             nextMonth = (new Date(dates[i-1])).getMonth();
                             if(thisMonth != nextMonth){
                                 monthlyTotalLastYear.push(monthTotal);
-                                monthlyTotalLastYearKey[thisMonth] = monthTotal;
+                                monthlyTotalLastYearKey[thisMonth] = $scope.commaSeparateNumber(monthTotal);
                                 monthTotal = 0;
                             }
                         }else{
                             monthlyTotalLastYear.push(monthTotal);
-                            monthlyTotalLastYearKey[thisMonth] = monthTotal;
+                            monthlyTotalLastYearKey[thisMonth] = $scope.commaSeparateNumber(monthTotal);
                             monthTotal = 0;
                         }
                     }
@@ -375,7 +392,7 @@ angular.module('app')
                 });
                 if(count >= 8){
                     catetory_donut_labels.push('others');
-                    catetory_donut_data.push(otherTotal);                    
+                    catetory_donut_data.push(Number(otherTotal).toFixed(2));                    
                 }
 
                 count = 1;
@@ -385,7 +402,7 @@ angular.module('app')
                     if(count < 8){
                         store_pie_labels.push(key);
                         store_pie_data.push(Number(((stores[key]/countOfReceipts)*100).toFixed(2)));
-                        store_pie_data_total.push(storesTotal[key]);
+                        store_pie_data_total.push(Number(storesTotal[key]).toFixed(2));
                         count++;
                     }else{
                         otherTotal = otherTotal + Number(((stores[key]/countOfReceipts)*100).toFixed(2));
@@ -394,8 +411,8 @@ angular.module('app')
                 });
                 if(count >= 8){
                     store_pie_labels.push('others');
-                    store_pie_data.push(otherTotal);                    
-                    store_pie_data_total.push(otherTotal); 
+                    store_pie_data.push(Number(otherTotal).toFixed(2));                    
+                    store_pie_data_total.push(Number(otherTotal).toFixed(2)); 
                 }                
 
                 count = 1;
@@ -433,7 +450,7 @@ angular.module('app')
                 });
                 if(count >= 8){
                     tag_donut_labels.push('others');
-                    tag_donut_data.push(otherTotal);                    
+                    tag_donut_data.push(Number(otherTotal).toFixed(2));                    
                 } 
                 $scope.tagchartpercent =  tagprogresschart;
                 //console.log("tagprogresschart: ", tagprogresschart);                                      
@@ -470,16 +487,11 @@ angular.module('app')
                     ]
                 };
 
-                // Polar Area Chart Monthly Comsumption 
-                $scope.dynamic = {
+                // Polar Area Chart Monthly Comsumption
+                $scope.polararea = {
                     labels : store_pie_labels,
-                    data : store_pie_data_total,
-                    type : 'PolarArea',
-                    toggle : function () 
-                    {
-                        this.type = this.type === 'PolarArea' ? 'Pie' : 'PolarArea';
-                    }
-                };                                
+                    data : store_pie_data_total  
+                };                                              
 
             }   // if(receipts)
 
