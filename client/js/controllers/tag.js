@@ -3,8 +3,8 @@
  angular
   .module('app')
   .controller('AddTagController', [
-    '$scope', 'Tag', '$state', '$rootScope', '$stateParams', 
-     function($scope, Tag, $state, $rootScope, $stateParams) {      
+    '$scope', 'Tag', '$state', '$rootScope', '$stateParams', 'ReceiptService', 
+     function($scope, Tag, $state, $rootScope, $stateParams, ReceiptService) {      
 
     $scope.groupName = $stateParams.groupName;
 
@@ -20,18 +20,50 @@
     $scope.action = 'Add';
     $scope.tag = {};
 
+    $scope.tags = Tag.find({
+      filter: {
+        fields: { "id": true, "name": true},
+        order: 'name ASC',
+          where: {and: [
+            {customerId: userId},
+            {groupId: groupId}
+          ]}
+      }
+    });  
+
+    //console.log("$scope.tags: ", $scope.tags);  
+
     $scope.submitForm = function() {
-      Tag
-        .create({
-          name: $scope.tagname,
-          customerId: userId,
-          groupId: groupId
-        })
-        .$promise
-        .then(function() {
-          $scope.Tags();
-        });
-    };
+      var newTagName = (($scope.tagname).trim()).toLowerCase();
+      var tagName;
+      var isNewTagName = false;
+      if($scope.tags.length > 0){
+        var isExist = false;
+        for(var i = 0 ; i < $scope.tags.length ; i++){
+          tagName = (($scope.tags[i].name).trim()).toLowerCase();
+          if(tagName == newTagName){
+            ReceiptService.publicShowMessage('#addTagErrorMessage');
+            isExist = true;
+            break;
+          }
+        } // for(var i = 0 ; i < $scope.tags.length ; i++){
+        isNewTagName = !isExist;
+      }else{
+        isNewTagName = true;
+      } // if($scope.tags.length > 0){
+      if(isNewTagName){
+        Tag
+          .create({
+            name: newTagName,
+            customerId: userId,
+            groupId: groupId
+          })
+          .$promise
+          .then(function() {
+            $scope.Tags();
+          });          
+      } // if(isNewTagName){
+    };  // $scope.submitForm = function() {
 
     $scope.Tags = function(){
       if($stateParams.groupId == undefined){
@@ -49,8 +81,8 @@
 
   }])  
   .controller('AllTagsController', [
-  	'$scope', 'Tag', '$rootScope', '$stateParams', '$state', 
-    function($scope, Tag, $rootScope, $stateParams, $state) {     
+  	'$scope', 'Tag', '$rootScope', '$stateParams', '$state', 'ReceiptService', 
+    function($scope, Tag, $rootScope, $stateParams, $state, ReceiptService) {     
 
       $scope.groupName = $stateParams.groupName;
 
@@ -95,7 +127,6 @@
       }
 
       $scope.actionTag = function(action, groupAction, tagId){
-
         Tag.findById({
           id: tagId,
           filter: {   
@@ -114,12 +145,9 @@
         })
         .$promise
         .then(function(tag){
-          //console.log("tag: ", tag);
           if(tag.receipts.length > 0){
-            //console.log("tag.receipts.length: ", tag.receipts.length);
-            $scope.showMessage('#deleteTagErrorMessage');
+            ReceiptService.publicShowMessage('#deleteTagErrorMessage');
           }else if(tag.receipts.length === 0){
-
             if($stateParams.groupId == undefined){
                $state.go(
                 action, 
@@ -138,10 +166,8 @@
                 }
               );  
             } //if($stateParams.groupId == undefined){
-
           } //else if(tag.receipts.length === 0){
-        }); // Tag.findById({
- 
+        }); // Tag.findById({ 
       } // $scope.actionTag = function(action, groupAction, tagId){
  
       $scope.editTag = function(tagId){
@@ -172,17 +198,9 @@
         }         
       }
 
-    $scope.showMessage = function(flashMessage){
-      $(flashMessage).addClass("in"); 
-      window.setTimeout(function(){
-        $(flashMessage).removeClass("in"); 
-      }, 3000);        
-    }      
-
-
   }])
-  .controller('EditTagController', ['$scope', 'Tag', '$stateParams', '$state', '$location',  
-      function($scope, Tag, $stateParams, $state, $location) {
+  .controller('EditTagController', ['$scope', 'Tag', '$stateParams', '$state', '$location', 'ReceiptService',  
+      function($scope, Tag, $stateParams, $state, $location, ReceiptService) {
 		    $scope.action = 'Edit';
         $scope.tag = {};
         $scope.groupName = $stateParams.groupName;
@@ -211,14 +229,7 @@
           }else{
              $state.go('groupTags', groupParameters);
           }      
-        }
-
-        $scope.showMessage = function(flashMessage){
-          $(flashMessage).addClass("in"); 
-          window.setTimeout(function(){
-            $(flashMessage).removeClass("in"); 
-          }, 3000);        
-        }         
+        }       
 
         $scope.deleteTag = function(){
 
@@ -242,12 +253,9 @@
             })
             .$promise
             .then(function(tag){
-              //console.log("tag: ", tag);
               if(tag.receipts.length > 0){
-                //console.log("tag.receipts.length: ", tag.receipts.length);
-                $scope.showMessage('#deleteTagErrorMessage');
+                ReceiptService.publicShowMessage('#deleteTagErrorMessage');
               }else if(tag.receipts.length === 0){
-
                 if($stateParams.groupId == undefined){
                    $state.go(
                     'deleteTag', 
@@ -259,11 +267,8 @@
                   groupParameters['id'] = $stateParams.id;
                   $state.go('groupDeleteTag', groupParameters);
                 } // if($stateParams.groupId == undefined){
-
               } //else if(tag.receipts.length === 0){
-
             }); // Tag.findById({
-
           } // if(confirm("Are you sure?")){    
         }                   
 
@@ -279,7 +284,7 @@
   }])
   .controller('DeleteTagController', ['$scope', 'Tag', '$state', '$stateParams', 
     function($scope, Tag, $state, $stateParams) {
-        
+
         Tag
           .deleteById({ id: $stateParams.id })
           .$promise

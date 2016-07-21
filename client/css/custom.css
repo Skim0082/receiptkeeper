@@ -266,7 +266,12 @@ footer nav ul li{
 }
 
 #invalidCategoryMessage,
+#addStoreErrorMessage, 
+#deleteStoreErrorMessage, 
+#addTagErrorMessage, 
 #deleteTagErrorMessage, 
+#addCategoryErrorMessage, 
+#deleteCategoryErrorMessage,
 #invalidTotalMessage, 
 #invalidNoItemMessage, 
 #invalidDateMessage,

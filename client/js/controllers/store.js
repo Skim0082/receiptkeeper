@@ -3,8 +3,8 @@
  angular
   .module('app')
   .controller('AddStoreController', ['$scope', 'Store', 'Category', 
-    '$state', 'StoreCategory', '$rootScope', '$stateParams', 
-    function($scope, Store, Category, $state, StoreCategory, $rootScope, $stateParams) {      
+    '$state', 'StoreCategory', '$rootScope', '$stateParams', 'ReceiptService', 
+    function($scope, Store, Category, $state, StoreCategory, $rootScope, $stateParams, ReceiptService) {      
 
     $scope.action = 'Add';
     $scope.categories = [];
@@ -21,7 +21,19 @@
     }else{
       userId = $stateParams.ownerId;
       groupId = $stateParams.groupId;
-    }  
+    } 
+
+    $scope.storesName = Store.find({
+      filter: {
+        fields: { "id": true, "name": true},
+        order: 'name ASC',
+          where: {and: [
+            {customerId: userId},
+            {groupId: groupId}
+          ]}
+      }
+    }); 
+    //console.log("$scope.storesName: ",$scope.storesName);    
 
     Category
       .find({
@@ -60,7 +72,7 @@
     $scope.checkValues = function(){
 
       if($scope.selectedCategory.length < 1){
-        $scope.showMessage('#invalidCategoryMessage'); 
+        ReceiptService.publicShowMessage('#invalidCategoryMessage'); 
         return false;        
       }
       return true;            
@@ -75,22 +87,41 @@
 
     $scope.submitForm = function() {
       if($scope.checkValues()){
-        Store
-          .create({
-            name: $scope.store.name,
-            customerId: userId,
-            groupId: groupId
-          }, function(store) {
-            for(var i = 0 ; i < $scope.selectedCategory.length ; i++){
-              StoreCategory
-                .create({
-                  storeId: store.id,
-                  categoryId: $scope.selectedCategory[i].id
-                }).$promise;              
+        var newStoreName = (($scope.store.name).trim()).toLowerCase();
+        var storeName;
+        var isNewStoreName = false;
+        if($scope.storesName.length > 0){
+          var isExist = false;
+          for(var i = 0 ; i < $scope.storesName.length ; i++){
+            storeName = (($scope.storesName[i].name).trim()).toLowerCase();
+            if(storeName == newStoreName){
+              ReceiptService.publicShowMessage('#addStoreErrorMessage');
+              isExist = true;
+              break;
             }
-            $scope.Stores();
-          });        
-        } // if($scope.checkValues()){
+          } // for(var i = 0 ; i < $scope.tags.length ; i++){
+          isNewStoreName = !isExist;
+        }else{
+          isNewStoreName = true;
+        } // if($scope.tags.length > 0){
+        if(isNewStoreName){
+          Store
+            .create({
+              name: ($scope.store.name).trim(),
+              customerId: userId,
+              groupId: groupId
+            }, function(store) {
+              for(var i = 0 ; i < $scope.selectedCategory.length ; i++){
+                StoreCategory
+                  .create({
+                    storeId: store.id,
+                    categoryId: $scope.selectedCategory[i].id
+                  }).$promise;              
+              }
+              $scope.Stores();
+            });          
+        } // if(isNewStoreName){
+      } // if($scope.checkValues()){
     };  // $scope.submitForm = function() {
   }])  
   .controller('EditStoreController', ['$scope', 'Store', 'Category', 
