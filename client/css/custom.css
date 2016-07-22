@@ -266,6 +266,7 @@ footer nav ul li{
 }
 
 #invalidCategoryMessage,
+#deleteGroupErrorMessage, 
 #addStoreErrorMessage, 
 #deleteStoreErrorMessage, 
 #addTagErrorMessage, 

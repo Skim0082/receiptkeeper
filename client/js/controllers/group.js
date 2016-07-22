@@ -335,8 +335,6 @@
         $scope.leaveGroup = function(flashMessageId){
           if(confirm("Are you sure?")){
 
-
-
             Notification
             .create({
               senderId:           $rootScope.currentUser.id,
@@ -392,9 +390,9 @@
         
   }])  
   .controller('EditGroupController', ['$scope', 'Group', '$stateParams', 
-    '$state', '$rootScope', 'Customer', 'Notification', 'CustomerGroup', '$location',  
+    '$state', '$rootScope', 'Customer', 'Notification', 'CustomerGroup', '$location', 'ReceiptService', 
       function($scope, Group, $stateParams, $state, $rootScope, 
-        Customer, Notification, CustomerGroup, $location) {
+        Customer, Notification, CustomerGroup, $location, ReceiptService) {
 
 		    $scope.action = 'Edit';
         $scope.isEnabled = false;
@@ -604,8 +602,42 @@
 
         $scope.deleteGroup = function(){
           if(confirm("Are you sure?")){
-               $location.path('/deleteGroup/' + $scope.group.id);    
-          }         
+
+            Group.findById({
+              id: $scope.group.id,
+              filter: {   
+                fields: {
+                  id: true,
+                  ownerId: true
+                },          
+                include:{
+                  relation: 'customers',
+                  scope: {
+                    fields: {
+                      id: true,
+                      groupId: true
+                    },
+                  }
+                }
+              }
+            })
+            .$promise
+            .then(function(group){
+              console.log("group: ", group);
+              if(group.customers.length > 1){
+                ReceiptService.publicShowMessage('#deleteGroupErrorMessage');
+              }else if(group.customers.length === 1){
+                if(group.customers[0].id === group.ownerId){
+                  $state.go('deleteGroup', {'id': $scope.group.id});
+                }else{
+                  ReceiptService.publicShowMessage('#deleteGroupErrorMessage');
+                }
+              }else{
+                $state.go('deleteGroup', {'id': $scope.group.id}); 
+              } //else if(group.customers.length === 0){
+            }); // Group.findById({           
+            //$location.path('/deleteGroup/' + $scope.group.id);    
+          }  // if(confirm("Are you sure?")){       
         }        
         
 		    $scope.submitForm = function() {	
@@ -639,4 +671,5 @@
                 });              
             });          
         });
+
   }]);
