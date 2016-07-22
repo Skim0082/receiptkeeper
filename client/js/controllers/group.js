@@ -13,43 +13,72 @@
       $scope.notifications;
       $scope.requestleaveFromMember;
       $scope.noticeLeaveByOnwer;
+      $scope.memberNotifications;
+      var fromMemberLeaveGroup = {};
 
-          // Find invitation notification
-          Notification.find({
+      // from member notification (Leave Group)
+      Notification.find({
+        filter: {
+          where: { and: [
+            {senderId: userId},
+            {removeFromMember: true}                  
+          ]}
+        }
+      })
+      .$promise
+      .then(function(memberNotifications){
+        console.log("memberNotifications: ", memberNotifications);
+        $scope.memberNotifications = memberNotifications;
+        if(memberNotifications.length > 0){
+          var groupId;
+          for(var i = 0 ; i < memberNotifications.length ; i++){
+            groupId = memberNotifications[i].groupId;
+            fromMemberLeaveGroup[groupId] = {
+              rejectLeaveGroup: memberNotifications[i].rejectLeaveGroup,
+              removeFromMember: memberNotifications[i].removeFromMember,
+              notificationId: memberNotifications[i].id
+            };
+          }
+          console.log("fromMemberLeaveGroup: ", fromMemberLeaveGroup);
+        }
+      }); // Notification.find({      
+
+      // Find invitation notification
+      Notification.find({
+        filter: {
+          where: { and: [
+            {receiverId: userId},
+            {seen: false}                  
+          ]}
+        }
+      })
+      .$promise
+      .then(function(notifications){
+        console.log("notifications: ", notifications);
+        if(notifications.length > 0){
+          $scope.notifications = notifications;
+
+          var groupIDs = notifications.map(function(notification){
+            return notification.groupId;
+          });
+          //console.log("groupIDs: ", groupIDs);
+          Group.find({
             filter: {
-              where: { and: [
-                {receiverId: userId},
-                {seen: false}                  
-              ]}
+              include: 'grouptype',                  
+              where: {
+                id: {inq: groupIDs}
+              }
             }
           })
           .$promise
-          .then(function(notifications){
-            console.log("notifications: ", notifications);
-            if(notifications.length > 0){
-              $scope.notifications = notifications;
-
-              var groupIDs = notifications.map(function(notification){
-                return notification.groupId;
-              });
-              //console.log("groupIDs: ", groupIDs);
-              Group.find({
-                filter: {
-                  include: 'grouptype',                  
-                  where: {
-                    id: {inq: groupIDs}
-                  }
-                }
-              })
-              .$promise
-              .then(function(groups){
-                //console.log("groups: ", groups);
-                for(var i = 0 ; i < notifications.length ; i++){
-                  $scope.notifications[i].group = groups[i];
-                }
-              });
+          .then(function(groups){
+            //console.log("groups: ", groups);
+            for(var i = 0 ; i < notifications.length ; i++){
+              $scope.notifications[i].group = groups[i];
             }
-          }); // Notification.find({
+          });
+        }
+      }); // Notification.find({
 
       // Find Group whose owner is current logged in user
       Customer
@@ -76,7 +105,20 @@
             var memberInGroups = [];
             var requestleaveFromMember = [];
             var noticeLeaveByOnwer = [];            
+            var groupID;
             for(var i = 0 ; i < customer.groups.length ; i++){
+                groupID = customer.groups[i].id
+                if(fromMemberLeaveGroup[groupID] == undefined){
+                  customer.groups[i]['leaveGroup'] = true;
+                }else if(fromMemberLeaveGroup[groupID].removeFromMember == true && 
+                  fromMemberLeaveGroup[groupID].rejectLeaveGroup == false){
+                  customer.groups[i]['leaveGroup'] = false;
+                }else if(fromMemberLeaveGroup[groupID].removeFromMember == true && 
+                  fromMemberLeaveGroup[groupID].rejectLeaveGroup == true){
+                  customer.groups[i]['leaveGroup'] = true;
+                  customer.groups[i]['notificationId'] = fromMemberLeaveGroup[groupID].notificationId;
+                }
+
               if(customer.groups[i].ownerId == userId){
                 isOwner = true;
 
@@ -94,7 +136,7 @@
               $scope.groupsinmember = memberInGroups;
             }
             //console.log("owner groups: ", $scope.groups);
-            //console.log("member groups: ", $scope.groupsinmember);
+            console.log("member groups: ", $scope.groupsinmember);
             if(isOwner){
               $scope.isDisabled = true;
             }else{
@@ -104,8 +146,52 @@
             $scope.isDisabled = false;
           } // if(customer.groups.length > 0){
 
-
         });  //.then(function(customer){
+
+        $scope.leaveGroup = function(flashMessageId, groupId, ownerId){
+          if(confirm("Are you sure?")){
+            var index = $scope.groupsinmember.map(function(groupsinmember){
+              return groupsinmember.id;
+            }).indexOf(groupId); 
+            if($scope.groupsinmember[index].notificationId != undefined){
+              Notification.prototype$updateAttributes(
+                  { id: $scope.groupsinmember[index].notificationId }, 
+                  { 
+                    rejectLeaveGroup: false
+                  }
+              )
+              .$promise
+              .then(function(result){
+                  $scope.showMessage(flashMessageId); 
+                  $scope.groupsinmember[index].leaveGroup = false;
+              }); // Notification.prototype$updateAttributes(
+            }else{
+                Customer.findById({
+                  id: ownerId,
+                  filter: {
+                    fields: { id: true, email: true}
+                  }
+                })
+                .$promise
+                .then(function(customer){
+                  Notification
+                  .create({
+                    senderId:           $rootScope.currentUser.id,
+                    senderEmail:        $rootScope.currentUser.email,
+                    receiverId:         ownerId,
+                    receiverEmail:      customer.email,
+                    groupId:            groupId,
+                    removeFromMember:   true
+                  })
+                  .$promise
+                  .then(function(notification){
+                    $scope.showMessage(flashMessageId); 
+                    $scope.groupsinmember[index].leaveGroup = false;
+                  }); // .then(function(notification){
+              }) // .then(function(customer){
+            } // }else{
+          } // if(confirm("Are you sure?" + groupId)){
+        }  // $scope.leaveGroup = function(flashMessageId, groupId, ownerId){        
 
       $scope.groupReceipts = function(groupId, ownerId, groupName){
         //alert("groupId: " + groupId);
@@ -143,6 +229,7 @@
                     if($scope.groupsinmember == undefined){
                       $scope.groupsinmember = [];              
                     }
+                    $scope.notifications[index].group['leaveGroup'] = true;
                     $scope.groupsinmember.push($scope.notifications[index].group);
                     $scope.notifications.splice(index, 1);
                     if($scope.notifications.length == 0){
@@ -434,75 +521,156 @@
               }
             }
           }
-          //Find notification
+          //Find invite notification from Group owner
           Notification.find({
             filter: {
               where: { and: [
                 {senderId: $rootScope.currentUser.id},
-                {and: [
-                    {groupId: group.id},
-                    {accepted: false}
-                  ]
-                }                  
+                {groupId: group.id}           
               ]}
             }
           })
           .$promise
           .then(function(notifications){
-            console.log("notifications: ", notifications);
+            console.log("owner-notifications: ", notifications);
             $scope.notifications = notifications;
             if($scope.notifications.length > 0){
               for(var i = 0 ; i < $scope.notifications.length ; i++){
-                if($scope.notifications[i].seen == true && 
-                    $scope.notifications[i].left == true){
-                  $scope.notifications[i].display = 
-                    $scope.notifications[i].receiverEmail + " (refused)";
-                }else if($scope.notifications[i].seen == false && 
-                          $scope.notifications[i].left == true){
-                  $scope.notifications[i].display = 
-                    $scope.notifications[i].receiverEmail + " (refused - invite again)";
-                }else{
-                  $scope.notifications[i].display = $scope.notifications[i].receiverEmail;
-                }
-              }
+                if($scope.notifications[i].accepted == false){
+                  if($scope.notifications[i].seen == true && 
+                      $scope.notifications[i].left == true){
+                    $scope.notifications[i].display = 
+                      $scope.notifications[i].receiverEmail + " (refused)";
+                  }else if($scope.notifications[i].seen == false && 
+                            $scope.notifications[i].left == true){
+                    $scope.notifications[i].display = 
+                      $scope.notifications[i].receiverEmail + " (refused - invite again)";
+                  }else{
+                    $scope.notifications[i].display = $scope.notifications[i].receiverEmail;
+                  }                  
+                }//if($scope.notifications[i].accepted == false){
+              } // for(var i = 0 ; i < $scope.notifications.length ; i++){
+            } // if($scope.notifications.length > 0){
+          });
+          //Notification from member
+          Notification.find({
+            filter: {
+              where: { and: [
+                {receiverId: $rootScope.currentUser.id},
+                {and: [
+                  {removeFromMember: true},
+                  {groupId: group.id}           
+                ]}                
+              ]}
             }
+          })
+          .$promise
+          .then(function(notifications){
+            console.log("member-notifications: ", notifications);            
+            if(notifications.length > 0){
+              $scope.memberNotifications = notifications;
+              for(var i = 0 ; i < $scope.memberNotifications.length ; i++){
+                if($scope.memberNotifications[i].removeFromOwner == false && 
+                    $scope.memberNotifications[i].rejectLeaveGroup == false){
+                    $scope.memberNotifications[i].display = 
+                      $scope.memberNotifications[i].senderEmail + " (request of leaving group)";                
+                }else if($scope.memberNotifications[i].removeFromOwner == false && 
+                    $scope.memberNotifications[i].rejectLeaveGroup == true){
+                    $scope.memberNotifications[i].display = 
+                      $scope.memberNotifications[i].senderEmail + " (reject leaving group)";
+                } //if($scope.memberNotifications[i].removeFromOwner == false){
+              } // for(var i = 0 ; i < $scope.memberNotifications.length ; i++){
+            } // if($scope.memberNotifications.length > 0){            
           });
         }); // .then(function(group){
 
         $scope.backToPage = function(){
           window.history.back();
         }
+
+        // reject request leaving Group
+        $scope.rejectLeaveGroup = function(notificationId){
+          if(confirm("Are you going to request to cancel leaving group?")){
+
+            var index = $scope.memberNotifications.map(function(notification){
+              return notification.id;
+            }).indexOf(notificationId);
+
+            Notification.prototype$updateAttributes(
+                { id: notificationId }, 
+                { 
+                  rejectLeaveGroup: true
+                }
+            ).$promise
+            .then(function(response){
+              $scope.memberNotifications[index].display = 
+                    $scope.memberNotifications[index].receiverEmail + " (request - cancel leave group)"
+              $scope.memberNotifications[index].rejectLeaveGroup = true;
+              $scope.showMessage("#cancelLeavingRequest");
+            });
+          }
+        } // $scope.rejectLeaveGroup = function(notificationId){
+
+        // accept request of leaving Group and Remove Member
+        $scope.acceptLeaveAndRemoveMember = function(memberId, notificationId){
+          if(confirm("Are you sure?")){
+              $scope.removeLeavingGroupList(memberId);          
+              $scope.deleteMemberFromGroup(memberId);
+          } // if(confirm("Are you sure?")){
+        } // $scope.acceptLeaveAndRemoveMember = function(memberId){
+
+        $scope.removeLeavingGroupList = function(memberId){
+          var index = $scope.memberNotifications.map(function(notification){
+            return notification.senderId;
+          }).indexOf(memberId);
+          if($scope.memberNotifications[index] != undefined){
+            var notificationId = $scope.memberNotifications[index].id;
+            Notification.deleteById({id: notificationId})
+              .$promise
+              .then(function(){
+                $scope.memberNotifications.splice(index, 1);
+                if($scope.memberNotifications.length == 0){
+                  $scope.memberNotifications = null;
+                }                
+                $scope.showMessage("#removeLeavingRequest");               
+              });              
+          }          
+        } // $scope.removeLeavingGroupList = function(memberId){
+
+        $scope.deleteMemberFromGroup = function(memberId){
+          CustomerGroup
+            .find({
+              filter: {
+                where: {and: [
+                  {customerId: memberId},
+                  {groupId: $scope.group.id}
+                ]}
+              }
+            })
+            .$promise
+            .then(function(customergroup){                
+              if(customergroup.length != 0){
+                CustomerGroup
+                  .deleteById({ id: customergroup[0].id })
+                  .$promise
+                  .then(function(){
+                    var index = $scope.members.map(function(customer){
+                      return customer.id;
+                    }).indexOf(memberId);
+                    $scope.members.splice(index, 1);
+                    if($scope.members.length == 0){
+                      $scope.members = null;
+                    }
+                    $scope.showMessage("#removeMember"); 
+                  });
+              }
+            });  // .then(function(customergroup){ 
+        } // $scope.deleteMemberFromGroup = function(memberId){
         
         $scope.removeMember = function(memberId){
           if(confirm("Are you sure?")){
-            CustomerGroup
-              .find({
-                filter: {
-                  where: {and: [
-                    {customerId: memberId},
-                    {groupId: $scope.group.id}
-                  ]}
-                }
-              })
-              .$promise
-              .then(function(customergroup){                
-                if(customergroup.length != 0){
-                  CustomerGroup
-                    .deleteById({ id: customergroup[0].id })
-                    .$promise
-                    .then(function(){
-                      var index = $scope.members.map(function(customer){
-                        return customer.id;
-                      }).indexOf(memberId);
-                      $scope.members.splice(index, 1);
-                      if($scope.members.length == 0){
-                        $scope.members = null;
-                      }
-                      $scope.showMessage("#removeMember"); 
-                    });
-                }
-              });  // .then(function(customergroup){ 
-                      
+            $scope.deleteMemberFromGroup(memberId);  
+            $scope.removeLeavingGroupList(memberId);                     
           } // if(confirm("Are you sure?")){
         } // $scope.removeMember = function(memberId){
 
@@ -566,7 +734,6 @@
               });            
           }
         }
-
 
         $scope.againInvitation = function(notificationId){
           if(confirm("Are you going to invite again?")){
