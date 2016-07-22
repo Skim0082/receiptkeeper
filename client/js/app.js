@@ -204,7 +204,7 @@ angular
 		})
 		.state('groupAddReceipt', {
 			url: '/groupAddReceipt/:groupId/:ownerId/:groupName',
-			templateUrl: 'views/receipts/receipt-form.html',
+			templateUrl: 'views/receipts/receipt-add.html',
 			controller: 'AddReceiptController',
 			authenticate: true
 		})			
@@ -233,7 +233,7 @@ angular
 		})		
 		.state('addReceipt', {
 			url: '/addReceipt',
-			templateUrl: 'views/receipts/receipt-form.html',
+			templateUrl: 'views/receipts/receipt-add.html',
 			controller: 'AddReceiptController',
 			authenticate: true
 		})		

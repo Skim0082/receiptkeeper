@@ -901,6 +901,10 @@
       ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, null);
     } 
     */
+    $scope.removePhoto = function(){
+      $scope.receipt.imageFilePath = "";
+    }
+
     $scope.Receipts = function(){
       if($stateParams.groupId == undefined){
         $state.go('Receipts');
@@ -965,6 +969,7 @@
             $scope.selectedCategory = categories[selectedCategoryIndex];
         }
       });
+
     } // $scope.getStoreCategories = function(storeId, categoryId){  
 
     $scope.countSelectedTag = function(){
