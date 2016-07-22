@@ -29,7 +29,7 @@
 				<button class="btn btn-default"  ng-click="Categories()">Categories</button>
 			</div>	
 			<div ng-show="category.id" class="col-sm-offset-3 col-sm-3">
-				<button class="btn btn-danger" ng-disabled="categoryForm.$invalid" ng-click="deleteCategory()">Delete Category</button>
+				<button class="btn btn-danger pull-right" ng-disabled="categoryForm.$invalid" ng-click="deleteCategory()">Delete Category</button>
 			</div> 
 		</div> 
 	</div>		
@@ -40,7 +40,7 @@
 <div id="deleteCategoryErrorMessage" class="alert alert-danger fade">
   <a href="" class="close" data-dismiss="alert"></a>
   <i class="glyphicon glyphicon-info-sign text-danger"></i>
-  <strong>Note:</strong> Category is already used by Receipt(s).
+  <strong>Note:</strong> Category is already used by Store(s).
 </div>
 <div id="addCategoryErrorMessage" class="alert alert-danger fade">
   <a href="" class="close" data-dismiss="alert"></a>

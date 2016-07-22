@@ -128,17 +128,17 @@
         }
       }
 
-      $scope.actionCategory = function(action, groupAction, categoryId){
+      $scope.editCategory = function(categoryId){
         if($stateParams.groupId == undefined){
            $state.go(
-            action, 
+            'editCategory', 
             {
               'id': categoryId
             }
           );
         }else{
            $state.go(
-            groupAction, 
+            'groupEditCategory', 
             {
               'id': categoryId, 
               'groupId': $stateParams.groupId, 
@@ -146,18 +146,54 @@
               'ownerId': $stateParams.ownerId
             }
           );  
-        } 
-      }
- 
-      $scope.editCategory = function(categoryId){
-        $scope.actionCategory('editCategory', 'groupEditCategory', categoryId);  
-      }
+        } // if($stateParams.groupId == undefined){        
+      } // $scope.editCategory = function(categoryId){
 
       $scope.deleteCategory = function(categoryId){
         if(confirm("Are you sure?")){
-          $scope.actionCategory('deleteCategory', 'groupDeleteCategory', categoryId);  
-        }         
-      }    
+            Category.findById({
+              id: categoryId,
+              filter: {   
+                fields: {
+                  id: true
+                },          
+                include:{
+                  relation: 'stores',
+                  scope: {
+                    fields: {
+                      id: true
+                    },
+                  }
+                }
+              }
+            })
+            .$promise
+            .then(function(category){
+              if(category.stores.length > 0){
+                ReceiptService.publicShowMessage('#deleteCategoryErrorMessage');
+              }else if(category.stores.length === 0){
+                if($stateParams.groupId == undefined){
+                   $state.go(
+                    'deleteCategory', 
+                    {
+                      'id': categoryId
+                    }
+                  );
+                }else{
+                   $state.go(
+                    'groupDeleteCategory', 
+                    {
+                      'id': categoryId, 
+                      'groupId': $stateParams.groupId, 
+                      'groupName':  $stateParams.groupName,
+                      'ownerId': $stateParams.ownerId
+                    }
+                  );  
+                } // if($stateParams.groupId == undefined){
+              } //else if(tag.receipts.length === 0){
+            }); // Tag.findById({
+        } // if(confirm("Are you sure?")){
+      } //$scope.deleteCategory = function(categoryId){
 
   }])
   .controller('EditCategoryController', ['$scope', 'Category', '$stateParams', '$state', '$location', 'ReceiptService', 
@@ -194,19 +230,42 @@
 
         $scope.deleteCategory = function(){
           if(confirm("Are you sure?")){
-            if($stateParams.groupId == undefined){
-               $state.go(
-                'deleteCategory', 
-                {
-                  'id': $stateParams.id
+            Category.findById({
+              id: $stateParams.id,
+              filter: {   
+                fields: {
+                  id: true
+                },          
+                include:{
+                  relation: 'stores',
+                  scope: {
+                    fields: {
+                      id: true
+                    },
+                  }
                 }
-              );
-            }else{
-              groupParameters['id'] = $stateParams.id;
-              $state.go('groupDeleteCategory', groupParameters);
-            } 
-          }        
-        }        
+              }
+            })
+            .$promise
+            .then(function(category){
+              if(category.stores.length > 0){
+                ReceiptService.publicShowMessage('#deleteCategoryErrorMessage');
+              }else if(category.stores.length === 0){
+                if($stateParams.groupId == undefined){
+                   $state.go(
+                    'deleteCategory', 
+                    {
+                      'id': $stateParams.id
+                    }
+                  );
+                }else{
+                  groupParameters['id'] = $stateParams.id;
+                  $state.go('groupDeleteCategory', groupParameters);
+                } // if($stateParams.groupId == undefined){
+              } //else if(tag.receipts.length === 0){
+            }); // Tag.findById({
+          }  // if(confirm("Are you sure?")){      
+        }  // $scope.deleteCategory = function(){     
 
 		    $scope.submitForm = function() {				
           Category.prototype$updateAttributes(
@@ -220,6 +279,7 @@
   }])
   .controller('DeleteCategoryController', ['$scope', 'Category', '$state',
       '$stateParams', function($scope, Category, $state, $stateParams) {
+
     Category
       .deleteById({ id: $stateParams.id })
       .$promise
@@ -238,4 +298,5 @@
           );
         }
       });
+
   }]);
