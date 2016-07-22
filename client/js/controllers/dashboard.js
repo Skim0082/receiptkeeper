@@ -704,7 +704,7 @@
           userId: userId
         };
 
-        console.log("$scope.params: ", $scope.params);
+        //console.log("$scope.params: ", $scope.params);
 
         var modalInstance = $modal.open({
           templateUrl: 'ModalUserPohtoFile.html',
@@ -747,7 +747,7 @@
           Container.createContainer({
             name: storageId
           },function(data){
-              console.log("new container: ", data);
+              //console.log("new container: ", data);
             }
           );               
         }          
@@ -774,32 +774,32 @@
     // REGISTER HANDLERS
     // --------------------
     uploader.onAfterAddingFile = function(item) {
-      console.info('After adding a file', item);
+      //console.info('After adding a file', item);
     };
     // --------------------
     uploader.onAfterAddingAll = function(items) {
-      console.info('After adding all files', items);
+      //console.info('After adding all files', items);
     };
     // --------------------
     uploader.onWhenAddingFileFailed = function(item, filter, options) {
-      console.info('When adding a file failed', item);
+      //console.info('When adding a file failed', item);
     };
     // --------------------
     uploader.onBeforeUploadItem = function(item) {
-      console.info('Before upload', item);
+      //console.info('Before upload', item);
     };
     // --------------------
     uploader.onProgressItem = function(item, progress) {
       $scope.disabled = true;
-      console.info('Progress: ' + progress, item);
+      //console.info('Progress: ' + progress, item);
     };
     // --------------------
     uploader.onProgressAll = function(progress) {
-      console.info('Total progress: ' + progress);
+      //console.info('Total progress: ' + progress);
     };
     // --------------------
     uploader.onSuccessItem = function(item, response, status, headers) {
-      console.info('Success', response, status, headers); 
+      //console.info('Success', response, status, headers); 
       $scope.disabled = true;   
       var filePath = '/api/containers/' + storageId + '/download/' + response.result.files.file[0].name
       Customer.prototype$updateAttributes(
@@ -827,19 +827,19 @@
     // --------------------
     uploader.onErrorItem = function(item, response, status, headers) {
       $scope.disabled = true;
-      console.info('Error', response, status, headers);
+      //console.info('Error', response, status, headers);
     };
     // --------------------
     uploader.onCancelItem = function(item, response, status, headers) {
-      console.info('Cancel', response, status);
+      //console.info('Cancel', response, status);
     };
     // --------------------
     uploader.onCompleteItem = function(item, response, status, headers) {
-      console.info('Complete', response, status, headers);
+      //console.info('Complete', response, status, headers);
     };
     // --------------------
     uploader.onCompleteAll = function() {
-      console.info('Complete all');
+      //console.info('Complete all');
     };
     // --------------------
     //console.info('uploader: ', uploader);

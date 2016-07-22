@@ -27,7 +27,7 @@
       })
       .$promise
       .then(function(memberNotifications){
-        console.log("memberNotifications: ", memberNotifications);
+        //console.log("memberNotifications: ", memberNotifications);
         $scope.memberNotifications = memberNotifications;
         if(memberNotifications.length > 0){
           var groupId;
@@ -39,7 +39,7 @@
               notificationId: memberNotifications[i].id
             };
           }
-          console.log("fromMemberLeaveGroup: ", fromMemberLeaveGroup);
+          //console.log("fromMemberLeaveGroup: ", fromMemberLeaveGroup);
         }
       }); // Notification.find({      
 
@@ -54,7 +54,7 @@
       })
       .$promise
       .then(function(notifications){
-        console.log("notifications: ", notifications);
+        //console.log("notifications: ", notifications);
         if(notifications.length > 0){
           $scope.notifications = notifications;
 
@@ -98,7 +98,7 @@
         })
         .$promise
         .then(function(customer){
-          console.log("customer-groups: ", customer);
+          //console.log("customer-groups: ", customer);
           if(customer.groups.length > 0){
             var isOwner = false;
             var groups = [];
@@ -136,7 +136,7 @@
               $scope.groupsinmember = memberInGroups;
             }
             //console.log("owner groups: ", $scope.groups);
-            console.log("member groups: ", $scope.groupsinmember);
+            //console.log("member groups: ", $scope.groupsinmember);
             if(isOwner){
               $scope.isDisabled = true;
             }else{
@@ -259,7 +259,7 @@
               )
               .$promise
               .then(function(result){
-                console.log("result: ", result);
+                //console.log("result: ", result);
                 if($scope.groupsinmember == undefined){
                   $scope.groupsinmember = [];              
                 }
