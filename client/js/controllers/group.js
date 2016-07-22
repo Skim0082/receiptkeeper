@@ -396,7 +396,7 @@
         .then(function(group){
 
           $scope.group = group;
-          console.log("$scope.group: ", $scope.group);
+          //console.log("$scope.group: ", $scope.group);
           //if current user is the owner of group
           //enable invite member and show the member list of group        
           if(group.ownerId == userId){
@@ -532,7 +532,7 @@
           })
           .$promise
           .then(function(notifications){
-            console.log("owner-notifications: ", notifications);
+            //console.log("owner-notifications: ", notifications);
             $scope.notifications = notifications;
             if($scope.notifications.length > 0){
               for(var i = 0 ; i < $scope.notifications.length ; i++){
@@ -566,7 +566,7 @@
           })
           .$promise
           .then(function(notifications){
-            console.log("member-notifications: ", notifications);            
+            //console.log("member-notifications: ", notifications);            
             if(notifications.length > 0){
               $scope.memberNotifications = notifications;
               for(var i = 0 ; i < $scope.memberNotifications.length ; i++){
@@ -790,7 +790,7 @@
             })
             .$promise
             .then(function(group){
-              console.log("group: ", group);
+              //console.log("group: ", group);
               if(group.customers.length > 1){
                 ReceiptService.publicShowMessage('#deleteGroupErrorMessage');
               }else if(group.customers.length === 1){
