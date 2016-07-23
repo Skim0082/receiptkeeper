@@ -16,7 +16,7 @@
 		  	<div class="col-sm-4">
 			    <input type="text" class="form-control" name="name" 
 			        placeholder="Name" autocomplete="off" required
-			        ng-model="store.name">
+			        maxlength="30" ng-model="store.name">
 			    <span class="has-error control-label" ng-show="storeForm.name.$invalid && storeForm.name.$dirty">
 			      Store name is required.
 			    </span>   
@@ -73,7 +73,7 @@
 <style>
 	div.tabcontent{
 		background-color:white ;
-		padding : 30px 40px 5px 40px;
+		padding : 30px 40px 20px 40px;
 		border: 1px solid #ddd;
 		border-radius: 4px;
 	}
