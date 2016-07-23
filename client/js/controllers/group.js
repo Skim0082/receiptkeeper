@@ -531,10 +531,10 @@
             }
           })
           .$promise
-          .then(function(notifications){
-            //console.log("owner-notifications: ", notifications);
-            $scope.notifications = notifications;
-            if($scope.notifications.length > 0){
+          .then(function(notifications){            
+            if(notifications.length > 0){
+              $scope.notifications = notifications;
+              //console.log("$scope.notifications: ", $scope.notifications);
               for(var i = 0 ; i < $scope.notifications.length ; i++){
                 if($scope.notifications[i].accepted == false){
                   if($scope.notifications[i].seen == true && 
