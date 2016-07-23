@@ -1,14 +1,30 @@
+<style>
+	div.tabcontent{
+		background-color:white ;
+		padding : 30px 40px 60px 40px;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+	}
+	div.tabcontent .row{
+		 margin-top: 10px;
+		 margin-bottom: 10px;
+	} 
+</style>
 <div class="container">
 <section>
 <div class="container">
-<h1 class="page-title">
-	<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-	{{ action }} {{groupName}} receipt
-</h1>
-<hr>
-	<div class="col-sm-11">
+	<h1 class="page-title">
+		<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+		{{ action }} {{groupName}} receipt
+	</h1>
+	<hr>
+	<div class="col-sm-12">
 		<form name="receiptForm" novalidate>
 		 	<div class="form-group" >
+
+			<div>
+		    <div class="tabcontent">
+
 		 		<div class="row">
 				  	<label class="col-sm-2 control-label">Store name</label>
 				  	<div class="col-sm-4">
@@ -109,6 +125,8 @@
 				  	</div>
 
 				</div>
+
+				<!--
 				<div class="row" ng-show="receipt.imageFilePath">
 					<div class="row">
 						<div class="col-sm-offset-2 col-sm-10">
@@ -120,19 +138,26 @@
 						</div>
 					</div>
 				</div>
+				-->
+			</div>
+			</div>
+
 				<hr>
 				<div class="row">
+					<!--
 					<div ng-show="receipt.id" class="col-sm-2">
 						<button class="btn btn-default"  
 							ng-click="open(receiptId, groupId, groupName, ownerId)">Upload</button>
-					</div>				
-					<div  class="col-sm-2">
+					</div>	
+					-->			
+					<div  class="col-sm-3">
 						<button class="btn btn-primary"  ng-click="submitForm()"
 							ng-disabled="isDisabled">{{ action }} Receipt</button>
 					</div>
-					<div  class="col-sm-2">
+					<div  class="col-sm-3">
 						<button class="btn btn-default"  ng-click="Receipts()">Receipts</button>
 					</div>
+					<!--
 					<div ng-show="receipt.id" class="col-sm-3">
 						<button class="btn btn-default" ng-click="viewReceipt()">
 							<i class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></i> 
@@ -141,7 +166,8 @@
 					</div>				
 					<div ng-show="receipt.id" class="col-sm-3">
 						<button class="btn btn-danger pull-right" ng-click="deleteReceipt()">Delete Receipt</button>
-					</div>						
+					</div>	
+					-->					
 				</div>
 			</div>		
 		</form>
@@ -152,8 +178,8 @@
 </div>
 
 <!-- Receipts File Upload Modal Window -->
-
 <!-- Receipts File Upload Modal Window -->
+
 <div id="invalidCategoryMessage" class="alert alert-danger fade">
   <a href="" class="close" data-dismiss="alert"></a>
   <i class="glyphicon glyphicon-info-sign text-danger"></i>

@@ -6,27 +6,30 @@
 	{{groupName? groupName + ' r': 'R'}}eceipt details
 </h1>
 <hr>
-
 <style>
-div.tabcontent{
-	background-color:white ;
-	padding : 30px 40px 60px 40px;
-	border: 1px solid #ddd;
-	border-radius: 4px;
-}
-div.tabcontent .row{
-	 margin-top: 10px;
-	 margin-bottom: 10px;
-}
-.fade.in{
-	opacity: 1;
-}
-.modal-backdrop.in {
-    opacity: .5 !important;
-}
-.modal-backdrop.fade {
-    opacity: 0  !important;
-}
+	div.tabcontent{
+		background-color:white ;
+		padding : 30px 40px 60px 40px;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+	}
+	div.tabcontent .row{
+		 margin-top: 10px;
+		 margin-bottom: 10px;
+	}
+	.fade.in{
+		opacity: 1;
+	}
+	.modal-backdrop.in {
+	    opacity: .5 !important;
+	}
+	.modal-backdrop.fade {
+	    opacity: .5  !important;
+	}
+	.modal-header {
+	    padding: 10px;
+	    border-bottom: 1px solid #e5e5e5;
+	}
 </style>
 <!-- Start Receipt View -->
 <div>
@@ -137,7 +140,7 @@ div.tabcontent .row{
             </h1>
         </div>
         <div class="modal-body">
-            <div style="margin:25px;">
+            <div style="margin:20px;">
 
 		        <div class="row">
 		            <div class="col-sm-12">
@@ -148,15 +151,15 @@ div.tabcontent .row{
 		                    <div class="panel-body">
 
 	<div class="row">
-		<label class="col-sm-1 control-label text-right">Search</label>
+		<label class="col-sm-2 control-label text-right">Search</label>
 		<div class="col-sm-3">			
-			<input ng-model="searchText" id="search" class="form-control" placeholder="Search text">
+			<input style="margin-bottom:5px;" ng-model="searchText" id="search" class="form-control" placeholder="Search text">
 		</div>
 	</div>
 	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
-				<tr style="background:#ffffff;">
+				<tr style="border-top: solid 1px #e5e5e5;">
 					<th style="display:none;">ID</th>
 					<!--<th style="text-align: center; ">Store</th>-->
 					<th class="sortable" 
@@ -221,7 +224,7 @@ div.tabcontent .row{
     </script>
 </div>
 <!-- Tag Receipts Modal Window -->
-<!-- modal test -->
+<!-- modal Receipt Photo -->
 <div class="container">
   <!-- Modal -->
   <div class="modal fade" id="receiptPhotoModal" role="dialog">
@@ -255,5 +258,5 @@ div.tabcontent .row{
     </div>
   </div>  
 </div>
-<!-- modal test -->
+<!-- modal Receipt Photo -->
 

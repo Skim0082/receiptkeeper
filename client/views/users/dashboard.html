@@ -6,8 +6,12 @@
         opacity: .5 !important;
     }
     .modal-backdrop.fade {
-        opacity: 0  !important;
+        opacity: .5  !important;
     }
+    .modal-header {
+        padding: 10px;
+        border-bottom: 1px solid #e5e5e5;
+    }    
 </style>
 <div class="container">
 <section>
@@ -303,7 +307,7 @@
             </h1>
         </div>
         <div class="modal-body">
-            <div style="margin:25px;">
+            <div style="margin:20px;">
 
                 <div class="row">
                     <div class="col-sm-12">
@@ -471,15 +475,15 @@
                             <div class="panel-body">
                                 <!-- Receipts in Tag of Table -->
                                 <div class="row">
-                                    <label class="col-sm-1 control-label text-right">Search</label>
+                                    <label class="col-sm-2 control-label text-right">Search</label>
                                     <div class="col-sm-3">          
-                                        <input ng-model="searchText" id="search" class="form-control" placeholder="Search text">
+                                        <input style="margin-bottom:5px;" ng-model="searchText" id="search" class="form-control" placeholder="Search text">
                                     </div>
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-hover">
                                         <thead>
-                                            <tr style="background:#ffffff;">
+                                            <tr style="border-top: solid 1px #e5e5e5;">
                                                 <th style="display:none;">ID</th>
                                                 <!--<th style="text-align: center; ">Store</th>-->
                                                 <th class="sortable" 
