@@ -13,8 +13,8 @@ angular
     //}        
 
     $scope.user = {
-      email: "joe@gmail.com",
-      password: "aaa"
+      //email: "joe@gmail.com",
+      //password: "aaa"
     };
 
     var flashMessage;
