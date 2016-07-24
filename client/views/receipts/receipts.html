@@ -26,8 +26,11 @@
 								<th class="sortable" 
 									style="text-align: center; "
 									ng-repeat="(key,value) in tablehead" 
-								    ng-class="selectedCls(key)" 
-								    ng-click="changeSorting(key)">{{value}}</th>
+								    ng-click="changeSorting(key)">
+								    {{value}}&nbsp;
+									<span ng-show="sortDesc && (sortColumn == key)"  class="fa fa-caret-down"></span>
+									<span ng-show="!sortDesc && (sortColumn == key)"  class="fa fa-caret-up"></span>    
+								</th>
 								<th colspan="2">Comment</th>
 							</tr>
 						</thead>

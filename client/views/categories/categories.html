@@ -30,7 +30,7 @@
 					</span>
 					</a>
 					<span class="list-group-item" 
-							ng-repeat="category in categorys | filter : searchText | orderBy:sortType:sortReverse">{{category.name}}<i class="glyphicon glyphicon-remove pull-right text-danger" 
+							ng-repeat="category in categorys | categoryFilter:searchText | orderBy:sortType:sortReverse | startFrom:currentPage*pageSize | limitTo:pageSize">{{category.name}}<i class="glyphicon glyphicon-remove pull-right text-danger" 
 					    	ng-click="deleteCategory(category.id)" tooltip-html-unsafe="Delete"></i>	 	
 					 	<i class="glyphicon glyphicon-pencil pull-right text-primary" 
 					 		style="padding-right:20px" 
@@ -39,6 +39,30 @@
 				</div>
 			</div>
 		</div>
+		<!-- Pagination -->
+		<div style="margin-bottom:20px;">
+		<div class="row">
+			<div class="col-sm-2">
+				<select ng-model="pageSize" 
+					id="pageSize" 
+					class="form-control" 
+					style="width:80px;"
+					ng-change="changePageSize()"
+					ng-options="unit for unit in pageUnits">
+				</select>
+			</div>
+			<div class="col-sm-4">
+				<ul class="list-group list-group-horizontal">
+					<button  class="btn btn-primary" ng-disabled="currentPage == 0"  ng-click="currentPage=currentPage-1">Previous</button>
+					<button  class="btn btn-primary" ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="currentPage=currentPage+1">Next</button>
+				</ul>
+			</div>
+			<div class="col-sm-6 text-center">
+				<pre>Selected page: {{currentPage+1}}/{{numberOfPages()==0? 1:numberOfPages();}}</pre>
+			</div>
+		</div>
+    	</div>
+    	<!-- Pagination -->
 	</div>
 	</div>
 	<hr>
@@ -79,7 +103,7 @@
 	.list-group-item {
 	    position: relative;
 	    display: block;
-	    padding: 10px 15px;
+	    padding: 8px 15px;
 	    margin-bottom: -1px;
 	    border-top: 1px solid #ddd;
 	    border-bottom: 1px solid #ddd;

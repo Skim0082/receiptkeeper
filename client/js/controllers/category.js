@@ -79,12 +79,44 @@
     }
 
   }])  
+  .filter('startFrom', function() {
+      return function(input, start) {
+          start = +start; //parse to int
+          return input.slice(start);
+      }
+  })
+  .filter('categoryFilter', function(){
+    return function(dataArray, searchTerm) {
+        // If no array is given, exit.
+        if (!dataArray) {
+            return;
+        }
+        // If no search term exists, return the array unfiltered.
+        else if (!searchTerm) {
+            return dataArray;
+        }
+        // Otherwise, continue.
+        else {
+             // Convert filter text to lower case.
+             var term = searchTerm.toLowerCase();
+             // Return the array and filter it by looking for any occurrences of the search term in each items id or name. 
+             return dataArray.filter(function(category){
+                var name = category.name;
+                var categoryName = name.toLowerCase().indexOf(term) > -1;
+                return categoryName;
+             });
+        } 
+    }
+  })  
   .controller('AllCategoriesController', [
-      '$scope', 'Category', '$rootScope', '$stateParams', '$state', 'ReceiptService', 
-      function($scope, Category, $rootScope, $stateParams, $state, ReceiptService) {
+      '$scope', 'Category', '$rootScope', '$stateParams', '$state', 'ReceiptService', '$filter', 
+      function($scope, Category, $rootScope, $stateParams, $state, ReceiptService, $filter) {
 
-      //console.log("$stateParams: ", $stateParams);
-      //console.log("groupId: ", $stateParams.groupId);
+      // Pagination
+      $scope.pageUnits = [5, 10, 15, 20];
+      $scope.pageSize = 10;
+      $scope.currentPage = 0;       
+      // Pagination
 
       $scope.groupName = $stateParams.groupName;
 
@@ -97,6 +129,7 @@
         groupId = $stateParams.groupId;
       }
 
+      $scope.categorys = [];
       $scope.categorys = Category.find({
         filter: {
           order: 'name ASC',
@@ -105,8 +138,26 @@
             {groupId: groupId}
           ]}
         }
-      });    
+      });   
 
+      //Pagination - angular
+      $scope.getData = function(){
+        return $filter('filter')($scope.categorys)
+      }
+
+      $scope.numberOfPages=function(){
+          return Math.ceil($scope.getData().length/$scope.pageSize);                
+      }
+      //$scope.number = $scope.numberOfPages();
+      $scope.getNumber = function(num) {
+          return new Array(num);   
+      }
+      $scope.changePageSize = function(){
+        $scope.currentPage = 0;
+      }     
+      //Pagination - angular    
+
+      // Sorting
       $scope.searchText;
       $scope.sortType;
       $scope.sortReverse;              

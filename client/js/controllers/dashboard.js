@@ -145,12 +145,7 @@
           }else{
             valComma = Math.floor(tmp[0]).toLocaleString() + ".00";
           }
-          val = valComma;
-          /*
-          while (/(\d+)(\d{3})/.test(val.toString())){
-            val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
-          } 
-          */         
+          val = valComma;        
         }
         return val;
       };
@@ -916,7 +911,7 @@
       $scope.tablehead = {
         'store.name': "Store",
         'total': "Total",
-        'numberOfItem': "# Item",
+        'numberOfItem': "#Item(s)",
         'date': "Date"
       };
 
@@ -954,6 +949,8 @@
           return column == $scope.sort.column && 'sort-' + $scope.sort.symbol;
       };
 
+      $scope.sortColumn = 'date';
+      $scope.sortDesc = true;
       $scope.changeSorting = function(column) {
           var sort = $scope.sort;
           if (sort.column == column) {
@@ -963,10 +960,28 @@
                 sort.descending = '';
              }
              sort.symbol = !sort.symbol;
+
+             $scope.sortDesc = !$scope.sortDesc;
           } else {
               sort.column = column;
               sort.descending = '';
               sort.symbol = false;
+
+              $scope.sortDesc = false;
+          }
+          switch(column){
+            case 'store.name':
+              $scope.sortColumn = 'store.name';
+              break;
+            case 'total':
+              $scope.sortColumn = 'total';
+              break;
+            case 'numberOfItem':
+              $scope.sortColumn = 'numberOfItem';
+              break;
+            case 'date':
+              $scope.sortColumn = 'date';
+              break;                            
           }
       };  
       // Sorting 

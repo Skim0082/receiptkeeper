@@ -153,7 +153,7 @@
 	<div class="row">
 		<!--<label class="col-sm-2 control-label text-right">Search</label>-->
 		<div class="col-sm-12">			
-			<input style="margin-bottom:5px;" ng-model="searchText" id="search" class="form-control" placeholder="Search text" maxlength="30">
+			<input style="margin-bottom:15px;" ng-model="searchText" id="search" class="form-control" placeholder="Search text" maxlength="30">
 		</div>
 	</div>
 	<div class="table-responsive">
@@ -161,12 +161,14 @@
 			<thead>
 				<tr style="background:#f5f5f5;border-top:solid 1px #e5e5e5;">
 					<th style="display:none;">ID</th>
-					<!--<th style="text-align: center; ">Store</th>-->
 					<th class="sortable" 
 						style="text-align: center; "
 						ng-repeat="(key,value) in tablehead" 
-					    ng-class="selectedCls(key)" 
-					    ng-click="changeSorting(key)">{{value}}</th>
+					    ng-click="changeSorting(key)">
+					    {{value}}
+						<span ng-show="sortDesc && (sortColumn == key)"  class="fa fa-caret-down"></span>
+						<span ng-show="!sortDesc && (sortColumn == key)"  class="fa fa-caret-up"></span>    
+					</th>
 					<th colspan="2">Comment</th>
 				</tr>
 			</thead>
