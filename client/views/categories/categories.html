@@ -10,14 +10,27 @@
 	<div class="tabcontent" >	
 		<div class="row">
 			<div class="col-sm-12">
+				<input type="text"
+					name="searchText"  
+					ng-model="searchText" 
+					class="form-control" 
+					placeholder="Search text" 
+					maxlength="30">
+			</div>
+			<div class="col-sm-12">
 				<div class="list-group">
+					<a href="" 
+						style="text-decoration:none;" 
+						ng-click="sortType='name';sortReverse=!sortReverse;">
 					<span class="list-group-item" 
-						style="background-color:#f5f5f5;border-bottom:solid 2px #ddd;">
+						style="background-color:#f5f5f5;border-bottom:solid 2px #e5e5e5;">
 						<strong>Category Name</strong>
+						<span ng-show="sortReverse"  class="fa fa-caret-down"></span>
+						<span ng-show="!sortReverse"  class="fa fa-caret-up"></span>
 					</span>
-					<span class="list-group-item" ng-repeat="category in categorys">
-					 	{{category.name}}&nbsp; &nbsp; 
-					    <i class="glyphicon glyphicon-remove pull-right text-danger" 
+					</a>
+					<span class="list-group-item" 
+							ng-repeat="category in categorys | filter : searchText | orderBy:sortType:sortReverse">{{category.name}}<i class="glyphicon glyphicon-remove pull-right text-danger" 
 					    	ng-click="deleteCategory(category.id)" tooltip-html-unsafe="Delete"></i>	 	
 					 	<i class="glyphicon glyphicon-pencil pull-right text-primary" 
 					 		style="padding-right:20px" 

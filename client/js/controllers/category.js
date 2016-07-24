@@ -105,7 +105,11 @@
             {groupId: groupId}
           ]}
         }
-      });                     
+      });    
+
+      $scope.searchText;
+      $scope.sortType;
+      $scope.sortReverse;              
 
       $scope.viewGroup = function(){
         if($stateParams.groupId != undefined){
