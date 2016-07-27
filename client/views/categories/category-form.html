@@ -59,14 +59,29 @@
 					<i class="fa fa-plus-circle" aria-hidden="true"></i>
 					Add Category
 				</button>
-				<button  
+				<!--
+				<button 
+					tooltip-html-unsafe="Delete Category"  
 					ng-show="category.id" 
-					class="btn btn-default pull-right" 
-					ng-disabled="categoryForm.$invalid" 
+					class="btn btn-danger pull-right" 
+					ng-disabled="disableDelete" 
 					ng-click="deleteCategory()">
 					<i class="fa fa-minus-circle" aria-hidden="true"></i>
 					Delete Category
 				</button>
+				-->
+				<span class=" pull-right" 
+					data-toggle="tooltip" 
+					tooltip-html-unsafe="{{delTooltip}}">			
+					<a 
+						ng-show="category.id" 
+						class="btn btn-default" 
+						ng-disabled="disableDelete" 
+						ng-click="deleteCategory()">
+						<i class="fa fa-minus-circle" aria-hidden="true"></i>
+						Delete Category
+					</a>
+				</span>
 			</div> 
 		</div> 
 	</div>		
@@ -84,7 +99,15 @@
   <i class="glyphicon glyphicon-info-sign text-danger"></i>
   <strong>Note:</strong> Category name already exists.
 </div>
+<script>
+	$('span').tooltip({
+	    'placement': 'top'
+	});
+</script>
 <style>
+	.btn.disabled {
+	    pointer-events: all !important;
+	}
 	div.tabcontent{
 		background-color:white ;
 		padding : 30px 40px 20px 40px;

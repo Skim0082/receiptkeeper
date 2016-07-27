@@ -775,11 +775,46 @@
           }, 4000);          
         } 
 
+        $scope.disableDelete = true;
+        $scope.delTooltip = '';
+        $scope.isAllowedToDelete = function(){
+          Group.findById({
+            id: $stateParams.id,
+            filter: {   
+              fields: {
+                id: true,
+                ownerId: true
+              },          
+              include:{
+                relation: 'customers',
+                scope: {
+                  fields: {
+                    id: true,
+                    groupId: true
+                  },
+                }
+              }
+            }
+          })
+          .$promise
+          .then(function(group){
+            //console.log("group: ", group);
+            if(group.customers.length > 1){
+              $scope.disableDelete = true;
+              $scope.delTooltip = 'Group already has member(s)';
+            }else{
+              $scope.disableDelete = false;
+              $scope.delTooltip = '';
+            } //if(group.customers.length > 1){
+          }); // Group.findById({      
+        }    
+        $scope.isAllowedToDelete();        
+
         $scope.deleteGroup = function(){
           if(confirm("Are you sure?")){
 
             Group.findById({
-              id: $scope.group.id,
+              id: $stateParams.id,
               filter: {   
                 fields: {
                   id: true,

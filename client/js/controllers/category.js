@@ -282,7 +282,7 @@
         $scope.backToPage = function(){
           window.history.back();
         }
-        
+
         $scope.Categories = function(){
           if($stateParams.groupId == undefined){
             $state.go('Categories');
@@ -290,6 +290,39 @@
              $state.go('groupCategories', groupParameters);
           }      
         }
+
+        $scope.disableDelete = true;
+        $scope.delTooltip = '';
+        $scope.isAllowedToDelete = function(){
+
+            Category.findById({
+              id: $stateParams.id,
+              filter: {   
+                fields: {
+                  id: true
+                },          
+                include:{
+                  relation: 'stores',
+                  scope: {
+                    fields: {
+                      id: true
+                    },
+                  }
+                }
+              }
+            })
+            .$promise
+            .then(function(category){
+              if(category.stores.length > 0){
+                $scope.disableDelete = true;
+                $scope.delTooltip = 'Category has been used by store(s)';
+              }else{
+                $scope.disableDelete = false;
+                $scope.delTooltip = '';
+              } //if(category.stores.length > 0){
+            }); // Category.findById({
+        } // $scope.isAllowedToDelete = function(){
+        $scope.isAllowedToDelete();
 
         $scope.deleteCategory = function(){
           if(confirm("Are you sure?")){

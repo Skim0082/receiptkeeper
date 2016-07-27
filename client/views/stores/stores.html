@@ -36,9 +36,11 @@
 						<span ng-show="!sortReverse"  class="fa fa-caret-up"></span>
 					</span>
 					<span class="list-group-item" ng-repeat="store in stores | orderBy:sortType:sortReverse | storeFilter:searchText | startFrom:currentPage*pageSize | limitTo:pageSize">
-					 	{{store.name}}&nbsp; &nbsp; 
+					 	{{store.name}}
+					 	<!--
 					    <i class="glyphicon glyphicon-remove pull-right text-danger" 
-					    	ng-click="deleteStore(store.id)" tooltip-html-unsafe="Delete"></i>	 	
+					    	ng-click="deleteStore(store.id)" tooltip-html-unsafe="Delete"></i>
+					    -->
 					 	<i class="glyphicon glyphicon-pencil pull-right text-primary" 
 					 		style="padding-right:20px" 
 					 		ng-click="editStore(store.id)" tooltip-html-unsafe="Edit"></i> 

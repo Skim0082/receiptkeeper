@@ -287,7 +287,39 @@
           }else{
              $state.go('groupTags', groupParameters);
           }      
-        }       
+        } 
+
+        $scope.disableDelete = true;
+        $scope.delTooltip = '';
+        $scope.isAllowedToDelete = function(){
+          Tag.findById({
+            id: $stateParams.id,
+            filter: {   
+              fields: {
+                id: true
+              },          
+              include:{
+                relation: 'receipts',
+                scope: {
+                  fields: {
+                    id: true
+                  },
+                }
+              }
+            }
+          })
+          .$promise
+          .then(function(tag){
+            if(tag.receipts.length > 0){
+              $scope.disableDelete = true;
+              $scope.delTooltip = 'Tag has been used by receipt(s)';
+            }else{
+              $scope.disableDelete = false;
+              $scope.delTooltip = '';
+            } //if(tag.receipts.length > 0){
+          }); // Tag.findById({      
+        }    
+        $scope.isAllowedToDelete();
 
         $scope.deleteTag = function(){
 

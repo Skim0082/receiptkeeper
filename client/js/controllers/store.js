@@ -218,6 +218,39 @@
         }      
       }
 
+      $scope.disableDelete = true;
+      $scope.delTooltip = '';
+      $scope.isAllowedToDelete = function(){
+        Store.findById({
+          id: $stateParams.id,
+          filter: {   
+            fields: {
+              id: true
+            },          
+            include:{
+              relation: 'receipts',
+              scope: {
+                fields: {
+                  id: true
+                },
+              }
+            }
+          }
+        })
+        .$promise
+        .then(function(store){
+          //console.log("store: ", store);
+          if(store.receipts.length > 0){
+            $scope.disableDelete = true;
+            $scope.delTooltip = 'Store has been used by receipt(s)';
+          }else{
+            $scope.disableDelete = false;
+            $scope.delTooltip = '';
+          } //if(store.receipts.length > 0){
+        }); // Store.findById({     
+      }    
+      $scope.isAllowedToDelete();  
+
       $scope.deleteStore = function(){
         if(confirm("Are you sure?")){
             Store.findById({
