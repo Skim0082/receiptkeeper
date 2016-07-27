@@ -446,31 +446,6 @@
                 $state.go('Groups');
               }, 3500);                    
             });   
-        
-
-
-            /*
-            CustomerGroup
-              .find({
-                filter: {
-                  where: {and: [
-                    {customerId: userId},
-                    {groupId: $scope.group.id}
-                  ]}
-                }
-              })
-              .$promise
-              .then(function(customergroup){                
-                if(customergroup.length != 0){
-                  CustomerGroup
-                    .deleteById({ id: customergroup[0].id })
-                    .$promise
-                    .then(function(){
-                      $state.go('Groups');
-                    });
-                }
-              });  // .then(function(customergroup){
-            */
 
           } // if(confirm("Are you sure?" + groupId)){
         }
@@ -802,6 +777,14 @@
             if(group.customers.length > 1){
               $scope.disableDelete = true;
               $scope.delTooltip = 'Group already has member(s)';
+            }else if(group.customers.length === 1){
+                if(group.customers[0].id === group.ownerId){
+                  $scope.disableDelete = false;
+                  $scope.delTooltip = '';
+                }else{
+                  $scope.disableDelete = true;
+                  $scope.delTooltip = 'Group already has member(s)';
+                }
             }else{
               $scope.disableDelete = false;
               $scope.delTooltip = '';
