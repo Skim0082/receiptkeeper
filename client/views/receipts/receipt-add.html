@@ -65,13 +65,14 @@
 				                </div>
 				            </div>
 				        </div>
+				        <!--
 						<div class="col-sm-offset-2 col-sm-2">
 							<button class="btn btn-default" ng-click="newItem()">Add Item</button>
 						</div>
 						<div class="col-sm-2">
 							<button class="btn btn-warning" ng-click="spliceItem()" ng-disabled="delDisabled">Del Item</button>
 						</div>			
-
+						-->
 						<div class="col-sm-offset-2 col-sm-10">
 						<hr style="margin-top:0">
 						</div>
@@ -159,8 +160,13 @@
 					</div>	
 
 					<div  class="col-sm-10">
-						<button class="btn btn-primary pull-right"  ng-click="submitForm()"
-							ng-disabled="isDisabled">Add Receipt</button>
+						<button 
+							class="btn btn-primary pull-right" 
+							ng-click="submitForm()"
+							ng-disabled="isDisabled">
+							<i class="fa fa-plus-circle" aria-hidden="true"></i>
+							Add Receipt
+						</button>
 					</div>
 
 					<!--
