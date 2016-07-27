@@ -32,6 +32,14 @@
 	}
 </style>
 <!-- Start Receipt View -->
+<div class="row" style="margin-bottom:20px;">
+	<div  class="col-sm-2">
+		<button class="btn btn-default"  ng-click="backToPage()">
+			<i class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></i> 
+			Back
+		</button>
+	</div>
+</div>
 <div>
     <div class="tabcontent" >
 		<div class="row">
@@ -95,9 +103,9 @@
 	</div>
 </div>
 <!-- END Receipt View -->
-<hr>
+
 <!-- button -->
-<div class="row">
+<div class="row" style="margin-top:20px;">
 	<div  class="col-sm-2">
 		<button class="btn btn-default"  ng-click="backToPage()">
 			<i class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></i> 
@@ -114,10 +122,12 @@
 		</button>	
 	</div>
 	<div  class="col-sm-2">
+		<!--
 		<button class="btn btn-default"  ng-click="Receipts()">
 			<i class="fa fa-files-o" aria-hidden="true"></i>
 			Receipts
 		</button>
+		-->
 	</div>
 	<div  class="col-sm-4">
 		<button class="btn btn-default pull-right" ng-click="editReceipt()">
@@ -149,70 +159,68 @@
 		                        <strong>Receipts in '{{tagname}}'</strong>
 		                    </div>
 		                    <div class="panel-body">
+								<!-- Receipt in Tags Table -->
+								<div class="row">
+									<div class="col-sm-12">			
+										<input style="margin-bottom:15px;" ng-model="searchText" id="search" class="form-control" placeholder="Search text" maxlength="30">
+									</div>
+								</div>
+								<div class="table-responsive">
+									<table class="table table-hover">
+										<thead>
+											<tr style="background:#f5f5f5;border-top:solid 1px #e5e5e5;">
+												<th style="display:none;">ID</th>
+												<th class="sortable" 
+													style="text-align: center; "
+													ng-repeat="(key,value) in tablehead" 
+												    ng-click="changeSorting(key)">
+												    {{value}}
+													<span ng-show="sortDesc && (sortColumn == key)"  class="fa fa-caret-down"></span>
+													<span ng-show="!sortDesc && (sortColumn == key)"  class="fa fa-caret-up"></span>    
+												</th>
+												<th colspan="2">Comment</th>
+											</tr>
+										</thead>
+										<tbody>
+									    <tr ng-repeat="receipt in receipts | orderBy : sort.descending + sort.column | receiptFilter:searchText | startFrom:currentPage*pageSize | limitTo:pageSize">
+									        <td style="display:none;">{{receipt.id}}</td>
+									        <td style="margin-left:15px;">{{receipt.store.name}}</td>
+									        <td style="text-align: center; ">${{commaSeparateNumber(receipt.total)}}</td>
+									        <td style="text-align: center; ">{{receipt.numberOfItem}}</td>
+									        <td style="text-align: center; ">{{(receipt.date).substring(0, 10)}}</td>
+									        <td>
+									        	{{receipt.comment}}
+											 	<i class="glyphicon glyphicon-search pull-right text-primary" 
+											 		style="padding-right:10px" 
+											 		ng-click="viewReceipt(receipt.id)" tooltip-html-unsafe="View Details"></i>
+									        </td>
+									    </tr>
+									    </tbody>
+									</table>
 
-	<div class="row">
-		<!--<label class="col-sm-2 control-label text-right">Search</label>-->
-		<div class="col-sm-12">			
-			<input style="margin-bottom:15px;" ng-model="searchText" id="search" class="form-control" placeholder="Search text" maxlength="30">
-		</div>
-	</div>
-	<div class="table-responsive">
-		<table class="table table-hover">
-			<thead>
-				<tr style="background:#f5f5f5;border-top:solid 1px #e5e5e5;">
-					<th style="display:none;">ID</th>
-					<th class="sortable" 
-						style="text-align: center; "
-						ng-repeat="(key,value) in tablehead" 
-					    ng-click="changeSorting(key)">
-					    {{value}}
-						<span ng-show="sortDesc && (sortColumn == key)"  class="fa fa-caret-down"></span>
-						<span ng-show="!sortDesc && (sortColumn == key)"  class="fa fa-caret-up"></span>    
-					</th>
-					<th colspan="2">Comment</th>
-				</tr>
-			</thead>
-			<tbody>
-		    <tr ng-repeat="receipt in receipts | orderBy : sort.descending + sort.column | receiptFilter:searchText | startFrom:currentPage*pageSize | limitTo:pageSize">
-		        <td style="display:none;">{{receipt.id}}</td>
-		        <td style="margin-left:15px;">{{receipt.store.name}}</td>
-		        <td style="text-align: center; ">${{commaSeparateNumber(receipt.total)}}</td>
-		        <td style="text-align: center; ">{{receipt.numberOfItem}}</td>
-		        <td style="text-align: center; ">{{(receipt.date).substring(0, 10)}}</td>
-		        <td>
-		        	{{receipt.comment}}
-				 	<i class="glyphicon glyphicon-search pull-right text-primary" 
-				 		style="padding-right:10px" 
-				 		ng-click="viewReceipt(receipt.id)" tooltip-html-unsafe="View Details"></i>
-		        </td>
-		    </tr>
-		    </tbody>
-		</table>
-
-	</div>
-	<div style="margin-bottom:20px;">
-	<div class="row">
-		<div class="col-sm-2">
-			<select ng-model="pageSize" 
-				id="pageSize" 
-				class="form-control" 
-				style="width:80px;"
-				ng-change="changePageSize()"
-				ng-options="unit for unit in pageUnits">
-			</select>
-		</div>
-		<div class="col-sm-4">
-			<ul class="list-group list-group-horizontal">
-				<button  class="btn btn-primary" ng-disabled="currentPage == 0"  ng-click="currentPage=currentPage-1">Previous</button>
-				<button  class="btn btn-primary" ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="currentPage=currentPage+1">Next</button>
-			</ul>
-		</div>
-		<div class="col-sm-6 text-center">
-			<pre>Selected page: {{currentPage+1}}/{{numberOfPages()==0? 1:numberOfPages();}}</pre>
-		</div>
-	</div>
-
-
+								</div>
+								<div style="margin-bottom:20px;">
+								<div class="row">
+									<div class="col-sm-2">
+										<select ng-model="pageSize" 
+											id="pageSize" 
+											class="form-control" 
+											style="width:80px;"
+											ng-change="changePageSize()"
+											ng-options="unit for unit in pageUnits">
+										</select>
+									</div>
+									<div class="col-sm-4">
+										<ul class="list-group list-group-horizontal">
+											<button  class="btn btn-default" ng-disabled="currentPage == 0"  ng-click="currentPage=currentPage-1">Previous</button>
+											<button  class="btn btn-default" ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="currentPage=currentPage+1">Next</button>
+										</ul>
+									</div>
+									<div class="col-sm-6 text-center">
+										<pre style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: 14px;">Selected page: {{currentPage+1}}/{{numberOfPages()==0? 1:numberOfPages();}}</pre>
+									</div>
+								</div>
+								<!-- Receipt in Tags Table -->
 		                    </div>
 		                </div>
 		            </div>

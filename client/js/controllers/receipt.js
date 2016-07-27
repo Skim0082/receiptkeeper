@@ -930,6 +930,11 @@
       ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, null);
     } 
     */
+
+    $scope.backToPage = function(){
+      window.history.back();
+    }
+
     $scope.removePhoto = function(){
       $scope.receipt.imageFilePath = "";
     }
@@ -1280,6 +1285,11 @@
       ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, null); 
     }
     */
+
+    $scope.backToPage = function(){
+      window.history.back();
+    }
+         
     $scope.showMessage = function(flashMessage){
       $(flashMessage).addClass("in"); 
       window.setTimeout(function(){

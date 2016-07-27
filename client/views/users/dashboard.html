@@ -528,16 +528,15 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <ul class="list-group list-group-horizontal">
-                                            <button  class="btn btn-primary" ng-disabled="currentPage == 0"  ng-click="currentPage=currentPage-1">Previous</button>
-                                            <button  class="btn btn-primary" ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="currentPage=currentPage+1">Next</button>
+                                            <button  class="btn btn-default" ng-disabled="currentPage == 0"  ng-click="currentPage=currentPage-1">Previous</button>
+                                            <button  class="btn btn-default" ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="currentPage=currentPage+1">Next</button>
                                         </ul>
                                     </div>
                                     <div class="col-sm-6 text-center">
-                                        <pre>Selected page: {{currentPage+1}}/{{numberOfPages()==0? 1:numberOfPages();}}</pre>
+                                        <pre style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: 14px;">Selected page: {{currentPage+1}}/{{numberOfPages()==0? 1:numberOfPages();}}</pre>
                                     </div>
                                 </div>
                                 <!-- Receipts in Tag of Table -->
-
                             </div>
                         </div>
                     </div>

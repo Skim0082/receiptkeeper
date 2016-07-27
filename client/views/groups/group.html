@@ -6,7 +6,14 @@
 	View Group
 </h1>
 <hr>
-
+<div class="row" style="margin-bottom:20px;">
+	<div class="col-sm-3">
+		<button class="btn btn-default"  ng-click="backToPage()">
+			<i class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></i> 
+			Back
+		</button>
+	</div>
+</div>	
 <form name="groupForm" novalidate>
 
 	<div>
@@ -56,27 +63,39 @@
 		</div>
 	</div>
 
-	<hr>
-	<div class="row">
+	<div class="row" style="margin-top:20px;">
 		<div class="col-sm-3">
-			<button class="btn btn-default"  ui-sref="Groups">Groups</button>
+			<button class="btn btn-default"  ng-click="backToPage()">
+				<i class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></i> 
+				Back
+			</button>
 		</div>
-		<div ng-show="isEnabled" class="col-sm-3">
-			<button class="btn btn-primary" 
-				ui-sref="editGroup({id: group.id})">Edit Group</button>			
+		<div ng-show="isEnabled" class="col-sm-9">
+			<button class="btn btn-primary pull-right" 
+				ui-sref="editGroup({id: group.id})">
+				<i class="glyphicon glyphicon-edit"></i>
+				Edit Group
+			</button>			
 		</div>	
 		<div ng-show="isLeave" class="col-sm-6">
-			<button class="btn btn-default" 
+			<button class="btn btn-default pull-right" 
 				ui-sref="groupReceipts({
 				groupId: group.id, 
 				ownerId: group.ownerId, 
-				groupName: group.name})">Group Receipts</button>						
-
-			<button class="btn btn-default" 
+				groupName: group.name})">
+				<i class="fa fa-barcode" aria-hidden="true"></i>
+				Group Receipts
+			</button>						
+		</div>
+		<div ng-show="isLeave" class="col-sm-3">
+			<button class="btn btn-default pull-right" 
 				ui-sref="groupChart({
 				groupId: group.id, 
 				ownerId: group.ownerId, 
-				groupName: group.name})">Group Charts</button>			
+				groupName: group.name})">
+				<i class="fa fa-bar-chart" aria-hidden="true"></i>
+				Group Charts
+			</button>			
 		</div>
 		<!--						
 		<div ng-show="isLeave" class="col-sm-3">
@@ -88,7 +107,7 @@
 	</div>
 	<div class="row" ng-show="isEnabled">
 	    <div class="col-sm-12 text-center">
-	    <hr style="margin-bottom:15px;">
+	    <hr>
 	    </div>
         <div class="col-sm-12 text-center">
             <div class="list-group list-group-horizontal">
@@ -96,27 +115,42 @@
                 groupId: group.id, 
                 ownerId: group.ownerId, 
                 groupName: group.name})" 
-                	class="list-group-item">Group Receipts</a>
+                	class="list-group-item">
+                	<i class="fa fa-barcode" aria-hidden="true"></i>
+                	Group Receipts
+                </a>
                 <a ui-sref="groupChart({
                 groupId: group.id, 
                 ownerId: group.ownerId, 
                 groupName: group.name})" 
-                	class="list-group-item">Group Chart</a>                	                	
+                	class="list-group-item">
+                	<i class="fa fa-bar-chart" aria-hidden="true"></i>
+                	Group Charts
+                </a>                	                	
                 <a ui-sref="groupCategories({
                 groupId: group.id, 
                 ownerId: group.ownerId, 
                 groupName: group.name})" 
-                	class="list-group-item">Group Categories</a>
+                	class="list-group-item">
+                	<i class="fa fa-files-o" aria-hidden="true"></i>
+                	Group Categories
+                </a>
                 <a ui-sref="groupStores({
                 groupId: group.id, 
                 ownerId: group.ownerId, 
                 groupName: group.name})" 
-                	class="list-group-item">Group Stores</a>
+                	class="list-group-item">
+                	<i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                	Group Stores
+                </a>
                 <a ui-sref="groupTags({
                 groupId: group.id, 
                 ownerId: group.ownerId, 
                 groupName: group.name})"
-                 	class="list-group-item">Group Tags</a>
+                 	class="list-group-item">
+                 	<i class="fa fa-tags" aria-hidden="true"></i>
+                 	Group Tags
+                 </a>
             </div>
         </div>								
 	</div>

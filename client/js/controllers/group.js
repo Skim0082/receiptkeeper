@@ -320,6 +320,10 @@
         }
       });      
 
+    $scope.backToPage = function(){
+      window.history.back();
+    }
+    
     $scope.submitForm = function() {
 
       // Get the default group limitation
@@ -419,6 +423,10 @@
           }
         });
 
+        $scope.backToPage = function(){
+          window.history.back();
+        }
+        
         $scope.leaveGroup = function(flashMessageId){
           if(confirm("Are you sure?")){
 

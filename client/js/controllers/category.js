@@ -32,6 +32,10 @@
       }
     });
 
+    $scope.backToPage = function(){
+      window.history.back();
+    }
+
     $scope.submitForm = function() {
       var newCategoryName = (($scope.categoryname).trim()).toLowerCase();
       var categoryName;
@@ -275,6 +279,10 @@
 
         //console.log("groupParameters: ", groupParameters);       
 
+        $scope.backToPage = function(){
+          window.history.back();
+        }
+        
         $scope.Categories = function(){
           if($stateParams.groupId == undefined){
             $state.go('Categories');

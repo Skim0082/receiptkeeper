@@ -446,3 +446,7 @@ thead {
 h1 {
   text-transform: uppercase;
 }
+
+.navbar-show {
+  box-shadow: 4px 4px 10px #888888;
+}

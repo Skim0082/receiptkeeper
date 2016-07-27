@@ -50,6 +50,10 @@
         $scope.categories = categories;
     });
 
+    $scope.backToPage = function(){
+      window.history.back();
+    }
+    
     $scope.Stores = function(){
       if($stateParams.groupId == undefined){
         $state.go('Stores');
@@ -189,6 +193,10 @@
           });
       });
 
+      $scope.backToPage = function(){
+        window.history.back();
+      }
+      
       $scope.countSelectedCategory = function(){
         $scope.selCategoryCount=$scope.selectedCategory.length + " selected";
       }

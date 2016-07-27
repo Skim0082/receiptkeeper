@@ -31,7 +31,11 @@
       }
     });  
 
-    //console.log("$scope.tags: ", $scope.tags);  
+    //console.log("$scope.tags: ", $scope.tags);
+      
+    $scope.backToPage = function(){
+      window.history.back();
+    }
 
     $scope.submitForm = function() {
       var newTagName = (($scope.tagname).trim()).toLowerCase();
@@ -273,6 +277,10 @@
 
         //console.log("groupParameters: ", groupParameters);       
 
+        $scope.backToPage = function(){
+          window.history.back();
+        }
+        
         $scope.Tags = function(){
           if($stateParams.groupId == undefined){
             $state.go('Tags');
