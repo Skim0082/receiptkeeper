@@ -2,7 +2,8 @@
 <section>
 <div class="container">
 	<h1 class="page-title">
-		<i class="fa fa-edit" aria-hidden="true"></i>
+		<i ng-hide="action == 'Edit'" class="fa fa-users" aria-hidden="true"></i>
+		<i ng-hide="action != 'Edit'" class="fa fa-edit" aria-hidden="true"></i>
 		{{ action }} Group
 	</h1>
 	<hr>
