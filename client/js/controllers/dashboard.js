@@ -9,7 +9,7 @@
       $state, Customer, Notification, Group) {     
 
       $scope.groupName = $stateParams.groupName;
-      $scope.receipts = [];
+      $scope.receipts;
       $scope.tagcloud = true;
       $scope.recentReceiptsCount;
       var tagnames = {};
@@ -55,12 +55,12 @@
       })
       .$promise
       .then(function(receipts){
-        //console.log("receipts: ", receipts);
-
-        $scope.receipts = receipts;
 
         var name;
         if(receipts.length > 0){
+          $scope.receipts = [];
+          $scope.receipts = receipts;
+
           angular.forEach(receipts, function(receipt, receipt_key){
             if(receipt.tags.length > 0){
               angular.forEach(receipt.tags, function(tag, tag_key){
