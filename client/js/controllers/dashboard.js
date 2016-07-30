@@ -334,7 +334,7 @@
           // High Chart
           $('#container1').highcharts({
               title: {
-                  text: $scope.thisYearLastMonth + ' of the week ($' + monthlyTotalLastYearKey + ')'
+                  text: $scope.thisYearLastMonth + ' day of the week ($' + monthlyTotalLastYearKey + ')'
               },
               xAxis: {
                   categories: comboChartCategories
