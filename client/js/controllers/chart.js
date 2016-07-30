@@ -143,6 +143,13 @@ angular.module('app')
         //console.log("startDate: ", startDate);
         //console.log("startDateThisYear: ", startDateThisYear);
 
+        var strThisMonthFirstDay;
+        if(("" + month).length > 1){
+        strThisMonthFirstDay = "" + (month+1) + "-01";
+        }else{
+        strThisMonthFirstDay = "0" + (month+1) + "-01";
+        } 
+
         var j = 0;
         var m = 0;
         var s = 0;

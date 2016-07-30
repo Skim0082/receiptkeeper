@@ -289,15 +289,15 @@
 </div>
 
 <!-- Combo chart using Hight Chart Open Source for non comercial -->
-<div class="row ng-scope" ng-init="combChart()" ng-show="receipts">
+<div class="row ng-scope" ng-show="enabledComboChart">
   <div class="col-sm-12">
       <div class="panel panel-success">
         <div class="panel-heading"> 
             <i class="fa fa-tasks fa-fw"></i>
-            2016 June - days of the week Consumption
+            {{thisYearLastMonth}} - days of the week Consumption
         </div>
         <div class="panel-body">
-            <div id="container1" style="min-width: 310px; height: 400px; margin: 0 auto">                        
+            <div id="container1"  style="margin: 0 auto;">                        
             </div>
         </div>
       </div>
