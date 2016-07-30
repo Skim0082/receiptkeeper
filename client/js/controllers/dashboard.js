@@ -331,6 +331,7 @@
                   };    
           comboChartSeries.push(pieChart);  
 
+        $scope.comboChart = function(){
           // High Chart
           $('#container1').highcharts({
               title: {
@@ -350,7 +351,11 @@
                   }]
               },
               series: comboChartSeries
-          }); // $('#container1').highcharts({       
+          }); // $('#container1').highcharts({   
+        };
+        window.setTimeout(function(){
+          $scope.comboChart();
+        }, 500);         
 
       });  // .then(function(lastYearReceipts){   
       //ComboChart -- END -- Get last month receipt as day of the week      
