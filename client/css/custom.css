@@ -267,6 +267,7 @@ footer nav ul li{
   margin-right:5%;
 }
 
+#invalidFileSizeMessage, 
 #invalidCategoryMessage,
 #deleteGroupErrorMessage, 
 #addStoreErrorMessage, 

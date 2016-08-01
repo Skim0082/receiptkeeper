@@ -856,9 +856,9 @@
   })
   .controller('ModalUserPohtoFileInstanceCtrl', [
     '$scope', '$state', '$modalInstance', 'params', 
-    'Customer', 'FileUploader', 'Container', '$rootScope', 
+    'Customer', 'FileUploader', 'Container', '$rootScope', 'ReceiptService', 
       function($scope, $state, $modalInstance, params, Customer, 
-        FileUploader, Container, $rootScope) {
+        FileUploader, Container, $rootScope, ReceiptService) {
       
       $scope.params = params;
 
@@ -912,6 +912,12 @@
     // --------------------
     uploader.onAfterAddingFile = function(item) {
       //console.info('After adding a file', item);
+      if((item.file.size/1024/1024)>2){
+        ReceiptService.publicShowMessage('#invalidFileSizeMessage');
+        uploader.queue = [];
+      }else{
+        $scope.disabled = true;
+      }      
     };
     // --------------------
     uploader.onAfterAddingAll = function(items) {

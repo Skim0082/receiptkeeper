@@ -504,9 +504,9 @@
   }])
   .controller('ModalReceiptFileInstanceCtrl', [
     '$scope', '$state', '$modalInstance', 'params', 
-    'Receipt', 'FileUploader', 'Container', '$rootScope', 
+    'Receipt', 'FileUploader', 'Container', '$rootScope', 'ReceiptService', 
       function($scope, $state, $modalInstance, params, Receipt, 
-        FileUploader, Container, $rootScope) {
+        FileUploader, Container, $rootScope, ReceiptService) {
       
       $scope.params = params;
 
@@ -565,8 +565,13 @@
     // REGISTER HANDLERS
     // --------------------
     uploader.onAfterAddingFile = function(item) {
-      //console.info('After adding a file', item);
-      $scope.disabled = true;
+      //console.info('After adding a file', item);      
+      if((item.file.size/1024/1024)>2){
+        ReceiptService.publicShowMessage('#invalidFileSizeMessage');
+        uploader.queue = [];
+      }else{
+        $scope.disabled = true;
+      }
     };
     // --------------------
     uploader.onAfterAddingAll = function(items) {
@@ -924,14 +929,6 @@
 
         });
     });
- 
-    /*
-    // Get categories by selected store using Service named 'ReceiptService'
-    $scope.changeStore = function(){
-      console.log("changeStore: ", $scope.selectedStore.name);
-      ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, null);
-    } 
-    */
 
     $scope.backToPage = function(){
       window.history.back();
@@ -1022,7 +1019,6 @@
 
     $scope.items = [];        
     $scope.newItem = function () {
-      //console.log("go into newItem");
       // Add Item input form
       $scope.items.push({});
       if($scope.items.length > 0){ 
@@ -1031,7 +1027,6 @@
     }
 
     $scope.spliceItem = function(){
-      //console.log("Item length: ", $scope.items.length);
       $scope.items.splice($scope.items.length-1, 1);
       if($scope.items.length < 1){ 
         $scope.delDisabled = $scope.isDisabled = true;
@@ -1041,7 +1036,6 @@
     }
 
     $scope.changeItemPrice = function(){
-      //console.log("items.length: ", $scope.items.length);
       $scope.totalprice=0;
       if($scope.items.length > 0){ 
         for(var i = 0 ; i < $scope.items.length ; i++){
@@ -1049,7 +1043,6 @@
             $scope.totalprice += $scope.items[i].price;
           }
         };
-        //console.log("total price: ", $scope.totalprice);
         $scope.receipt.numberOfItem = $scope.items.length;
         $scope.receipt.total = $scope.totalprice;
         this.changeTotal();
@@ -1093,8 +1086,6 @@
           groupName: groupName
         };
 
-        //console.log("$scope.params: ", $scope.params);
-
         var modalInstance = $modal.open({
           templateUrl: 'ModalReceiptFile.html',
           controller: 'ModalReceiptFileInstanceCtrl',
@@ -1108,7 +1099,6 @@
         modalInstance.result.then(function (imageFilePath) {
           $scope.receipt.imageFilePath = imageFilePath;
         }, function () {
-          //console.info('Receipt Photo Upload Modal dismissed.');
         });
 
     };   
@@ -1158,7 +1148,6 @@
         var receiptDate = $('#receiptdate input').prop('value');
         var temp_date = new Date(receiptDate);
         $scope.receipt.date = temp_date.setHours(temp_date.getHours() + 12);
-        //console.log("$scope.receipt.date: ", $scope.receipt.date);
         $scope.receipt
         .$save()
         .then(function(){
@@ -1217,8 +1206,7 @@
 
           }); 
         });        
-      }  //if($scope.checkValues()){    
-
+      }  //if($scope.checkValues()){
     };  // Submit()
   }])
   .controller('AddReceiptController', ['$scope', '$state', 'Receipt', 'Store', 
@@ -1279,14 +1267,6 @@
             $scope.tags = tags;
         });
     });
-    
-    /*
-    // Get categories by selected store using Service named 'ReceiptService'
-    $scope.changeStore = function(){
-      console.log("changeStore: ", $scope.selectedStore.name);
-      ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, null); 
-    }
-    */
 
     $scope.backToPage = function(){
       window.history.back();
@@ -1350,7 +1330,6 @@
 
     $scope.items = [];        
     $scope.newItem = function () {
-      //console.log("go into newItem");
       // Add Item input form
       $scope.items.push({});
       if($scope.items.length > 0){ 
@@ -1360,7 +1339,6 @@
     };
 
     $scope.spliceItem = function(){
-      //console.log("Item length: ", $scope.items.length);
       $scope.items.splice($scope.items.length-1, 1);
       if($scope.items.length < 1){ 
         $scope.delDisabled = $scope.isDisabled = true;
@@ -1371,7 +1349,6 @@
     };        
 
     $scope.changeItemPrice = function(){
-      //console.log("items.length: ", $scope.items.length);
       $scope.totalprice=0;
       if($scope.items.length > 0){ 
         for(var i = 0 ; i < $scope.items.length ; i++){
@@ -1379,7 +1356,6 @@
             $scope.totalprice += $scope.items[i].price;
           }
         };
-        //console.log("total price: ", $scope.totalprice);
         $scope.receipt.numberOfItem = $scope.items.length;
         $scope.receipt.total = $scope.totalprice;
         this.changeTotal();
@@ -1463,7 +1439,6 @@
                   customerId: userId,
                   groupId: groupId               
                 }, function(item){
-                  //console.log('item id : ', item.id);
                   ReceiptItem
                     .create({
                       receiptId: receipt.id,
@@ -1494,8 +1469,6 @@
         }
 
       } // if($scope.checkValues){
-     
-
-
+ 
     };  // $scope.submitForm = function() {
   }]);  
