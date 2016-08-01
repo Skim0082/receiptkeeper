@@ -3,8 +3,8 @@
  angular
   .module('app')
   .controller('AllReceiptsController', [
-  	'$scope', 'Receipt', '$rootScope', '$stateParams', '$state', '$log', '$filter', 'Tag', 
-     function($scope, Receipt, $rootScope, $stateParams, $state, $log, $filter, Tag) {
+  	'$scope', 'Receipt', '$rootScope', '$stateParams', '$state', '$log', '$filter', 'Tag', 'Excel', '$timeout', 
+     function($scope, Receipt, $rootScope, $stateParams, $state, $log, $filter, Tag, Excel, $timeout) {
 
       $scope.ownerId = $stateParams.ownerId;
       $scope.groupId = $stateParams.groupId;
@@ -52,7 +52,12 @@
           column: 'date',
           descending: '-',
           symbol: true
-      };   
+      };
+
+      $scope.exportToExcel=function(tableId){ 
+            $scope.exportHref=Excel.tableToExcel(tableId,'Receipts');
+            $timeout(function(){location.href=$scope.exportHref;},100); 
+      };         
 
       $scope.commaSeparateNumber =   function(val){
         if(val != undefined){
@@ -287,7 +292,7 @@
   }])
   .controller('ViewReceiptController', ['$scope', 'Receipt', '$state',
       '$stateParams', 'Store', 'Item', 'ReceiptItem', 'Category', 
-      'Tag', 'ReceiptTag', '$location', '$rootScope', 
+      'Tag', 'ReceiptTag', '$location', '$rootScope',  
       function($scope, Receipt, $state, $stateParams, Store, 
         Item, ReceiptItem, Category, Tag, ReceiptTag, $location, $rootScope) {
 
@@ -400,14 +405,6 @@
 
         });
     });
- 
-    /*
-    // Get categories by selected store using Service named 'ReceiptService'
-    $scope.changeStore = function(){
-      console.log("changeStore: ", $scope.selectedStore.name);
-      ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, null);
-    } 
-    */
 
     $scope.commaSeparateNumber =   function(val){
       if(val != undefined){
@@ -653,8 +650,8 @@
       };
   })
   .controller('ModalTagReceiptsInstanceCtrl', [
-    '$scope', '$state', '$modalInstance', 'params', 'Tag', '$filter', 
-      function($scope, $state, $modalInstance, params, Tag, $filter) {           
+    '$scope', '$state', '$modalInstance', 'params', 'Tag', '$filter', 'Excel', '$timeout', 
+      function($scope, $state, $modalInstance, params, Tag, $filter, Excel, $timeout) {           
 
       $scope.receipts = [];
       $scope.userId = params.userId;
@@ -707,6 +704,11 @@
           descending: '-',
           symbol: true
       };   
+
+      $scope.exportToExcel=function(tableId, tagName){ 
+            $scope.exportHref=Excel.tableToExcel(tableId,'Receipts in ' + tagName);
+            $timeout(function(){location.href=$scope.exportHref;},100); 
+      };         
 
       $scope.commaSeparateNumber =   function(val){
         if(val != undefined){

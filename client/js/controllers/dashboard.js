@@ -1008,8 +1008,8 @@
       };
   })
   .controller('ModalDashboardTagReceiptsInstanceCtrl', [
-    '$scope', '$state', '$modalInstance', 'params', 'Tag', '$filter', 
-      function($scope, $state, $modalInstance, params, Tag, $filter) {           
+    '$scope', '$state', '$modalInstance', 'params', 'Tag', '$filter', 'Excel', '$timeout', 
+      function($scope, $state, $modalInstance, params, Tag, $filter, Excel, $timeout) {           
 
       $scope.receipts = [];
       $scope.userId = params.userId;
@@ -1062,6 +1062,11 @@
           descending: '-',
           symbol: true
       };      
+
+      $scope.exportToExcel=function(tableId, tagName){ 
+            $scope.exportHref=Excel.tableToExcel(tableId,'Receipts in ' + tagName);
+            $timeout(function(){location.href=$scope.exportHref;},100); 
+      };         
          
       $scope.commaSeparateNumber =   function(val){
         if(val != undefined){
