@@ -188,18 +188,10 @@
 					</div>				
 					<div  class="col-sm-4">
 						<button class="btn btn-primary"  ng-click="submitForm()" ng-disabled="isDisabled">
-							<i class="glyphicon glyphicon-edit"></i>
-							Edit Receipt
+							<i class="fa fa-hdd-o" aria-hidden="true"></i>
+							Save Receipt
 						</button>
-					</div>
-					<!--
-					<div ng-show="receipt.id" class="col-sm-3">
-						<button class="btn btn-default" ng-click="viewReceipt()">
-							<i class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></i> 
-							Receipt Details
-						</button>
-					</div>	
-					-->			
+					</div>		
 					<div ng-show="receipt.id" class="col-sm-3">
 						<button class="btn btn-default pull-right" ng-click="deleteReceipt()">
 							<i class="fa fa-minus-circle" aria-hidden="true"></i>
@@ -300,7 +292,10 @@
 	                <input nv-file-select uploader="uploader" type="file" ng-disabled="disabled"/>
 	            </span> 
 	        </div>		
-			<button class="btn btn-warning" ng-click="close()" style="margin-right:10px;">Close</button>
+			<button class="btn btn-warning" ng-click="close()" style="margin-right:10px;">
+				<i class="fa fa-ban" aria-hidden="true"></i>
+				Cancel
+			</button>
 		</div> 
 		</div>
 		<div id="invalidFileSizeMessage" class="alert alert-danger fade" style="z-index:100;">

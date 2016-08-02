@@ -812,8 +812,12 @@
       };
   }])
   .controller('ModalEditCustomerInstanceCtrl', [
-    '$scope', '$state', '$modalInstance', 'params', 'Customer',   
-      function($scope, $state, $modalInstance, params, Customer) {
+    '$scope', '$state', '$modalInstance', 'params', 'Customer', '$rootScope', '$http',  
+      function($scope, $state, $modalInstance, params, Customer, $rootScope, $http) {
+
+      $http.defaults.headers.common.authorization = $rootScope.currentUser.tokenId;
+      console.log("$rootScope.currentUser.tokenId: ", $rootScope.currentUser.tokenId);
+
       $scope.customer = params;
       $scope.submit = function(){
           Customer.prototype$updateAttributes(
