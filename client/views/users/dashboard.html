@@ -351,7 +351,7 @@
                                         <label class="col-xs-3 text-right" for="username">User Name</label>
                                         <div class="col-xs-8">
                                             <input class="form-control" type="text" required 
-                                                ng-model="customer.username" name="username" placeholder="User Name">
+                                                ng-model="customer.username" name="username" placeholder="User Name" maxlength="30">
                                             <span class="has-error control-label" ng-show="customerEditForm.username.$invalid && customerEditForm.username.$dirty">
                                               User Name is required.
                                             </span>
@@ -361,14 +361,14 @@
                                         <label class="col-xs-3 text-right" for="firstName">First Name</label>
                                         <div class="col-xs-8">      
                                             <input class="form-control" type="text"  
-                                                ng-model="customer.firstName" name="firstName" placeholder="First Name">  
+                                                ng-model="customer.firstName" name="firstName" placeholder="First Name" maxlength="30">  
                                         </div>
                                     </div>       
                                     <div class="row">
                                         <label class="col-xs-3 text-right" for="lastName">Last Name</label>
                                         <div class="col-xs-8">
                                             <input class="form-control" type="text"  
-                                                ng-model="customer.lastName" name="lastName" placeholder="Last Name"> 
+                                                ng-model="customer.lastName" name="lastName" placeholder="Last Name" maxlength="30"> 
                                         </div>
                                     </div>      
                                   </div>

@@ -29,9 +29,11 @@ angular
 
     function logout() {
       return User
-       .logout()
+       .logout({
+          access_token: $rootScope.currentUser.tokenId
+       })
        .$promise
-       .then(function() {          
+       .then(function(response) { 
           $rootScope.currentUser = null;
           sessionStorage.removeItem('access_token');
        });
@@ -45,7 +47,8 @@ angular
        })
        .$promise
        .then(function(response){
-          login(email, password);
+          console.log("register user: ", response);
+          //login(email, password);
        }, function(err){
           console.log("Error in SignUp: ", err);
        });

@@ -256,10 +256,16 @@ angular
       	})
 		.state('Customers', {
 			url: '/Customers',
+			templateUrl: 'views/pages/register.html'
+		})
+		/*	      	
+		.state('Customers', {
+			url: '/Customers',
 			templateUrl: 'views/users/users.html',
 			controller: 'AllCustomersController', 
 			authenticate: true
 		})
+		*/
 		.state('addCustomer', {
 			url: '/addCustomer',
 			templateUrl: 'views/users/user-form.html',
@@ -291,12 +297,6 @@ angular
 			url: '/Signup',
 			templateUrl: 'views/users/signup.html',
 			controller: 'SignUpController'
-		})
-		.state('Profile', {
-			url: '/Profile',
-			templateUrl: 'views/users/profile.html',
-			controller: 'ProfileController', 
-			authenticate: true
 		})
 		.state('Groups', {
 			url: '/Groups',
@@ -337,6 +337,10 @@ angular
 			url: '/forbidden',
 			templateUrl: 'views/pages/forbidden.html'
 		})
+		.state('registered', {
+			url: '/registered',
+			templateUrl: 'views/pages/register.html'
+		})			
 		.state('groupChart',{
 			url:'/groupChart/:groupId/:ownerId/:groupName',
 			templateUrl:'views/charts/chart.html',			

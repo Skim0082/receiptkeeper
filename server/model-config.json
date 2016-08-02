@@ -96,6 +96,9 @@
   "Customer": {
     "dataSource": "MongoDB",
     "public": true,
+    "options": {
+      "emailVerificationRequired": true
+    },
     "$promise": {},
     "$resolved": true
   },
@@ -116,5 +119,8 @@
   "Notification": {
     "dataSource": "MongoDB",
     "public": true
-  }
+  },
+  "Email": {
+    "dataSource": "EmailDataSources"
+  }  
 }
