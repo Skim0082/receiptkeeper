@@ -2,6 +2,7 @@ var config = require('../../server/config.json');
 var path = require('path');
 
 module.exports = function(Customer) {
+/*
   //send verification email after registration
   Customer.afterRemote('create', function(context, Customer, next) {
     console.log('> Customer.afterRemote triggered');
@@ -12,7 +13,7 @@ module.exports = function(Customer) {
       from: 'noreply@receiptkeeper.com',
       subject: 'Thanks for registering.',
       template: path.resolve(__dirname, '../../client/views/pages/register.html'),
-      redirect: '/Login',
+      redirect: '/registered',
       user: Customer
     };
 
@@ -47,4 +48,5 @@ module.exports = function(Customer) {
       console.log('> sending password reset email to:', info.email);
     });
   });
+ */
 };

@@ -18,24 +18,5 @@
     "name": "MongoDB",
     "user": "receiptmongo",
     "connector": "mongodb"
-  },
-  "EmailDataSources": {
-    "name": "EmailDataSources",
-    "connector": "mail",
-    "transports": [
-      {
-        "type": "smtp",
-        "host": "smtp.gmail.com",
-        "secure": true,
-        "port": 465,
-        "tls": {
-          "rejectUnauthorized": false
-        },
-        "auth": {
-          "user": "jason215.kim@gmail.com",
-          "pass": "kisjoe2015"
-        }
-      }
-    ]
-  }  
+  }
 }

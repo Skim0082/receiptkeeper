@@ -254,11 +254,12 @@ angular
 	        controller: 'DeleteReceiptController',
 	        authenticate: true
       	})
+		/*      	
 		.state('Customers', {
 			url: '/Customers',
 			templateUrl: 'views/customers/register.html'
 		})
-		/*	      	
+	      	
 		.state('Customers', {
 			url: '/Customers',
 			templateUrl: 'views/users/users.html',
