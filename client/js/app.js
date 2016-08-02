@@ -22,14 +22,6 @@ angular
 			url: '/',
 			templateUrl: 'views/pages/home.html',
 			controller: 'IndexController'
-		})
-		.state('About', {
-			url: '/About',
-			templateUrl: 'views/pages/about.html'
-		})
-		.state('Contact', {
-			url: '/Contact',
-			templateUrl: 'views/pages/contact.html'
 		})				
       	.state('Items', {
 			url: '/Items',
@@ -339,6 +331,7 @@ angular
 			url:'/groupChart/:groupId/:ownerId/:groupName',
 			templateUrl:'views/charts/chart.html',			
 			controller:'ChartCtrl',
+			authenticate: true,
 			resolve: {
 			  loadMyFile:function($ocLazyLoad) {
 			    return $ocLazyLoad.load({
@@ -359,6 +352,7 @@ angular
 			url:'/chart',
 			templateUrl:'views/charts/chart.html',			
 			controller:'ChartCtrl',
+			authenticate: true,
 			resolve: {
 			  loadMyFile:function($ocLazyLoad) {
 			    return $ocLazyLoad.load({
