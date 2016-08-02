@@ -253,20 +253,13 @@ angular
 	        url: '/deleteReceipt/:id',
 	        controller: 'DeleteReceiptController',
 	        authenticate: true
-      	})
-		/*      	
-		.state('Customers', {
-			url: '/Customers',
-			templateUrl: 'views/customers/register.html'
-		})
-	      	
+      	})   		
 		.state('Customers', {
 			url: '/Customers',
 			templateUrl: 'views/users/users.html',
 			controller: 'AllCustomersController', 
 			authenticate: true
 		})
-		*/
 		.state('addCustomer', {
 			url: '/addCustomer',
 			templateUrl: 'views/users/user-form.html',

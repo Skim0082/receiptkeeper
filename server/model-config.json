@@ -116,8 +116,5 @@
   "Notification": {
     "dataSource": "MongoDB",
     "public": true
-  },
-  "Email": {
-    "dataSource": "EmailDataSources"
-  }  
+  }
 }
