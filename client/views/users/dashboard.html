@@ -397,11 +397,11 @@
             </div>
         </div>
         <div class="modal-footer" style="margin-right:20px;">
-            <button class="btn btn-primary" ng-disabled="customerEditForm.$invalid" ng-click="submit()">
+            <button class="btn btn-primary" ng-disabled="disabled" ng-click="submit()">
                 <i class="fa fa-hdd-o" aria-hidden="true"></i>
                 Save
             </button>
-            <button class="btn btn-warning" ng-click="cancel()">
+            <button class="btn btn-warning" ng-disabled="disabled" ng-click="cancel()">
                 <i class="fa fa-ban" aria-hidden="true"></i>
                 Cancel
             </button>
@@ -410,8 +410,18 @@
         <div id="invalidPasswordMessage" class="alert alert-danger fade" style="z-index:100;">
           <a href="" class="close" data-dismiss="alert"></a>
           <i class="glyphicon glyphicon-info-sign text-danger"></i>
-          <strong>Note:</strong> Password doesn't match Confirmation.
-        </div>               
+          <strong>Note:</strong> Password doesn't match confirmation.
+        </div>  
+        <div id="invalidWhiteSpaceMessage" class="alert alert-danger fade" style="z-index:100;">
+          <a href="" class="close" data-dismiss="alert"></a>
+          <i class="glyphicon glyphicon-info-sign text-danger"></i>
+          <strong>Note:</strong> Space is now allowed as password.
+        </div> 
+        <div id="showChangePasswordMessage" class="alert alert-success fade" style="z-index:100;">
+          <a href="" class="close" data-dismiss="alert"></a>
+          <i class="glyphicon glyphicon-info-sign text-success"></i>
+          <strong>Success:</strong> Password has been changed.
+        </div>                               
     </script>
 </div>
 <!-- Edit Customer Modal Window -->

@@ -819,29 +819,13 @@
 
       $scope.customer = params;
 
-      $scope.submit = function(){
+      $scope.hasWhiteSpace = function(pw){
+        retrun (/^\s*$/).test(pw);
+      }
 
-        if($scope.customer.password != undefined){
+      $scope.disabled = false;
 
-          if($scope.customer.password != $scope.customer.password1){
-            ReceiptService.publicShowMessage('#invalidPasswordMessage');
-          }else{
-            Customer.prototype$updateAttributes(
-                { id:$scope.customer.userId }, 
-                { 
-                  username: $scope.customer.username,
-                  firstName: $scope.customer.firstName,
-                  lastName: $scope.customer.lastName,
-                  password: $scope.customer.password
-                }
-            )
-            .$promise
-            .then(function(customer){            
-              $modalInstance.close(customer);
-            });
-          } // if($scope.customer.password === $scope.customer.password1){
-        }else{
-          //Without password changing
+      $scope.updateUserProfile = function(){
           Customer.prototype$updateAttributes(
               { id:$scope.customer.userId }, 
               { 
@@ -853,7 +837,54 @@
           .$promise
           .then(function(customer){            
             $modalInstance.close(customer);
-          });
+          });        
+      }
+
+      $scope.submit = function(){
+
+        $scope.disabled = true;
+
+        if($scope.customer.password != undefined){
+          if($scope.customer.password =='' && 
+            ($scope.customer.password1 == undefined || $scope.customer.password1 == '')){
+              // Update User Profile
+              $scope.updateUserProfile();
+          }else if($scope.customer.password != $scope.customer.password1){
+            ReceiptService.publicShowMessage('#invalidPasswordMessage');
+            $scope.disabled = false; 
+          }else{
+            var newPassword = $scope.customer.password;
+            var re = /^\w*$/;
+            if(re.test(newPassword) == false){
+              ReceiptService.publicShowMessage('#invalidWhiteSpaceMessage');
+              $scope.disabled = false;
+            }else if(newPassword == ''){
+              // Update User Profile
+              $scope.updateUserProfile();             
+            }else{
+              // Change Password **************************
+              Customer.prototype$updateAttributes(
+                  { id:$scope.customer.userId }, 
+                  { 
+                    username: $scope.customer.username,
+                    firstName: $scope.customer.firstName,
+                    lastName: $scope.customer.lastName,
+                    password: newPassword
+                  }
+              )
+              .$promise
+              .then(function(customer){ 
+                ReceiptService.publicShowMessage('#showChangePasswordMessage');   
+                window.setTimeout(function(){
+                  $modalInstance.close(customer);
+                }, 3100);                
+              }); 
+              // Change Password **************************             
+            } // if($scope.hasWhiteSpace($scope.customer.password)){
+          } // if($scope.customer.password === $scope.customer.password1){
+        }else{
+          //Update User Profile
+          $scope.updateUserProfile();
         } // if($scope.customer.password != undefined){
       } // $scope.submit = function(){
 
