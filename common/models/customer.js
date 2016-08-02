@@ -28,7 +28,7 @@ module.exports = function(Customer) {
         redirectTo: '/',
         redirectToLinkText: 'Log in'
       });
-	  console.log('>context: ', context);
+	  console.log('>After verify: ');
     });
   });
 
@@ -48,5 +48,5 @@ module.exports = function(Customer) {
       console.log('> sending password reset email to:', info.email);
     });
   });
- */
+*/  
 };
