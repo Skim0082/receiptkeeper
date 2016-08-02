@@ -812,14 +812,36 @@
       };
   }])
   .controller('ModalEditCustomerInstanceCtrl', [
-    '$scope', '$state', '$modalInstance', 'params', 'Customer', '$rootScope', '$http',  
-      function($scope, $state, $modalInstance, params, Customer, $rootScope, $http) {
+    '$scope', '$state', '$modalInstance', 'params', 'Customer', '$rootScope', '$http', 'ReceiptService', 
+      function($scope, $state, $modalInstance, params, Customer, $rootScope, $http, ReceiptService) {
 
       $http.defaults.headers.common.authorization = $rootScope.currentUser.tokenId;
-      console.log("$rootScope.currentUser.tokenId: ", $rootScope.currentUser.tokenId);
 
       $scope.customer = params;
+
       $scope.submit = function(){
+
+        if($scope.customer.password != undefined){
+
+          if($scope.customer.password != $scope.customer.password1){
+            ReceiptService.publicShowMessage('#invalidPasswordMessage');
+          }else{
+            Customer.prototype$updateAttributes(
+                { id:$scope.customer.userId }, 
+                { 
+                  username: $scope.customer.username,
+                  firstName: $scope.customer.firstName,
+                  lastName: $scope.customer.lastName,
+                  password: $scope.customer.password
+                }
+            )
+            .$promise
+            .then(function(customer){            
+              $modalInstance.close(customer);
+            });
+          } // if($scope.customer.password === $scope.customer.password1){
+        }else{
+          //Without password changing
           Customer.prototype$updateAttributes(
               { id:$scope.customer.userId }, 
               { 
@@ -831,8 +853,10 @@
           .$promise
           .then(function(customer){            
             $modalInstance.close(customer);
-          });      
-      }
+          });
+        } // if($scope.customer.password != undefined){
+      } // $scope.submit = function(){
+
       $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
       };
