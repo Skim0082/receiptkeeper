@@ -256,7 +256,7 @@ angular
       	})
 		.state('Customers', {
 			url: '/Customers',
-			templateUrl: 'views/pages/register.html'
+			templateUrl: 'views/customers/register.html'
 		})
 		/*	      	
 		.state('Customers', {

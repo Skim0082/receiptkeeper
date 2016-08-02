@@ -32,11 +32,7 @@
       "id": false,
       "required": false,
       "index": false
-    },
-    "emailVerified": {
-      "type": "boolean",
-      "default": true
-    }    
+    }
   },
   "validations": [],
   "relations": {

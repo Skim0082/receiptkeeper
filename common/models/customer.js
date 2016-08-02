@@ -12,7 +12,7 @@ module.exports = function(Customer) {
       from: 'noreply@receiptkeeper.com',
       subject: 'Thanks for registering.',
       template: path.resolve(__dirname, '../../client/views/pages/register.html'),
-      redirect: '/',
+      redirect: '/Login',
       user: Customer
     };
 
@@ -20,13 +20,14 @@ module.exports = function(Customer) {
       if (err) return next(err);
 
       console.log('> verification email sent:', response);
-
+      
       context.res.render('response', {
         title: 'Signed up successfully',
         content: 'Please check your email and click on the verification link before logging in.',
         redirectTo: '/',
         redirectToLinkText: 'Log in'
       });
+	  console.log('>context: ', context);
     });
   });
 
