@@ -383,7 +383,7 @@ angular
 		// redirect to login page if not logged in
 		if (next.authenticate && !$rootScope.currentUser) {
 		event.preventDefault(); //prevent current page from loading
-		$state.go('forbidden');
+		$state.go('Login');
 		}
     });
  }]);
