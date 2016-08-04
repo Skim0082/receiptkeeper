@@ -6,16 +6,9 @@
 angular
   .module('app')
   .controller('AuthLoginController', ['$scope', 'AuthService', '$state', '$rootScope', 
-      function($scope, AuthService, $state, $rootScope) {    
+      function($scope, AuthService, $state, $rootScope) {          
 
-    //if(!$('.staticNavSigup').is(":visible")){
-    //  $('.staticNavSigup').show();       
-    //}        
-
-    $scope.user = {
-      //email: "joe@gmail.com",
-      //password: "aaa"
-    };
+    $scope.user = {};
 
     var flashMessage;
 
@@ -28,7 +21,7 @@ angular
             $scope.showMessage(flashMessage); 
           }
         }, function(err){
-          //console.log("Error of login at Login page: ", err);
+          console.log("Error when user logged in at Login page: ", err);
         });
     };
 
@@ -65,11 +58,9 @@ angular
         if(user.length > 0){
           flashMessage = '#signUpErrorMessage';
           $scope.showMessage(flashMessage); 
-          //console.log("Already exist user", user);
         }else{
           AuthService.register($scope.user.email, $scope.user.password)
             .then(function(user) {
-              //console.log("SignUp user: ", user);
             });          
         }
       });    
@@ -87,12 +78,10 @@ angular
     '$scope', '$state', 'Customer', '$rootScope', 
     function($scope, $state, Customer, $rootScope) {     
 
-      //console.log("currentUser: ", $rootScope.currentUser);
       if($rootScope.currentUser == null || $rootScope.currentUser == undefined){
         $state.go('forbidden');
       }else{
-        $scope.user = Customer.findById({id: $rootScope.currentUser.id});
-        //console.log("loggedin user; ", $scope.user);        
+        $scope.user = Customer.findById({id: $rootScope.currentUser.id});    
       }
   }])   
   // Admin Activities : admin codes are for Test, need to modify with correct authentication later

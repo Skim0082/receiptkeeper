@@ -22,10 +22,7 @@
   	'$scope', 'AuthService', '$state', '$rootScope', '$modalInstance', 
       function($scope, AuthService, $state, $rootScope, $modalInstance) {           
 
-    $scope.user = {
-      //email: "joe@gmail.com",
-      //password: "aaa"
-    };
+    $scope.user = {};
 
     var flashMessage;
 
@@ -35,10 +32,11 @@
           if($rootScope.currentUser == undefined){
           	flashMessage = "#loginErrorMessage"
           	$scope.showMessage(flashMessage); 
-          }
-          $modalInstance.close('login');
+          }else{
+            $modalInstance.close('login');
+          }          
         }, function(err){
-        	console.log("Error of login at Index page: ", err);
+        	console.log("Error when user logged in at Index page: ", err);
         });
     };
 
