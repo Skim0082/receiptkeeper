@@ -888,6 +888,10 @@
           //console.log("receipt: ", receipt);   
           // Set Items related to Receipt       
           $scope.receipt = receipt; 
+
+          //Extract only yyyy-mm-dd from date
+          $scope.receipt.date = ($scope.receipt.date).substring(0,10);
+
           $scope.items = receipt.items;
           if($scope.items.length > 0){ 
             $scope.delDisabled = false;
@@ -898,10 +902,7 @@
           }).indexOf($scope.receipt.storeId);
           $scope.selectedStore = stores[selectedStoreIndex];   
           // Call to get the categories from selected store
-          $scope.getStoreCategories($scope.selectedStore.id, $scope.receipt.categoryId);
-
-          // Get categories by selected store using Service named 'ReceiptService'
-          //ReceiptService.getCategoriesBySelectedStore($scope.selectedStore.id, $scope.receipt.categoryId);                  
+          $scope.getStoreCategories($scope.selectedStore.id, $scope.receipt.categoryId);               
 
           // Set Tag related to Receipt
           Tag.find({
@@ -1148,6 +1149,7 @@
         var receiptDate = $('#receiptdate input').prop('value');
         var temp_date = new Date(receiptDate);
         $scope.receipt.date = temp_date.setHours(temp_date.getHours() + 12);
+        //Update Receipt
         $scope.receipt
         .$save()
         .then(function(){
@@ -1165,7 +1167,6 @@
                   customerId: userId,
                   groupId: groupId
                 }, function(item){
-                  //console.log('new related item id : ', item.id);
                   ReceiptItem
                     .create({
                       receiptId: $scope.receipt.id,
