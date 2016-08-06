@@ -16,7 +16,18 @@
       $scope.memberNotifications;
       var fromMemberLeaveGroup = {};
 
-      // from member notification (Leave Group)
+      $scope.listNum = -1;
+      $(window).resize(function(){
+        if($scope.listNum != -1 && $scope.listNum < 4){
+          if( window.innerHeight == screen.height) {
+            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
+          }else{
+            $('pagefooter').removeAttr('style');          
+          }             
+        }
+      });        
+
+      // from member notification (Leave Group) -- Show in 'Group as member' member perspective
       Notification.find({
         filter: {
           where: { and: [
@@ -43,7 +54,7 @@
         }
       }); // Notification.find({      
 
-      // Find invitation notification
+      // Find invitation notification -- show in 'Group as owner' owner perspective
       Notification.find({
         filter: {
           where: { and: [
@@ -79,6 +90,8 @@
           });
         }
       }); // Notification.find({
+
+      $scope.memberLeaveNotifications;       
 
       // Find Group whose owner is current logged in user
       Customer
@@ -181,7 +194,8 @@
                     receiverId:         ownerId,
                     receiverEmail:      customer.email,
                     groupId:            groupId,
-                    removeFromMember:   true
+                    removeFromMember:   true,
+                    seen:               true
                   })
                   .$promise
                   .then(function(notification){
@@ -554,7 +568,7 @@
               }               
             } // if($scope.notifications.length > 0){
           });
-          //Notification from member
+          //Notification from member leave group request
           Notification.find({
             filter: {
               where: { and: [
@@ -589,7 +603,7 @@
           });
         }); // .then(function(group){
 
-        console.log("$scope.listNum : ", $scope.listNum);
+        //console.log("$scope.listNum : ", $scope.listNum);
 
         $scope.backToPage = function(){
           window.history.back();
