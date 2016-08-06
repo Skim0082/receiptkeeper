@@ -209,8 +209,10 @@ angular.module('app')
             if(receipts.length < 1){
                 $('#chart').hide();
                 $('#noChart').show();
+                $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
             }else{
                 $('#noChart').hide();
+                $('pagefooter').removeAttr('style'); 
 
                 // Line and Bar charts
                 totals = receipts.map(function(receipt){ return receipt.total});

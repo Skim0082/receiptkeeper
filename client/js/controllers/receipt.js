@@ -38,6 +38,11 @@
       .$promise
       .then(function(receipts){
         $scope.receipts = receipts;
+        if(receipts.length < 4){
+          $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+        }else{
+          $('pagefooter').removeAttr('style'); 
+        }       
       }); 
 
       // Sorting

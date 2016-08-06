@@ -380,16 +380,24 @@
       }
 
       $scope.stores = [];
-      $scope.stores = Store     
-            .find({
-              filter: {
-                order: 'name ASC',
-                where: {and: [
-                  {customerId: userId},
-                  {groupId: groupId}
-                ]}
-              }
-            });
+      Store.find({
+          filter: {
+            order: 'name ASC',
+            where: {and: [
+              {customerId: userId},
+              {groupId: groupId}
+            ]}
+          }
+        })
+      .$promise
+      .then(function(stores){
+        $scope.stores = stores;
+        if(stores.length < 4){
+          $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+        }else{
+          $('pagefooter').removeAttr('style'); 
+        }
+      });
 
       //Pagination - angular
       $scope.getData = function(){

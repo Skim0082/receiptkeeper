@@ -135,13 +135,22 @@
       }  
 
       $scope.tags = [];
-	    $scope.tags = Tag.find({
+	    Tag.find({
         filter: {
           order: 'name ASC',
             where: {and: [
               {customerId: userId},
               {groupId: groupId}
             ]}
+        }
+      })
+      .$promise
+      .then(function(tags){
+        $scope.tags = tags;
+        if(tags.length < 4){
+          $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+        }else{
+          $('pagefooter').removeAttr('style'); 
         }
       });
 

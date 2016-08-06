@@ -134,13 +134,22 @@
       }
 
       $scope.categorys = [];
-      $scope.categorys = Category.find({
+      Category.find({
         filter: {
           order: 'name ASC',
           where: {and: [
             {customerId: userId},
             {groupId: groupId}
           ]}
+        }
+      })
+      .$promise
+      .then(function(categories){
+        $scope.categorys = categories;
+        if(categories.length < 4){
+          $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+        }else{
+          $('pagefooter').removeAttr('style'); 
         }
       });   
 
