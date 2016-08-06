@@ -18,6 +18,11 @@ angular.module('app')
       groupId = $stateParams.groupId;
     } 
 
+    $('pagefooter').removeAttr('style'); 
+    $(window).resize(function(){
+        $('pagefooter').removeAttr('style');
+    });     
+
     $scope.viewGroup = function(){
         if($stateParams.groupId != undefined){
              $state.go('viewGroup', {'id': $stateParams.groupId});

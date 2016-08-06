@@ -7,6 +7,11 @@
 		//Fix nav bar and hid the intro header
 		IntroHeaderService.isIntroHeaderVisible(true); 
 		$scope.name = "index"; 	
+    
+    $('pagefooter').removeAttr('style'); 
+    $(window).resize(function(){
+        $('pagefooter').removeAttr('style');
+    });    
 
 	}])
 	.controller('ModalLoginCtrl', function ($scope, $modal, $log) {
