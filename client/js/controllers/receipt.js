@@ -1269,14 +1269,18 @@
     }else{
       userId = $stateParams.ownerId;
       groupId = $stateParams.groupId;
-    }    
-
-    $(window).resize(function(){
+    }  
+    $scope.relocateFooter = function(){
       if( window.innerHeight == screen.height) {
         $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
       }else{
         $('pagefooter').removeAttr('style');          
-      } 
+      }      
+    }  
+    $scope.relocateFooter();
+
+    $(window).resize(function(){
+      $scope.relocateFooter(); 
     });
 
     Store
