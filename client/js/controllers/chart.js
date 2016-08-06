@@ -8,6 +8,7 @@ angular.module('app')
     $scope.groupName = $stateParams.groupName;   
     $scope.receipts;
     $scope.tagchartpercent = [];
+    $scope.isChart;
 
     var userId, groupId;
     if($stateParams.groupId == undefined){
@@ -18,10 +19,19 @@ angular.module('app')
       groupId = $stateParams.groupId;
     } 
 
-    $('pagefooter').removeAttr('style'); 
     $(window).resize(function(){
-        $('pagefooter').removeAttr('style');
-    });     
+        $scope.footerRelocate();
+    }); 
+        
+    $('pagefooter').removeAttr('style');
+    $scope.footerRelocate = function(){
+        if(!$scope.isChart){
+            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+        }else{
+            $('pagefooter').removeAttr('style');
+        }        
+    }
+    $scope.footerRelocate();    
 
     $scope.viewGroup = function(){
         if($stateParams.groupId != undefined){
@@ -214,10 +224,14 @@ angular.module('app')
             if(receipts.length < 1){
                 $('#chart').hide();
                 $('#noChart').show();
-                $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+                $scope.isChart = false;
+                $scope.footerRelocate();
+                //$('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
             }else{
                 $('#noChart').hide();
-                $('pagefooter').removeAttr('style'); 
+                $scope.isChart = true;
+                $scope.footerRelocate();
+                //$('pagefooter').removeAttr('style'); 
 
                 // Line and Bar charts
                 totals = receipts.map(function(receipt){ return receipt.total});
