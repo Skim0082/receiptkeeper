@@ -139,6 +139,9 @@
           if($scope.lineNum != -1){
             $scope.relocateFooter($scope.lineNum);
           }
+          if( window.innerHeight == screen.height && $scope.pageSize == 5) {
+            $scope.relocateFooter($scope.pageSize);   
+          }           
       });
 
       $scope.relocateFooter = function(lineNum){
@@ -188,6 +191,9 @@
       }
       $scope.changePageSize = function(){
         $scope.currentPage = 0;
+        if( window.innerHeight == screen.height) {
+          $scope.relocateFooter($scope.pageSize);   
+        }        
       }     
       //Pagination - angular       
 
