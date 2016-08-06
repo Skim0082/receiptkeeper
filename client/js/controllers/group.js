@@ -606,6 +606,9 @@
             if($scope.listNum == -1){
               $scope.listNum = $scope.members.length;
             }
+            if($scope.listNum > 2){
+              $scope.footerRelocate();
+            }
           }
           //Find invite notification from Group owner
           Notification.find({
@@ -640,7 +643,10 @@
                 $scope.listNum += notifications.length;
               }else{
                 $scope.listNum = notifications.length;
-              }              
+              }  
+              if($scope.listNum > 2){
+                $scope.footerRelocate();
+              }                          
             } // if($scope.notifications.length > 0){
           });
           //Notification from member leave group request
@@ -673,7 +679,10 @@
               } // for(var i = 0 ; i < $scope.memberNotifications.length ; i++){
               if($scope.listNum != -1){
                 $scope.listNum += notifications.length;
-              }                
+              }  
+              if($scope.listNum > 2){
+                $scope.footerRelocate();
+              }                            
             } // if($scope.memberNotifications.length > 0){            
           });
         }); // .then(function(group){
