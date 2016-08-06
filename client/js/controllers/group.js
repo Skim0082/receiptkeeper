@@ -21,7 +21,7 @@
         $scope.footerRelocate();
       });   
       $scope.footerRelocate = function(){
-        if($scope.listNum != -1 && $scope.listNum < 5){
+        if($scope.listNum != -1 && $scope.listNum < 3){
           if( window.innerHeight == screen.height) {
             $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
           }else{
@@ -31,7 +31,7 @@
           if($scope.listNum == -1){
             $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
           }else{
-            if($scope.listNum > 3){
+            if($scope.listNum >= 2){
               $('pagefooter').removeAttr('style');  
             }
           }           
