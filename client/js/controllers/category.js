@@ -135,12 +135,7 @@
 
       $scope.lineNum = -1;
       $(window).resize(function(){
-          if($scope.lineNum != -1){
-            $scope.relocateFooter($scope.lineNum);
-          }
-          if( window.innerHeight == screen.height && $scope.pageSize == 5) {
-            $scope.relocateFooter($scope.pageSize);   
-          }           
+          $scope.changePageRelocateFooter();        
       });
 
       $scope.relocateFooter = function(lineNum){
@@ -172,11 +167,9 @@
       .$promise
       .then(function(categories){
         $scope.categorys = categories;
-        $scope.relocateFooter(categories.length);
+        $scope.changePageRelocateFooter();
         $scope.lineNum = categories.length;
       }); 
-
-
 
       //Pagination - angular
       $scope.getData = function(){
@@ -192,10 +185,33 @@
       }
       $scope.changePageSize = function(){
         $scope.currentPage = 0;
-        if( window.innerHeight == screen.height) {
-          $scope.relocateFooter($scope.pageSize);   
-        }         
-      }     
+        if($scope.pageSize == 5){
+          $scope.changePageRelocateFooter();
+        }else{
+          $scope.relocateFooter($scope.pageSize);
+        }
+      } 
+      $scope.changePageNumber = function(num){
+        $scope.currentPage = $scope.currentPage + num;
+        $scope.changePageRelocateFooter();
+      } 
+
+      $scope.changePageRelocateFooter = function(){
+        if($scope.currentPage >= $scope.getData().length/$scope.pageSize - 1){
+          var restLineNum = ($scope.getData().length)%$scope.pageSize;
+          if(restLineNum < 9){
+            if(window.innerHeight == screen.height){
+              $scope.relocateFooter(5);
+            }else{
+              if(restLineNum < 4){
+                $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+              }
+            }            
+          }
+        }else{
+          $scope.relocateFooter($scope.pageSize);
+        }        
+      }      
       //Pagination - angular    
 
       // Sorting
