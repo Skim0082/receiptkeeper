@@ -30,8 +30,7 @@
 	pagefooter.myfooter {
 	width:100%;
 	height:237px;
-	position: absolute;
-	bottom:0;
+
 	}			
 </style>
 <div class="container">
@@ -111,7 +110,7 @@
 	<!-- Notification List  -->
 	<div class="list-group" ng-show="notifications">
 		<div class="row">
-		<hr class="col-sm-offset-3 col-sm-3" style="margin-top:5px;margin-bottom10px;">
+		<hr  style="width:95%;margin-top:5px;margin-bottom:10px;">
 		</div>
 		<div class="row">
 			<label class="col-sm-3 control-label">Notification</label>
@@ -155,6 +154,29 @@
 		  	</div>
 	  	</div>
 	</div>
+
+
+	<!-- Notification leveGroup member List  -->
+	<div class="list-group" ng-show="memberLeaveNotifications">
+		<div class="row">
+		<hr  style="width:95%;margin-top:5px;margin-bottom:10px;">
+		</div>
+		<div class="row">
+			<label class="col-sm-3 control-label">Leaving Request</label>
+			<div class="col-sm-9">
+				<div ng-repeat="notification in memberLeaveNotifications">
+					<span class="list-group-item text-danger">
+						<i class="glyphicon glyphicon-bell" style="margin-right:10px;" ></i>
+			 			Request for leaving ({{notification.senderEmail}})	
+
+					 	<i class="glyphicon glyphicon-pencil pull-right text-warning" 
+					 		style="margin-left:10px;" 
+					 		ui-sref="editGroup({id: ownerGroupId})" tooltip-html-unsafe="Edit"></i> 			 			
+				  	</span>
+			  	</div>
+		  	</div>
+	  	</div>
+	</div>	
 
 </div>
 </div>

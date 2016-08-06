@@ -18,14 +18,26 @@
 
       $scope.listNum = -1;
       $(window).resize(function(){
-        if($scope.listNum != -1 && $scope.listNum < 4){
+        $scope.footerRelocate();
+      });   
+      $scope.footerRelocate = function(){
+        if($scope.listNum != -1 && $scope.listNum < 5){
           if( window.innerHeight == screen.height) {
             $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
           }else{
             $('pagefooter').removeAttr('style');          
-          }             
-        }
-      });        
+          }              
+        }else{
+          if($scope.listNum == -1){
+            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
+          }else{
+            if($scope.listNum > 4){
+              $('pagefooter').removeAttr('style');  
+            }
+          }           
+        }        
+      }
+      $scope.footerRelocate();          
 
       // from member notification (Leave Group) -- Show in 'Group as member' member perspective
       Notification.find({
@@ -54,7 +66,7 @@
         }
       }); // Notification.find({      
 
-      // Find invitation notification -- show in 'Group as owner' owner perspective
+      // Find invitation notification -- show in 'Notification' owner perspective
       Notification.find({
         filter: {
           where: { and: [
@@ -88,10 +100,15 @@
               $scope.notifications[i].group = groups[i];
             }
           });
+          if($scope.listNum == -1){
+            $scope.listNum = notifications.length;
+          }  
+          //console.log("$scope.listNum: ", $scope.listNum);        
         }
       }); // Notification.find({
 
       $scope.memberLeaveNotifications;       
+      $scope.ownerGroupId;
 
       // Find Group whose owner is current logged in user
       Customer
@@ -136,6 +153,7 @@
                 isOwner = true;
 
                 groups.push(customer.groups[i]);
+                $scope.ownerGroupId = customer.groups[i].id;
                 //$scope.groups.push(customer.groups[i]);
               }else{
                 memberInGroups.push(customer.groups[i]);
@@ -154,7 +172,46 @@
               $scope.isDisabled = true;
             }else{
               $scope.isDisabled = false;
-            }            
+            } 
+
+            //Notification from member leave group request - owner perspective
+            if($scope.ownerGroupId != undefined){
+              Notification.find({
+                filter: {
+                  where: { and: [
+                    {receiverId: userId},
+                    {and: [
+                      {removeFromMember: true},
+                      {groupId: $scope.ownerGroupId}           
+                    ]}                
+                  ]}
+                }
+              })
+              .$promise
+              .then(function(notifications){
+                //console.log("member-notifications: ", notifications);            
+                if(notifications.length > 0){
+                  $scope.memberLeaveNotifications = notifications;
+                  for(var i = 0 ; i < $scope.memberLeaveNotifications.length ; i++){
+                    if($scope.memberLeaveNotifications[i].removeFromOwner == false && 
+                        $scope.memberLeaveNotifications[i].rejectLeaveGroup == false){
+                        $scope.memberLeaveNotifications[i].display = 
+                          $scope.memberLeaveNotifications[i].senderEmail + " (request of leaving group)";                
+                    }else if($scope.memberLeaveNotifications[i].removeFromOwner == false && 
+                        $scope.memberLeaveNotifications[i].rejectLeaveGroup == true){
+                        $scope.memberLeaveNotifications[i].display = 
+                          $scope.memberLeaveNotifications[i].senderEmail + " (reject leaving request)";
+                    } //if($scope.memberNotifications[i].removeFromOwner == false){
+                  } // for(var i = 0 ; i < $scope.memberNotifications.length ; i++){
+                  if($scope.listNum != -1){
+                    $scope.listNum += notifications.length;
+                  }else{
+                    $scope.listNum = notifications.length;
+                  }               
+                } // if($scope.memberNotifications.length > 0){            
+              });               
+            }
+
           }else{
             $scope.isDisabled = false;
           } // if(customer.groups.length > 0){
@@ -593,7 +650,7 @@
                 }else if($scope.memberNotifications[i].removeFromOwner == false && 
                     $scope.memberNotifications[i].rejectLeaveGroup == true){
                     $scope.memberNotifications[i].display = 
-                      $scope.memberNotifications[i].senderEmail + " (reject leaving group)";
+                      $scope.memberNotifications[i].senderEmail + " (reject leaving request)";
                 } //if($scope.memberNotifications[i].removeFromOwner == false){
               } // for(var i = 0 ; i < $scope.memberNotifications.length ; i++){
               if($scope.listNum != -1){
