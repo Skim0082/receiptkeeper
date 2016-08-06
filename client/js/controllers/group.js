@@ -31,7 +31,7 @@
           if($scope.listNum == -1){
             $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
           }else{
-            if($scope.listNum > 4){
+            if($scope.listNum > 3){
               $('pagefooter').removeAttr('style');  
             }
           }           
@@ -546,14 +546,30 @@
 
         $scope.listNum = -1;
         $(window).resize(function(){
-          if($scope.listNum != -1 && $scope.listNum < 4){
+          $scope.footerRelocate(); 
+        }); 
+        $scope.footerRelocate = function(){
+          if($scope.listNum != -1 && $scope.listNum < 3){
             if( window.innerHeight == screen.height) {
               $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
             }else{
               $('pagefooter').removeAttr('style');          
             }             
+          }else{
+            if($scope.listNum == -1){
+              if( window.innerHeight == screen.height) {
+                $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
+              }else{
+                $('pagefooter').removeAttr('style');                
+              }    
+            }else if($scope.listNum > 2){
+              $('pagefooter').removeAttr('style');  
+            }else{
+              $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+            }            
           }
-        });        
+        }  
+        $scope.footerRelocate();     
 
         Group.findById({
          id: $stateParams.id, 
@@ -622,7 +638,9 @@
               } // for(var i = 0 ; i < $scope.notifications.length ; i++){
               if($scope.listNum != -1){
                 $scope.listNum += notifications.length;
-              }               
+              }else{
+                $scope.listNum = notifications.length;
+              }              
             } // if($scope.notifications.length > 0){
           });
           //Notification from member leave group request
