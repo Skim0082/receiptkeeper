@@ -292,6 +292,8 @@
     $scope.isDisabled = true;
     var userId = $rootScope.currentUser.id;
 
+    $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);    
+
     // Find group whose owner is current user
     Customer
       .findById({
@@ -471,6 +473,17 @@
         $scope.group;
         $scope.notifications;
 
+        $scope.listNum = -1;
+        $(window).resize(function(){
+          if($scope.listNum != -1 && $scope.listNum < 4){
+            if( window.innerHeight == screen.height) {
+              $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
+            }else{
+              $('pagefooter').removeAttr('style');          
+            }             
+          }
+        });        
+
         Group.findById({
          id: $stateParams.id, 
          filter: {
@@ -503,6 +516,9 @@
                 $scope.members.push(group.customers[i]);
               }
             }
+            if($scope.listNum == -1){
+              $scope.listNum = $scope.members.length;
+            }
           }
           //Find invite notification from Group owner
           Notification.find({
@@ -533,6 +549,9 @@
                   }                  
                 }//if($scope.notifications[i].accepted == false){
               } // for(var i = 0 ; i < $scope.notifications.length ; i++){
+              if($scope.listNum != -1){
+                $scope.listNum += notifications.length;
+              }               
             } // if($scope.notifications.length > 0){
           });
           //Notification from member
@@ -563,9 +582,14 @@
                       $scope.memberNotifications[i].senderEmail + " (reject leaving group)";
                 } //if($scope.memberNotifications[i].removeFromOwner == false){
               } // for(var i = 0 ; i < $scope.memberNotifications.length ; i++){
+              if($scope.listNum != -1){
+                $scope.listNum += notifications.length;
+              }                
             } // if($scope.memberNotifications.length > 0){            
           });
         }); // .then(function(group){
+
+        console.log("$scope.listNum : ", $scope.listNum);
 
         $scope.backToPage = function(){
           window.history.back();

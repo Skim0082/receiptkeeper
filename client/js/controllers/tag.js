@@ -134,6 +134,29 @@
         groupId = $stateParams.groupId;
       }  
 
+      $scope.lineNum = -1;
+      $(window).resize(function(){
+          if($scope.lineNum != -1){
+            $scope.relocateFooter($scope.lineNum);
+          }
+      });
+
+      $scope.relocateFooter = function(lineNum){
+        if( window.innerHeight == screen.height) {
+          if(lineNum < 9){
+            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+          }else{
+            $('pagefooter').removeAttr('style'); 
+          } 
+        }else{
+          if(lineNum < 4){
+            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+          }else{
+            $('pagefooter').removeAttr('style'); 
+          }          
+        }        
+      }
+
       $scope.tags = [];
 	    Tag.find({
         filter: {
@@ -147,11 +170,8 @@
       .$promise
       .then(function(tags){
         $scope.tags = tags;
-        if(tags.length < 4){
-          $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
-        }else{
-          $('pagefooter').removeAttr('style'); 
-        }
+        $scope.relocateFooter(tags.length);
+        $scope.lineNum = tags.length;
       });
 
       //Pagination - angular
