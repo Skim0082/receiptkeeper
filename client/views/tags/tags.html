@@ -6,16 +6,6 @@
 		{{groupName}} Tags
 	</h1>
 	<hr>
-	<!--
-	<div class="row" style="margin-bottom:20px;">
-		<div class="col-sm-3">
-			<button class="btn btn-primary" ng-click="addTag()">
-				<i class="fa fa-plus-circle" aria-hidden="true"></i>
-				Add Tag
-			</button>
-		</div>
-	</div>	
-	-->	
 	<div>
 	<div class="tabcontent" >
 		<div class="row">
@@ -38,11 +28,7 @@
 						<span ng-show="!sortReverse"  class="fa fa-caret-up"></span>
 					</span>			
 					<span class="list-group-item" ng-repeat="tag in tags | orderBy:sortType:sortReverse | tagFilter:searchText | startFrom:currentPage*pageSize | limitTo:pageSize">
-					 	{{tag.name}}{{$last ? checkFooter($index, searchText) :'';}}
-					 	<!--
-					    <i class="glyphicon glyphicon-remove pull-right text-danger" 
-					    	ng-click="deleteTag(tag.id)" tooltip-html-unsafe="Delete"></i>	
-					    --> 	
+					 	{{tag.name}}{{$last ? checkFooter($index, searchText) :'';}}	
 					 	<i class="glyphicon glyphicon-pencil pull-right text-primary" 
 					 		style="padding-right:20px" 
 					 		ng-click="editTag(tag.id)" tooltip-html-unsafe="Edit"></i> 

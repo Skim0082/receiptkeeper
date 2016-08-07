@@ -6,6 +6,18 @@
     '$state', 'StoreCategory', '$rootScope', '$stateParams', 'ReceiptService', 
     function($scope, Store, Category, $state, StoreCategory, $rootScope, $stateParams, ReceiptService) {      
 
+    $scope.relocateFooter = function(){
+      if(window.innerWidth < 768 || window.innerHeight < 860){
+        $('pagefooter').removeAttr('style');
+      }else{
+        $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+      }       
+    }
+    $scope.relocateFooter();     
+    $(window).resize(function(){
+      $scope.relocateFooter(); 
+    }); 
+        
     $scope.action = 'Add';
     $scope.categories = [];
     $scope.selectedCategory=[];
@@ -131,6 +143,18 @@
       '$stateParams', '$state', 'StoreCategory', '$location', '$rootScope', 'ReceiptService',   
       function($scope, Store, Category, $stateParams, $state, StoreCategory, $location, $rootScope, ReceiptService) {      
 
+    $scope.relocateFooter = function(){
+      if(window.innerWidth < 768 || window.innerHeight < 860){
+        $('pagefooter').removeAttr('style');
+      }else{
+        $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+      }       
+    }
+    $scope.relocateFooter();     
+    $(window).resize(function(){
+      $scope.relocateFooter(); 
+    }); 
+        
     $scope.action = 'Edit';
     $scope.categories = [];
     $scope.options2=[];

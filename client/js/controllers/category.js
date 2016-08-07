@@ -6,7 +6,18 @@
       '$state', '$rootScope', '$stateParams', 'ReceiptService', 
       function($scope, Category, $state, $rootScope, $stateParams, ReceiptService) {
 
-    //console.log("$stateParams: ", $stateParams);
+    $scope.relocateFooter = function(){
+      if(window.innerWidth < 768 || window.innerHeight < 860){
+        $('pagefooter').removeAttr('style');
+      }else{
+        $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+      }       
+    }
+    $scope.relocateFooter();     
+    $(window).resize(function(){
+      $scope.relocateFooter(); 
+    });  
+
     $scope.groupName = $stateParams.groupName;
 
     var userId, groupId;
@@ -403,6 +414,19 @@
   }])
   .controller('EditCategoryController', ['$scope', 'Category', '$stateParams', '$state', '$location', 'ReceiptService', 
       function($scope, Category, $stateParams, $state, $location, ReceiptService) {
+
+        $scope.relocateFooter = function(){
+          if(window.innerWidth < 768 || window.innerHeight < 860){
+            $('pagefooter').removeAttr('style');
+          }else{
+            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+          }       
+        }
+        $scope.relocateFooter();     
+        $(window).resize(function(){
+          $scope.relocateFooter(); 
+        }); 
+            
 		    $scope.action = 'Edit';
         $scope.category = {};
         $scope.groupName = $stateParams.groupName;

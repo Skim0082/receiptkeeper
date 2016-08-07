@@ -6,16 +6,6 @@
 		{{groupName}} Stores
 	</h1>
 	<hr>
-	<!--
-	<div class="row" style="margin-bottom:20px;">
-		<div class="col-sm-3">
-			<button class="btn btn-primary" ng-click="addStore()">
-				<i class="fa fa-plus-circle" aria-hidden="true"></i>
-				Add Store
-			</button>
-		</div>
-	</div>	
-	-->	
 	<div>
 	<div class="tabcontent" >
 		<div class="row">
@@ -39,10 +29,6 @@
 					</span>
 					<span class="list-group-item" ng-repeat="store in stores | orderBy:sortType:sortReverse | storeFilter:searchText | startFrom:currentPage*pageSize | limitTo:pageSize">
 					 	{{store.name}}{{$last ? checkFooter($index, searchText) :'';}}
-					 	<!--
-					    <i class="glyphicon glyphicon-remove pull-right text-danger" 
-					    	ng-click="deleteStore(store.id)" tooltip-html-unsafe="Delete"></i>
-					    -->
 					 	<i class="glyphicon glyphicon-pencil pull-right text-primary" 
 					 		style="padding-right:20px" 
 					 		ng-click="editStore(store.id)" tooltip-html-unsafe="Edit"></i> 

@@ -4,7 +4,19 @@
   .module('app')
   .controller('AddTagController', [
     '$scope', 'Tag', '$state', '$rootScope', '$stateParams', 'ReceiptService', 
-     function($scope, Tag, $state, $rootScope, $stateParams, ReceiptService) {      
+     function($scope, Tag, $state, $rootScope, $stateParams, ReceiptService) {  
+
+    $scope.relocateFooter = function(){
+      if(window.innerWidth < 768 || window.innerHeight < 860){
+        $('pagefooter').removeAttr('style');
+      }else{
+        $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+      }       
+    }
+    $scope.relocateFooter();     
+    $(window).resize(function(){
+      $scope.relocateFooter(); 
+    }); 
 
     $scope.groupName = $stateParams.groupName;
 
@@ -401,6 +413,19 @@
   }])
   .controller('EditTagController', ['$scope', 'Tag', '$stateParams', '$state', '$location', 'ReceiptService',  
       function($scope, Tag, $stateParams, $state, $location, ReceiptService) {
+
+        $scope.relocateFooter = function(){
+          if(window.innerWidth < 768 || window.innerHeight < 860){
+            $('pagefooter').removeAttr('style');
+          }else{
+            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+          }       
+        }
+        $scope.relocateFooter();     
+        $(window).resize(function(){
+          $scope.relocateFooter(); 
+        }); 
+        
 		    $scope.action = 'Edit';
         $scope.tag = {};
         $scope.groupName = $stateParams.groupName;

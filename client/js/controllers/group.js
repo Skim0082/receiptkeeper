@@ -21,21 +21,25 @@
         $scope.footerRelocate();
       });   
       $scope.footerRelocate = function(){
-        if($scope.listNum != -1 && $scope.listNum < 3){
-          if( window.innerHeight == screen.height) {
-            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
-          }else{
-            $('pagefooter').removeAttr('style');          
-          }              
+        if(window.innerWidth < 768 || window.innerHeight < 860){
+          $('pagefooter').removeAttr('style');
         }else{
-          if($scope.listNum == -1){
-            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
+          if($scope.listNum != -1 && $scope.listNum < 3){
+            if( window.innerHeight == screen.height) {
+              $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
+            }else{
+              $('pagefooter').removeAttr('style');          
+            }              
           }else{
-            if($scope.listNum >= 2){
-              $('pagefooter').removeAttr('style');  
-            }
-          }           
-        }        
+            if($scope.listNum == -1){
+              $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
+            }else{
+              if($scope.listNum >= 2){
+                $('pagefooter').removeAttr('style');  
+              }
+            }           
+          }
+        }         
       }
       $scope.footerRelocate();          
 
@@ -363,7 +367,17 @@
     $scope.isDisabled = true;
     var userId = $rootScope.currentUser.id;
 
-    $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);    
+    $scope.relocateFooter = function(){
+      if(window.innerWidth < 768 || window.innerHeight < 860){
+        $('pagefooter').removeAttr('style');
+      }else{
+        $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+      }       
+    }
+    $scope.relocateFooter();     
+    $(window).resize(function(){
+      $scope.relocateFooter(); 
+    });            
 
     // Find group whose owner is current user
     Customer
@@ -454,6 +468,18 @@
       '$stateParams', '$state', '$rootScope', 'Customer', 'Notification', 
       'CustomerGroup', function($scope, Group, $stateParams, 
         $state, $rootScope, Customer, Notification, CustomerGroup) {
+
+        $scope.relocateFooter = function(){
+          if(window.innerWidth < 768 || window.innerHeight < 860){
+            $('pagefooter').removeAttr('style');
+          }else{
+            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+          }       
+        }
+        $scope.relocateFooter();     
+        $(window).resize(function(){
+          $scope.relocateFooter(); 
+        });         
 
         $scope.isEnabled = false;
         $scope.isLeave = false;
@@ -549,25 +575,29 @@
           $scope.footerRelocate(); 
         }); 
         $scope.footerRelocate = function(){
-          if($scope.listNum != -1 && $scope.listNum < 3){
-            if( window.innerHeight == screen.height) {
-              $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
-            }else{
-              $('pagefooter').removeAttr('style');          
-            }             
+          if(window.innerWidth < 768 || window.innerHeight < 860){
+            $('pagefooter').removeAttr('style');
           }else{
-            if($scope.listNum == -1){
+            if($scope.listNum != -1 && $scope.listNum < 3){
               if( window.innerHeight == screen.height) {
                 $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
               }else{
-                $('pagefooter').removeAttr('style');                
-              }    
-            }else if($scope.listNum > 2){
-              $('pagefooter').removeAttr('style');  
+                $('pagefooter').removeAttr('style');          
+              }             
             }else{
-              $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
-            }            
-          }
+              if($scope.listNum == -1){
+                if( window.innerHeight == screen.height) {
+                  $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
+                }else{
+                  $('pagefooter').removeAttr('style');                
+                }    
+              }else if($scope.listNum > 2){
+                $('pagefooter').removeAttr('style');  
+              }else{
+                $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+              }            
+            }
+          } 
         }  
         $scope.footerRelocate();     
 
@@ -686,8 +716,6 @@
             } // if($scope.memberNotifications.length > 0){            
           });
         }); // .then(function(group){
-
-        //console.log("$scope.listNum : ", $scope.listNum);
 
         $scope.backToPage = function(){
           window.history.back();

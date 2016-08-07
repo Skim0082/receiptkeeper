@@ -441,9 +441,21 @@
       '$stateParams', 'Store', 'Item', 'ReceiptItem', 'Category', 
       'Tag', 'ReceiptTag', '$location', '$rootScope',  
       function($scope, Receipt, $state, $stateParams, Store, 
-        Item, ReceiptItem, Category, Tag, ReceiptTag, $location, $rootScope) {
+        Item, ReceiptItem, Category, Tag, ReceiptTag, $location, $rootScope) {        
 
     window.scrollTo(0,0); // Always move to top of page
+
+    $scope.relocateFooter = function(){
+      if(window.innerWidth < 768 || window.innerHeight < 860){
+        $('pagefooter').removeAttr('style');
+      }else{
+        $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+      }         
+    }
+    $scope.relocateFooter(); 
+    $(window).resize(function(){
+      $scope.relocateFooter();
+    });    
 
     $scope.stores = [];
     $scope.selectedStore;
@@ -996,10 +1008,14 @@
     });
 
     $scope.relocateFooter = function(){
-      if( window.innerHeight == screen.height) {
-        $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
+      if(window.innerWidth < 768 || window.innerHeight < 860){
+        $('pagefooter').removeAttr('style');
       }else{
-        $('pagefooter').removeAttr('style');          
+        if( window.innerHeight == screen.height) {
+          $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
+        }else{
+          $('pagefooter').removeAttr('style');          
+        } 
       } 
     }    
     $scope.relocateFooter();
@@ -1397,12 +1413,17 @@
       userId = $stateParams.ownerId;
       groupId = $stateParams.groupId;
     }  
+    
     $scope.relocateFooter = function(){
-      if( window.innerHeight == screen.height) {
-        $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
+      if(window.innerWidth < 768 || window.innerHeight < 860){
+        $('pagefooter').removeAttr('style');
       }else{
-        $('pagefooter').removeAttr('style');          
-      }      
+        if( window.innerHeight == screen.height) {
+          $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
+        }else{
+          $('pagefooter').removeAttr('style');          
+        } 
+      }     
     }  
     $scope.relocateFooter();
 
