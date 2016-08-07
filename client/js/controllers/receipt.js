@@ -15,6 +15,7 @@
       $scope.pageUnits = [5, 10, 15, 20];
       $scope.pageSize = 10;
       $scope.currentPage = 0;    
+      $scope.NextDisabled;
 
       var userId, groupId;
       if($stateParams.groupId == undefined){
@@ -27,7 +28,11 @@
 
       $scope.lineNum = -1;
       $(window).resize(function(){
-        $scope.changePageRelocateFooter();         
+        if($scope.searchText == undefined || $scope.searchText == ''){
+          $scope.changePageRelocateFooter();
+        }else{
+          $scope.relocateFooterAfterFilter($scope.filterNum, $scope.searchText);
+        }         
       });
 
       $scope.relocateFooter = function(lineNum){
@@ -58,9 +63,9 @@
       })
       .$promise
       .then(function(receipts){
-        $scope.receipts = receipts;
-        $scope.changePageRelocateFooter();
-        $scope.lineNum = receipts.length;       
+        $scope.receipts = receipts;        
+        $scope.lineNum = receipts.length;  
+        $scope.changePageRelocateFooter();     
       }); 
 
       // Sorting
@@ -145,12 +150,28 @@
 
       //Pagination - angular
       $scope.getData = function(){
-        return $filter('filter')($scope.receipts)
+        if($scope.searchText == undefined || $scope.searchText == ''){
+          return $filter('filter')($scope.receipts);
+        }else{
+          return $filter('receiptFilter')($scope.receipts, $scope.searchText);
+        }
       }
 
       $scope.numberOfPages=function(){
           return Math.ceil($scope.getData().length/$scope.pageSize);                
       }
+
+      $scope.totalPages;
+      $scope.calNumberOfPages = function(){
+          $scope.totalPages = ($scope.currentPage+1) + "/";
+          if($scope.numberOfPages()==0){
+             $scope.totalPages += '1';
+          }else{
+            $scope.totalPages += $scope.numberOfPages();
+          }
+          return $scope.totalPages;     
+      }     
+
       //$scope.number = $scope.numberOfPages();
       $scope.getNumber = function(num) {
           return new Array(num);   
@@ -165,11 +186,14 @@
       } 
       $scope.changePageNumber = function(num){
         $scope.currentPage = $scope.currentPage + num;
-        $scope.changePageRelocateFooter();
+        $scope.changePageRelocateFooter();        
       } 
 
       $scope.changePageRelocateFooter = function(){
+        //console.log("$scope.currentPage: ", $scope.currentPage);
+        //console.log("$scope.getData().length/$scope.pageSize - 1: ", $scope.getData().length/$scope.pageSize - 1);
         if($scope.currentPage >= $scope.getData().length/$scope.pageSize - 1){
+          $scope.NextDisabled = true;
           var restLineNum = ($scope.getData().length)%$scope.pageSize;
           if(restLineNum < 9){
             if(window.innerHeight == screen.height){
@@ -179,12 +203,53 @@
                 $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
               }
             }            
-          }
+          }         
         }else{
-          $scope.relocateFooter($scope.pageSize);
+          $scope.NextDisabled = false;                    
+          $scope.relocateFooter($scope.pageSize);          
         }        
       }    
       //Pagination - angular
+
+      $scope.filterNum = 0;
+      $scope.searchText;
+      $scope.checkFooter = function(num, searchText){
+        $scope.filterNum = num;
+        $scope.searchText = searchText;
+        $scope.relocateFooterAfterFilter(num, searchText);
+
+        if(num < $scope.pageSize-1){
+          $scope.NextDisabled = true;
+        }else{          
+          if($scope.currentPage >= $scope.getData().length/$scope.pageSize - 1){
+            $scope.NextDisabled = true;
+          }else{
+            $scope.NextDisabled = false;
+          }
+        }
+      }
+  
+      $scope.relocateFooterAfterFilter = function(num, searchText){
+        //console.log("$scope.getData().length: ", $filter('receiptFilter')($scope.receipts, searchText).length); 
+        if(searchText !=undefined && searchText != ''){     
+          $scope.calNumberOfPages();            
+          if(num < 9){
+            if(window.innerHeight == screen.height){
+              $scope.relocateFooter(5);
+            }else{
+              if(num < 4){
+                $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+              }else{
+                $scope.relocateFooter(10);
+              }
+            }
+          }else{
+                $scope.relocateFooter(10);
+          }
+        }else{
+          $scope.changePageRelocateFooter();
+        }         
+      }  
 
       $scope.viewGroup = function(){
         if($stateParams.groupId != undefined){

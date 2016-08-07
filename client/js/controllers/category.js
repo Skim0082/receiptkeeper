@@ -135,7 +135,11 @@
 
       $scope.lineNum = -1;
       $(window).resize(function(){
-          $scope.changePageRelocateFooter();        
+        if($scope.searchText == undefined || $scope.searchText == ''){
+          $scope.changePageRelocateFooter();
+        }else{
+          $scope.relocateFooterAfterFilter($scope.filterNum, $scope.searchText);
+        }       
       });
 
       $scope.relocateFooter = function(lineNum){
@@ -213,6 +217,34 @@
         }        
       }      
       //Pagination - angular    
+
+      $scope.filterNum = 0;
+      $scope.searchText;
+      $scope.checkFooter = function(num, searchText){
+        $scope.filterNum = num;
+        $scope.searchText = searchText;
+        $scope.relocateFooterAfterFilter(num, searchText);
+      }
+  
+      $scope.relocateFooterAfterFilter = function(num, searchText){
+        if(searchText !=undefined && searchText != ''){          
+          if(num < 9){
+            if(window.innerHeight == screen.height){
+              $scope.relocateFooter(5);
+            }else{
+              if(num < 4){
+                $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+              }else{
+                $scope.relocateFooter(10);
+              }
+            }
+          }else{
+                $scope.relocateFooter(10);
+          }
+        }else{
+          $scope.changePageRelocateFooter();
+        }      
+      }       
 
       // Sorting
       $scope.searchText;

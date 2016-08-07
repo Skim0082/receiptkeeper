@@ -38,7 +38,7 @@
 
 					<span class="list-group-item" 
 							ng-repeat="category in categorys | categoryFilter:searchText | orderBy:sortType:sortReverse | startFrom:currentPage*pageSize | limitTo:pageSize">
-							{{category.name}}
+							{{category.name}}{{$last ? checkFooter($index, searchText) :'';}}
 						<!--
 						<i class="glyphicon glyphicon-remove pull-right text-danger" 
 					    	ng-click="deleteCategory(category.id)" tooltip-html-unsafe="Delete"></i>	
