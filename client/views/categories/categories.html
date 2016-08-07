@@ -68,7 +68,7 @@
                         <i class="fa fa-arrow-left" aria-hidden="true"></i>
                         Previous
                     </button>
-                    <button  class="btn btn-default" ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="changePageNumber(1)">
+                    <button  class="btn btn-default" ng-disabled="NextDisabled" ng-click="changePageNumber(1)">
                         Next
                         <i class="fa fa-arrow-right" aria-hidden="true"></i>
                     </button>
@@ -76,7 +76,7 @@
 			</div>
 			<div class="col-sm-3 col-xs-4 text-right" style="padding-top:7px;padding-right:30px;">
                 <span style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: 14px;">
-                    page: {{currentPage+1}}/{{numberOfPages()==0? 1:numberOfPages();}}
+                    page: {{calNumberOfPages()}}
                 </span>
 			</div>
 		</div>

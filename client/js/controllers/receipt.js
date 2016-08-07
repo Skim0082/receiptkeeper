@@ -29,15 +29,20 @@
       $scope.lineNum = -1;
       $(window).resize(function(){
         if($scope.searchText == undefined || $scope.searchText == ''){
+          console.log("$scope.numberOfPages(): ", $scope.numberOfPages());
           $scope.changePageRelocateFooter();
         }else{
-          $scope.relocateFooterAfterFilter($scope.filterNum, $scope.searchText);
+          if($scope.numberOfPages() == 0){
+            $scope.relocateFooter(3);
+          }else{
+            $scope.relocateFooterAfterFilter($scope.filterNum, $scope.searchText);  
+          }
         }         
       });
 
       $scope.relocateFooter = function(lineNum){
         if( window.innerHeight == screen.height) {
-          if(lineNum < 9){
+          if(lineNum < 8){
             $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
           }else{
             $('pagefooter').removeAttr('style'); 
@@ -164,15 +169,17 @@
       $scope.totalPages;
       $scope.calNumberOfPages = function(){
           $scope.totalPages = ($scope.currentPage+1) + "/";
-          if($scope.numberOfPages()==0){
-             $scope.totalPages += '1';
+          var numPage = $scope.numberOfPages();
+          if(numPage == 0){
+            $scope.totalPages += '1';
+            $scope.NextDisabled = true;
+            $scope.relocateFooter(3);
           }else{
-            $scope.totalPages += $scope.numberOfPages();
+            $scope.totalPages += numPage;
           }
-          return $scope.totalPages;     
-      }     
+          return $scope.totalPages;    
+      }   
 
-      //$scope.number = $scope.numberOfPages();
       $scope.getNumber = function(num) {
           return new Array(num);   
       }
@@ -190,19 +197,33 @@
       } 
 
       $scope.changePageRelocateFooter = function(){
-        //console.log("$scope.currentPage: ", $scope.currentPage);
-        //console.log("$scope.getData().length/$scope.pageSize - 1: ", $scope.getData().length/$scope.pageSize - 1);
         if($scope.currentPage >= $scope.getData().length/$scope.pageSize - 1){
           $scope.NextDisabled = true;
           var restLineNum = ($scope.getData().length)%$scope.pageSize;
-          if(restLineNum < 9){
-            if(window.innerHeight == screen.height){
-              $scope.relocateFooter(5);
-            }else{
-              if(restLineNum < 4){
+          if(restLineNum < 8){
+            if(restLineNum == 0){
+              if($scope.getData().length == 0){
                 $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
-              }
+              }else{
+                if(window.innerHeight == screen.height && $scope.pageSize == 5){
+                  $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+                }else{
+                  $('pagefooter').removeAttr('style');                
+                }                 
+              } 
+            }else{
+              if(window.innerHeight == screen.height){
+                $scope.relocateFooter(5);
+              }else{
+                if(restLineNum < 4){
+                  $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+                }else{
+                  $('pagefooter').removeAttr('style'); 
+                }
+              }              
             }            
+          }else{
+            $('pagefooter').removeAttr('style'); 
           }         
         }else{
           $scope.NextDisabled = false;                    
@@ -233,7 +254,7 @@
         //console.log("$scope.getData().length: ", $filter('receiptFilter')($scope.receipts, searchText).length); 
         if(searchText !=undefined && searchText != ''){     
           $scope.calNumberOfPages();            
-          if(num < 9){
+          if(num < 8){
             if(window.innerHeight == screen.height){
               $scope.relocateFooter(5);
             }else{
