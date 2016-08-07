@@ -6,16 +6,26 @@
 angular
   .module('app')
   .controller('AuthLoginController', ['$scope', 'AuthService', '$state', '$rootScope', 
-      function($scope, AuthService, $state, $rootScope) {          
+      function($scope, AuthService, $state, $rootScope) {   
+
+    $scope.relocateFooter = function(){
+      if(window.innerHeight < 860){
+        $('pagefooter').removeAttr('style');
+      }else{
+        $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+      }         
+    }
+    $scope.relocateFooter();
+    $(window).resize(function(){
+      $scope.relocateFooter();
+    });              
 
     $scope.user = {};
-
     var flashMessage;
 
     $scope.login = function() {
       AuthService.login($scope.user.email, $scope.user.password)
         .then(function() {
-          //Check the invalid user, and giving a message will need
           flashMessage = '#loginErrorMessage';
           if($rootScope.currentUser == undefined){
             $scope.showMessage(flashMessage); 
@@ -41,6 +51,18 @@ angular
   }])
   .controller('SignUpController', ['$scope', 'AuthService', '$state', '$rootScope', 'Customer', 
       function($scope, AuthService, $state, $rootScope, Customer) {
+
+    $scope.relocateFooter = function(){
+      if(window.innerHeight < 860){
+        $('pagefooter').removeAttr('style');
+      }else{
+        $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+      }         
+    }
+    $scope.relocateFooter();
+    $(window).resize(function(){
+      $scope.relocateFooter();
+    });         
 
     $scope.user = {};
     var flashMessage;

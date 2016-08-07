@@ -30,8 +30,6 @@
           ]}
       }
     });  
-
-    //console.log("$scope.tags: ", $scope.tags);
       
     $scope.backToPage = function(){
       window.history.back();
@@ -148,19 +146,23 @@
       });
 
       $scope.relocateFooter = function(lineNum){
-        if( window.innerHeight == screen.height) {
-          if(lineNum < 8){
-            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
-          }else{
-            $('pagefooter').removeAttr('style'); 
-          } 
+        if(window.innerHeight < 860){
+          $('pagefooter').removeAttr('style');
         }else{
-          if(lineNum < 4){
-            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+          if( window.innerHeight == screen.height) {
+            if(lineNum < 8){
+              $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+            }else{
+              $('pagefooter').removeAttr('style'); 
+            } 
           }else{
-            $('pagefooter').removeAttr('style'); 
-          }          
-        }        
+            if(lineNum < 4){
+              $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+            }else{
+              $('pagefooter').removeAttr('style'); 
+            }          
+          }
+        }
       }
 
       $scope.tags = [];
@@ -182,7 +184,6 @@
 
       //Pagination - angular
       $scope.getData = function(){
-        //return $filter('filter')($scope.tags);
         if($scope.searchText == undefined || $scope.searchText == ''){
           return $filter('filter')($scope.tags);
         }else{
@@ -228,30 +229,34 @@
         if($scope.currentPage >= $scope.getData().length/$scope.pageSize - 1){
           $scope.NextDisabled = true;
           var restLineNum = ($scope.getData().length)%$scope.pageSize;
-          if(restLineNum < 8){
-            if(restLineNum == 0){
-              if($scope.getData().length == 0){
-                $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
-              }else{
-                if(window.innerHeight == screen.height && $scope.pageSize == 5){
-                  $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
-                }else{
-                  $('pagefooter').removeAttr('style');                
-                }                 
-              } 
-            }else{
-              if(window.innerHeight == screen.height){
-                $scope.relocateFooter(5);
-              }else{
-                if(restLineNum < 4){
-                  $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
-                }else{
-                  $('pagefooter').removeAttr('style'); 
-                }
-              }              
-            }            
+          if(window.innerHeight < 860){
+            $('pagefooter').removeAttr('style');
           }else{
-            $('pagefooter').removeAttr('style'); 
+            if(restLineNum < 8){
+              if(restLineNum == 0){
+                if($scope.getData().length == 0){
+                  $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+                }else{
+                  if(window.innerHeight == screen.height && $scope.pageSize == 5){
+                    $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+                  }else{
+                    $('pagefooter').removeAttr('style');                
+                  }                 
+                } 
+              }else{
+                if(window.innerHeight == screen.height){
+                  $scope.relocateFooter(5);
+                }else{
+                  if(restLineNum < 4){
+                    $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+                  }else{
+                    $('pagefooter').removeAttr('style'); 
+                  }
+                }              
+              }            
+            }else{
+              $('pagefooter').removeAttr('style'); 
+            }
           }
         }else{
           $scope.NextDisabled = false;
@@ -280,19 +285,23 @@
   
       $scope.relocateFooterAfterFilter = function(num, searchText){
         if(searchText !=undefined && searchText != ''){  
-          $scope.calNumberOfPages();        
-          if(num < 8){
-            if(window.innerHeight == screen.height){
-              $scope.relocateFooter(5);
-            }else{
-              if(num < 4){
-                $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
-              }else{
-                $scope.relocateFooter(10);
-              }
-            }
+          $scope.calNumberOfPages(); 
+          if(window.innerHeight < 860){
+            $('pagefooter').removeAttr('style');
           }else{
-                $scope.relocateFooter(10);
+            if(num < 8){
+              if(window.innerHeight == screen.height){
+                $scope.relocateFooter(5);
+              }else{
+                if(num < 4){
+                  $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+                }else{
+                  $scope.relocateFooter(10);
+                }
+              }
+            }else{
+                  $scope.relocateFooter(10);
+            }
           }
         }else{
           $scope.changePageRelocateFooter();

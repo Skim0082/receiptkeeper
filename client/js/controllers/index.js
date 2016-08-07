@@ -4,14 +4,14 @@
 	.module('app')
 	.controller('IndexController', ['$scope', '$state', 'IntroHeaderService', 
 	function($scope, $state, IntroHeaderService) {
-		//Fix nav bar and hid the intro header
-		IntroHeaderService.isIntroHeaderVisible(true); 
-		$scope.name = "index"; 	
-    
+
     $('pagefooter').removeAttr('style'); 
     $(window).resize(function(){
         $('pagefooter').removeAttr('style');
-    });    
+    });     
+		//Fix nav bar and hid the intro header
+		IntroHeaderService.isIntroHeaderVisible(true); 
+		$scope.name = "index";    
 
 	}])
 	.controller('ModalLoginCtrl', function ($scope, $modal, $log) {
@@ -28,7 +28,6 @@
       function($scope, AuthService, $state, $rootScope, $modalInstance) {           
 
     $scope.user = {};
-
     var flashMessage;
 
     $scope.login = function() {
@@ -45,14 +44,14 @@
         });
     };
 
-	$scope.cancel = function () {
-	$modalInstance.dismiss('cancel');
-	};
+  	$scope.cancel = function () {
+  	$modalInstance.dismiss('cancel');
+  	};
 
-	$scope.signup = function(){
-    	$modalInstance.close('signup');
-      	$state.go('Signup');			
-	};
+  	$scope.signup = function(){
+      	$modalInstance.close('signup');
+        	$state.go('Signup');			
+  	};
 
     $scope.showMessage = function(flashMessage){
       $(flashMessage).addClass("in"); 

@@ -321,10 +321,12 @@ angular
 		})      	 					
 		.state('forbidden', {
 			url: '/forbidden',
+			controller: 'StaticPagesController', 
 			templateUrl: 'views/pages/forbidden.html'
 		})
 		.state('registered', {
 			url: '/registered',
+			controller: 'StaticPagesController', 
 			templateUrl: 'views/pages/register.html'
 		})			
 		.state('groupChart',{

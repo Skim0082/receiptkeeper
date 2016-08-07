@@ -29,7 +29,7 @@
       $scope.lineNum = -1;
       $(window).resize(function(){
         if($scope.searchText == undefined || $scope.searchText == ''){
-          console.log("$scope.numberOfPages(): ", $scope.numberOfPages());
+          //console.log("$scope.numberOfPages(): ", $scope.numberOfPages());
           $scope.changePageRelocateFooter();
         }else{
           if($scope.numberOfPages() == 0){
@@ -41,19 +41,23 @@
       });
 
       $scope.relocateFooter = function(lineNum){
-        if( window.innerHeight == screen.height) {
-          if(lineNum < 8){
-            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
-          }else{
-            $('pagefooter').removeAttr('style'); 
-          } 
+        if(window.innerHeight < 860){
+          $('pagefooter').removeAttr('style');
         }else{
-          if(lineNum < 4){
-            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+          if( window.innerHeight == screen.height) {
+            if(lineNum < 8){
+              $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+            }else{
+              $('pagefooter').removeAttr('style'); 
+            } 
           }else{
-            $('pagefooter').removeAttr('style'); 
-          }          
-        }        
+            if(lineNum < 4){
+              $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+            }else{
+              $('pagefooter').removeAttr('style'); 
+            }          
+          }
+        }         
       }
 
       Receipt.find({
@@ -200,31 +204,35 @@
         if($scope.currentPage >= $scope.getData().length/$scope.pageSize - 1){
           $scope.NextDisabled = true;
           var restLineNum = ($scope.getData().length)%$scope.pageSize;
-          if(restLineNum < 8){
-            if(restLineNum == 0){
-              if($scope.getData().length == 0){
-                $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
-              }else{
-                if(window.innerHeight == screen.height && $scope.pageSize == 5){
-                  $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
-                }else{
-                  $('pagefooter').removeAttr('style');                
-                }                 
-              } 
-            }else{
-              if(window.innerHeight == screen.height){
-                $scope.relocateFooter(5);
-              }else{
-                if(restLineNum < 4){
-                  $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
-                }else{
-                  $('pagefooter').removeAttr('style'); 
-                }
-              }              
-            }            
+          if(window.innerHeight < 860){
+            $('pagefooter').removeAttr('style');
           }else{
-            $('pagefooter').removeAttr('style'); 
-          }         
+            if(restLineNum < 8){
+              if(restLineNum == 0){
+                if($scope.getData().length == 0){
+                  $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+                }else{
+                  if(window.innerHeight == screen.height && $scope.pageSize == 5){
+                    $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+                  }else{
+                    $('pagefooter').removeAttr('style');                
+                  }                 
+                } 
+              }else{
+                if(window.innerHeight == screen.height){
+                  $scope.relocateFooter(5);
+                }else{
+                  if(restLineNum < 4){
+                    $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+                  }else{
+                    $('pagefooter').removeAttr('style'); 
+                  }
+                }              
+              }            
+            }else{
+              $('pagefooter').removeAttr('style'); 
+            }            
+          }          
         }else{
           $scope.NextDisabled = false;                    
           $scope.relocateFooter($scope.pageSize);          
@@ -253,19 +261,23 @@
       $scope.relocateFooterAfterFilter = function(num, searchText){
         //console.log("$scope.getData().length: ", $filter('receiptFilter')($scope.receipts, searchText).length); 
         if(searchText !=undefined && searchText != ''){     
-          $scope.calNumberOfPages();            
-          if(num < 8){
-            if(window.innerHeight == screen.height){
-              $scope.relocateFooter(5);
-            }else{
-              if(num < 4){
-                $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
-              }else{
-                $scope.relocateFooter(10);
-              }
-            }
+          $scope.calNumberOfPages(); 
+          if(window.innerHeight < 860){
+            $('pagefooter').removeAttr('style');
           }else{
-                $scope.relocateFooter(10);
+            if(num < 8){
+              if(window.innerHeight == screen.height){
+                $scope.relocateFooter(5);
+              }else{
+                if(num < 4){
+                  $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);
+                }else{
+                  $scope.relocateFooter(10);
+                }
+              }
+            }else{
+                  $scope.relocateFooter(10);
+            }
           }
         }else{
           $scope.changePageRelocateFooter();
