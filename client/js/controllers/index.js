@@ -7,7 +7,16 @@
 
     $('pagefooter').removeAttr('style'); 
     $(window).resize(function(){
-        $('pagefooter').removeAttr('style');
+      $('pagefooter').removeAttr('style');
+      if(window.innerWidth < 992){
+        if(window.innerWidth < 768){
+          $('#mobileapp').show();
+        }else{
+          $('#mobileapp').hide();  
+        }        
+      }else{
+        $('#mobileapp').show();
+      }
     });     
 		//Fix nav bar and hid the intro header
 		IntroHeaderService.isIntroHeaderVisible(true); 
