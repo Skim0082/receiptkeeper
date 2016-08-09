@@ -1286,6 +1286,9 @@
 
         modalInstance.result.then(function (imageFilePath) {
           $scope.receipt.imageFilePath = imageFilePath;
+          if(imageFilePath != ''){
+            $('pagefooter').removeAttr('style'); 
+          }
         }, function () {
         });
 
