@@ -1012,10 +1012,10 @@
         $('pagefooter').removeAttr('style');
       }else{
         if( window.innerHeight == screen.height) {
-          if($scope.receipt.imageFilePath == ""){
-            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
+          if($('#receiptPhoto').is(":visible")){
+            $('pagefooter').removeAttr('style');
           }else{
-            $('pagefooter').removeAttr('style');  
+            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0);   
           }          
         }else{
           $('pagefooter').removeAttr('style');          
@@ -1121,6 +1121,9 @@
 
     $scope.removePhoto = function(){
       $scope.receipt.imageFilePath = "";
+      window.setTimeout(function(){
+        $scope.relocateFooter();
+      }, 100);      
     }
 
     $scope.Receipts = function(){
