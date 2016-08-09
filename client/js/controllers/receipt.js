@@ -1012,7 +1012,11 @@
         $('pagefooter').removeAttr('style');
       }else{
         if( window.innerHeight == screen.height) {
-          $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
+          if($scope.receipt.imageFilePath == ""){
+            $('pagefooter.myfooter').css('position', 'absolute').css('bottom',0); 
+          }else{
+            $('pagefooter').removeAttr('style');  
+          }          
         }else{
           $('pagefooter').removeAttr('style');          
         } 
@@ -1061,7 +1065,11 @@
         })
         .$promise
         .then(function(receipt){ 
-          //console.log("receipt: ", receipt);   
+          //console.log("receipt: ", receipt); 
+
+          if(receipt.imageFilePath != ""){
+            $('pagefooter').removeAttr('style');  
+          }  
           // Set Items related to Receipt       
           $scope.receipt = receipt; 
 
