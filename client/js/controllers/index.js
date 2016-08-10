@@ -12,8 +12,7 @@
     }); 
     window.setTimeout(function(){
       $scope.viewMobileAppMenu();
-    }, 30);
-
+    }, 20);
     $scope.viewMobileAppMenu = function(){
       if(window.innerWidth < 768){
         $('#mobileapp').show();
