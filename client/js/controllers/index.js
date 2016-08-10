@@ -8,15 +8,19 @@
     $('pagefooter').removeAttr('style'); 
     $(window).resize(function(){
       $('pagefooter').removeAttr('style');
+      $scope.viewMobileAppMenu();       
+    }); 
+    window.setTimeout(function(){
+      $scope.viewMobileAppMenu();
+    }, 30);
+
+    $scope.viewMobileAppMenu = function(){
       if(window.innerWidth < 768){
         $('#mobileapp').show();
       }else{
         $('#mobileapp').hide();  
-      }        
-    }); 
-    window.setTimeout(function(){
-      $('#mobileapp').hide(); 
-    }, 50);        
+      } 
+    }        
 		//Fix nav bar and hid the intro header
 		IntroHeaderService.isIntroHeaderVisible(true); 
 		$scope.name = "index";    
